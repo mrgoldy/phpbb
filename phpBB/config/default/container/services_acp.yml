@@ -1,0 +1,15 @@
+services:
+    phpbb.acp.controller:
+        class: phpbb\acp\controller
+        arguments:
+            - '@controller.helper'
+            - '@language'
+            - '@module.cp.manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    # General
+    acp_main:
+        class: phpbb\acp\general\index
+        arguments:
+            - '@controller.helper'

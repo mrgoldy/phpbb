@@ -2,11 +2,18 @@
 #
 # foo_controller:
 #     path: /foo
-#     defaults: { _controller: foo_sevice:method }
+#     defaults: { _controller: foo_service:method }
 #
-# The above will be accessed via app.php?controller=foo and it will
+# The above will be accessed via app.php/foo and it will
 # instantiate the 'foo_service' service and call the 'method' method.
 #
+
+phpbb_acp_controller:
+    path: /admin/{category}/{mode}
+    defaults:
+        _controller: phpbb.acp.controller:handle
+        category: general
+        mode: index
 
 phpbb_cron_routing:
     resource: cron.yml

@@ -1,0 +1,8 @@
+{% include 'acp/overall_header.html' %}
+
+<div class="{% if S_USER_NOTICE %}successbox{% else %}errorbox{% endif %}">
+	<h3>{{ MESSAGE_TITLE }}</h3>
+	<p>{{ MESSAGE_TEXT }}</p>
+</div>
+
+{% include 'acp/overall_footer.html' %}

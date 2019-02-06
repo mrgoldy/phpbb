@@ -1,15 +1,15 @@
 <?php
 /**
-*
-* This file is part of the phpBB Forum Software package.
-*
-* @copyright (c) phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-* For full copyright and license information, please see
-* the docs/CREDITS.txt file.
-*
-*/
+ *
+ * This file is part of the phpBB Forum Software package.
+ *
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ * For full copyright and license information, please see
+ * the docs/CREDITS.txt file.
+ *
+ */
 
 namespace phpbb\controller;
 
@@ -18,26 +18,26 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
-* Controller helper class, contains methods that do things for controllers
-*/
+ * Controller helper class, contains methods that do things for controllers
+ */
 class helper
 {
 	/**
-	* Template object
-	* @var \phpbb\template\template
-	*/
+	 * Template object
+	 * @var \phpbb\template\template
+	 */
 	protected $template;
 
 	/**
-	* User object
-	* @var \phpbb\user
-	*/
+	 * User object
+	 * @var \phpbb\user
+	 */
 	protected $user;
 
 	/**
-	* config object
-	* @var \phpbb\config\config
-	*/
+	 * config object
+	 * @var \phpbb\config\config
+	 */
 	protected $config;
 
 	/* @var \phpbb\symfony_request */
@@ -50,6 +50,8 @@ class helper
 	 * @var \phpbb\routing\helper
 	 */
 	protected $routing_helper;
+
+	protected $in_admin = false;
 
 	/**
 	 * Constructor
@@ -71,58 +73,77 @@ class helper
 		$this->routing_helper = $routing_helper;
 	}
 
+	public function set_in_admin($bool)
+	{
+		$this->in_admin = $bool;
+	}
+
 	/**
-	* Automate setting up the page and creating the response object.
-	*
-	* @param string $template_file The template handle to render
-	* @param string $page_title The title of the page to output
-	* @param int $status_code The status code to be sent to the page header
-	* @param bool $display_online_list Do we display online users list
-	* @param int $item_id Restrict online users to item id
-	* @param string $item Restrict online users to a certain session item, e.g. forum for session_forum_id
-	* @param bool $send_headers Whether headers should be sent by page_header(). Defaults to false for controllers.
-	*
-	* @return Response object containing rendered page
-	*/
+	 * Automate setting up the page and creating the response object.
+	 *
+	 * @param string $template_file The template handle to render
+	 * @param string $page_title The title of the page to output
+	 * @param int $status_code The status code to be sent to the page header
+	 * @param bool $display_online_list Do we display online users list
+	 * @param int $item_id Restrict online users to item id
+	 * @param string $item Restrict online users to a certain session item, e.g. forum for session_forum_id
+	 * @param bool $send_headers Whether headers should be sent by page_header(). Defaults to false for controllers.
+	 *
+	 * @return Response object containing rendered page
+	 */
 	public function render($template_file, $page_title = '', $status_code = 200, $display_online_list = false, $item_id = 0, $item = 'forum', $send_headers = false)
 	{
-		page_header($page_title, $display_online_list, $item_id, $item, $send_headers);
+		if ($this->in_admin)
+		{
+			adm_page_header($page_title);
+		}
+		else
+		{
+			page_header($page_title, $display_online_list, $item_id, $item, $send_headers);
+		}
 
 		$this->template->set_filenames(array(
 			'body'	=> $template_file,
 		));
 
-		page_footer(true, false, false);
+		if ($this->in_admin)
+		{
+			adm_page_footer();
+		}
+		else
+		{
+			page_footer(true, false, false);
 
-		$headers = !empty($this->user->data['is_bot']) ? array('X-PHPBB-IS-BOT' => 'yes') : array();
+			$headers = !empty($this->user->data['is_bot']) ? array('X-PHPBB-IS-BOT' => 'yes') : array();
+		}
 
 		return new Response($this->template->assign_display('body'), $status_code, $headers);
 	}
 
 	/**
-	* Generate a URL to a route
-	*
-	* @param string	$route		Name of the route to travel
-	* @param array	$params		String or array of additional url parameters
-	* @param bool	$is_amp		Is url using &amp; (true) or & (false)
-	* @param string|bool		$session_id	Possibility to use a custom session id instead of the global one
-	* @param bool|string		$reference_type The type of reference to be generated (one of the constants)
-	* @return string The URL already passed through append_sid()
-	*/
+	 * Generate a URL to a route
+	 *
+	 * @param string	$route		Name of the route to travel
+	 * @param array	$params		String or array of additional url parameters
+	 * @param bool	$is_amp		Is url using &amp; (true) or & (false)
+	 * @param string|bool		$session_id	Possibility to use a custom session id instead of the global one
+	 * @param bool|string		$reference_type The type of reference to be generated (one of the constants)
+	 * @return string The URL already passed through append_sid()
+	 */
 	public function route($route, array $params = array(), $is_amp = true, $session_id = false, $reference_type = UrlGeneratorInterface::ABSOLUTE_PATH)
 	{
 		return $this->routing_helper->route($route, $params, $is_amp, $session_id, $reference_type);
 	}
 
 	/**
-	* Output an error, effectively the same thing as trigger_error
-	*
-	* @param string $message The error message
-	* @param int $code The error code (e.g. 404, 500, 503, etc.)
-	* @return Response A Response instance
-	*
-	* @deprecated 3.1.3 (To be removed: 4.0.0) Use exceptions instead.
-	*/
+	 * Output an error, effectively the same thing as trigger_error
+	 *
+	 * @param string $message The error message
+	 * @param int $code The error code (e.g. 404, 500, 503, etc.)
+	 * @return Response A Response instance
+	 *
+	 * @deprecated 3.1.3 (To be removed: 3.3.0) Use exceptions instead.
+	 */
 	public function error($message, $code = 500)
 	{
 		return $this->message($message, array(), 'INFORMATION', $code);
@@ -166,7 +187,9 @@ class helper
 			'MESSAGE_TITLE'	=> $message_title,
 		));
 
-		return $this->render('message_body.html', $message_title, $code);
+		$template_file = $this->in_admin ? 'acp/message_body.html' : 'message_body.html';
+
+		return $this->render($template_file, $message_title, $code);
 	}
 
 	/**
@@ -184,10 +207,10 @@ class helper
 	}
 
 	/**
-	* Return the current url
-	*
-	* @return string
-	*/
+	 * Return the current url
+	 *
+	 * @return string
+	 */
 	public function get_current_url()
 	{
 		return generate_board_url(true) . $this->request->escape($this->symfony_request->getRequestUri(), true);

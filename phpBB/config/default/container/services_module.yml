@@ -8,3 +8,13 @@ services:
             - '%tables.modules%'
             - '%core.root_path%'
             - '%core.php_ext%'
+
+    module.cp.manager:
+        class: phpbb\module\cp_manager
+        arguments:
+            - '@service_container'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@language'
+            - '@template'
+            - '%tables.modules%'
