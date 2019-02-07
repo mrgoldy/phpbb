@@ -26,7 +26,10 @@ function adm_page_header($page_title)
 {
 	global $config, $user, $template;
 	global $phpbb_root_path, $phpbb_admin_path, $phpEx, $SID, $_SID;
-	global $phpbb_dispatcher, $phpbb_container;
+	global $phpbb_dispatcher, $phpbb_container, $phpbb_path_helper;
+
+	$phpbb_root_path = $phpbb_path_helper->update_web_root_path($phpbb_root_path);
+	$phpbb_admin_path = $phpbb_path_helper->update_web_root_path($phpbb_admin_path);
 
 	if (defined('HEADER_INC'))
 	{

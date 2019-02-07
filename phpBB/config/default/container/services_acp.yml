@@ -2,14 +2,29 @@ services:
     phpbb.acp.controller:
         class: phpbb\acp\controller
         arguments:
+            - '@auth'
             - '@controller.helper'
             - '@language'
             - '@module.cp.manager'
-            - '%core.root_path%'
-            - '%core.php_ext%'
+            - '@path_helper'
+            - '@template'
+            - '@user'
 
     # General
     acp_main:
         class: phpbb\acp\general\index
         arguments:
+            - '@auth'
+            - '@cache.driver'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@filesystem'
             - '@controller.helper'
+            - '@language'
+            - '@log'
+            - '@path_helper'
+            - '@request'
+            - '@template'
+            - '@user'

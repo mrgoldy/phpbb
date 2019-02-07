@@ -17,12 +17,13 @@ class cp_manager
 	protected $template;
 	protected $table;
 
-	protected $class	= '';
-	protected $category = '';
-	protected $mode		= '';
-	protected $mode_id	= 0;
-	protected $modules	= array();
-	protected $parents	= array();
+	protected $class		= '';
+	protected $category 	= '';
+	protected $mode			= '';
+	protected $category_id	= 0;
+	protected $mode_id		= 0;
+	protected $modules		= array();
+	protected $parents		= array();
 
 	public function __construct(ContainerInterface $container, db $db, helper $helper, language $lang, template $template, $modules_table)
 	{
@@ -36,35 +37,77 @@ class cp_manager
 
 	public function build($class, $category, $mode)
 	{
+		// @todo migration
 		$this->update();
 
 		$this->class	= (string) $class;
 		$this->category = (string) $category;
 		$this->mode		= (string) $mode;
 
-		# Check class existance
+		if (!in_array($this->class, array('acp', 'mcp', 'ucp')))
+		{
+			trigger_error('0'); // @todo throw exception
+		}
 
 		$this->get_modules();
 
-		# Check category existance
-		# Check category enabled
-		# Check category empty
-		# Check category authentication
-
-		# Check mode existance
-		# Check mode enabled
-		# Check mode authentication
-
 		$this->build_navigation();
+
+		if (!isset($this->modules[$this->category_id]))
+		{
+			trigger_error('1'); // @todo throw exception
+		}
+
+		if (!$this->modules[$this->category_id]['module_enabled'])
+		{
+			trigger_error('2'); // @todo throw exception
+		}
+
+		# Check category authentication
+		if (!true)
+		{
+			trigger_error('3'); // @todo throw exception
+		}
 	}
 
 	public function display()
 	{
-		$module = $this->modules[$this->mode_id];
-		$service = $module['module_basename'];
-		$function = $module['module_mode'];
+		if (!isset($this->modules[$this->mode_id]))
+		{
+			trigger_error('4'); // @todo throw exception
+		}
 
-		return $this->container->get($service)->$function();
+		if (!$this->modules[$this->mode_id]['module_enabled'])
+		{
+			trigger_error('5'); // @todo throw exception
+		}
+
+		# Check mode authentication
+		if (!true)
+		{
+			trigger_error('6'); // @todo throw exception
+		}
+
+		$module = $this->modules[$this->mode_id];
+		$basename = $module['module_basename'];
+		$function = $module['module_mode'];
+		$service = null;
+
+		try
+		{
+			$service = $this->container->get($basename);
+		}
+		catch (\Exception $e)
+		{
+			trigger_error('7'); // @todo throw exception
+		}
+
+		if (!method_exists($service, $function))
+		{
+			trigger_error('8'); // @todo throw exception
+		}
+
+		return $service->$function();
 	}
 
 	public function get_modules()
@@ -87,8 +130,6 @@ class cp_manager
 
 	public function build_navigation()
 	{
-		$category_id = 0;
-
 		# Categories
 		foreach ($this->parents[0] as $category)
 		{
@@ -113,18 +154,18 @@ class cp_manager
 			# Assign vars
 			$this->template->assign_block_vars($this->class . '_categories', $this->assign_tpl_vars($category, 'category'));
 
-			if ($category['module_slug'] == $this->category)
+			if ($this->category === $category['module_slug'])
 			{
-				$category_id = $category['module_id'];
+				$this->category_id = (int) $category['module_id'];
 			}
 		}
 
 		# Subcategories
-		if ($category_id)
+		if ($this->category_id)
 		{
-			foreach ($this->parents[$category_id] as $subcategory)
+			foreach ($this->parents[$this->category_id] as $subcategory)
 			{
-				if ($this->mode == $subcategory['module_slug'])
+				if ($this->mode === $subcategory['module_slug'])
 				{
 					$this->mode_id = (int) $subcategory['module_id'];
 				}
@@ -231,26 +272,24 @@ class cp_manager
 		switch ($type)
 		{
 			case 'category':
-				$s_selected = $this->category === $module['module_slug'];
+				return (bool) $this->category === $module['module_slug'];
 			break;
 
 			case 'subcategory':
 				# Get all slugs from the modes belonging to this subcategory
 				$slugs = array_column($this->parents[$module['module_id']], 'module_slug');
 
-				$s_selected = in_array($this->mode, $slugs);
+				return (bool) in_array($this->mode, $slugs);
 			break;
 
 			case 'mode':
-				$s_selected = $this->mode === $module['module_slug'];
+				return (bool) $this->mode === $module['module_slug'];
 			break;
 
 			default:
-				$s_selected = false;
+				return false;
 			break;
 		}
-
-		return $s_selected;
 	}
 
 	public function get_route($module, $type)
@@ -262,7 +301,7 @@ class cp_manager
 		switch ($type)
 		{
 			case 'category':
-				$u_view = $this->helper->route($controller, array('category' => $slug));
+				return (string) $this->helper->route($controller, array('category' => $slug));
 			break;
 
 			case 'mode':
@@ -270,20 +309,13 @@ class cp_manager
 				$category_id = $this->modules[$subcategory_id]['parent_id'];
 				$category = $this->modules[$category_id]['module_slug'];
 
-				if (empty($module['module_slug']))
-				{
-					print_r($module['module_langname']);
-				}
-
-				$u_view = $this->helper->route($controller, array('category' => $category, 'mode' => $slug));
+				return (string) $this->helper->route($controller, array('category' => $category, 'mode' => $slug));
 			break;
 
 			default:
-				$u_view = '';
+				return '';
 			break;
 		}
-
-		return $u_view;
 	}
 
 	/** @todo migration */
