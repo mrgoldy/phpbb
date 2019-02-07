@@ -24,6 +24,7 @@ class cp_manager
 	protected $mode_id		= 0;
 	protected $modules		= array();
 	protected $parents		= array();
+	protected $slugs		= array();
 
 	public function __construct(ContainerInterface $container, db $db, helper $helper, language $lang, template $template, $modules_table)
 	{
@@ -99,15 +100,25 @@ class cp_manager
 		}
 		catch (\Exception $e)
 		{
-			trigger_error('7'); // @todo throw exception
+			trigger_error("Service needs to be declared for: <code>$basename</code><br>With either of the functions: <code>$function()</code> or <code>main()</code>"); // @todo throw exception
 		}
 
-		if (!method_exists($service, $function))
+		if ($s_main = !method_exists($service, $function))
 		{
-			trigger_error('8'); // @todo throw exception
+			if (!method_exists($service, 'main'))
+			{
+				trigger_error("Service <code>$basename</code> does not have the correct function(s): <code>$function()</code> or <code>main()</code>"); // @todo throw exception
+			}
 		}
 
-		return $service->$function();
+		if ($s_main)
+		{
+			return $service->main($function);
+		}
+		else
+		{
+			return $service->$function();
+		}
 	}
 
 	public function get_modules()
@@ -124,6 +135,13 @@ class cp_manager
 
 			$this->modules[$mid] = $row;
 			$this->parents[$pid][$mid] = $row;
+
+			# Only set first occurrence
+			if (!isset($this->slugs[$row['module_slug']]))
+			{
+				$this->slugs[$row['module_slug']] = $row;
+			}
+
 		}
 		$this->db->sql_freeresult($result);
 	}
@@ -160,24 +178,67 @@ class cp_manager
 			}
 		}
 
-		# Subcategories
-		if ($this->category_id)
+		// No category was found
+		if (empty($this->category_id))
 		{
-			foreach ($this->parents[$this->category_id] as $subcategory)
+			// Check if it is a mode without a category
+			if (isset($this->slugs[$this->category]))
 			{
-				if ($this->mode === $subcategory['module_slug'])
+				$parent_id = (int) $this->slugs[$this->category]['parent_id'];
+				$parent = $this->modules[$parent_id];
+
+				switch ((int) $parent['parent_id'])
 				{
-					$this->mode_id = (int) $subcategory['module_id'];
+					case 0:
+						$this->category_id = (int) $parent['module_id'];
+					break;
+
+					default:
+						$category = $this->modules[$parent['parent_id']];
+
+						$this->category_id = (int) $category['module_id'];
+					break;
+				}
+			}
+		}
+
+		# Subcategories
+		foreach ($this->parents[$this->category_id] as $subcategory)
+		{
+			if ($this->mode === $subcategory['module_slug'])
+			{
+				$this->mode_id = (int) $subcategory['module_id'];
+			}
+
+			# Enabled and Display
+			if (!$subcategory['module_enabled'] || !$subcategory['module_display'])
+			{
+				continue;
+			}
+
+			# Empty
+			if ($this->is_empty($subcategory['module_id']))
+			{
+				continue;
+			}
+
+			# Authorised
+			if (!true)
+			{
+				continue;
+			}
+
+			$this->template->assign_block_vars($this->class . '_subcategories', $this->assign_tpl_vars($subcategory, 'subcategory'));
+
+			foreach ($this->parents[$subcategory['module_id']] as $mode)
+			{
+				if ($this->mode == $mode['module_slug'])
+				{
+					$this->mode_id = (int) $mode['module_id'];
 				}
 
 				# Enabled and Display
-				if (!$subcategory['module_enabled'] || !$subcategory['module_display'])
-				{
-					continue;
-				}
-
-				# Empty
-				if ($this->is_empty($subcategory['module_id']))
+				if (!$mode['module_enabled'] || !$mode['module_display'])
 				{
 					continue;
 				}
@@ -188,29 +249,7 @@ class cp_manager
 					continue;
 				}
 
-				$this->template->assign_block_vars($this->class . '_subcategories', $this->assign_tpl_vars($subcategory, 'subcategory'));
-
-				foreach ($this->parents[$subcategory['module_id']] as $mode)
-				{
-					if ($this->mode == $mode['module_slug'])
-					{
-						$this->mode_id = (int) $mode['module_id'];
-					}
-
-					# Enabled and Display
-					if (!$mode['module_enabled'] || !$mode['module_display'])
-					{
-						continue;
-					}
-
-					# Authorised
-					if (!true)
-					{
-						continue;
-					}
-
-					$this->template->assign_block_vars($this->class . '_subcategories.modes', $this->assign_tpl_vars($mode, 'mode'));
-				}
+				$this->template->assign_block_vars($this->class . '_subcategories.modes', $this->assign_tpl_vars($mode, 'mode'));
 			}
 		}
 	}

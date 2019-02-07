@@ -497,7 +497,7 @@ class index
 				$this->template->assign_vars(array(
 					'S_VERSION_UP_TO_DATE'		=> empty($updates_available),
 					'S_VERSION_UPGRADEABLE'		=> !empty($upgrades_available),
-					'UPGRADE_INSTRUCTIONS'		=> !empty($upgrades_available) ? $this->user->lang('UPGRADE_INSTRUCTIONS', $upgrades_available['current'], $upgrades_available['announcement']) : false,
+					'UPGRADE_INSTRUCTIONS'		=> !empty($upgrades_available) ? $this->lang->lang('UPGRADE_INSTRUCTIONS', $upgrades_available['current'], $upgrades_available['announcement']) : false,
 				));
 			}
 			catch (\RuntimeException $e)
@@ -658,7 +658,7 @@ class index
 					'POSTS'			=> ($row['user_posts']) ? $row['user_posts'] : 0,
 					'REMINDED'		=> $row['user_reminded'],
 
-					'REMINDED_EXPLAIN'	=> $this->user->lang('USER_LAST_REMINDED', (int) $row['user_reminded'], $this->user->format_date($row['user_reminded_time'])),
+					'REMINDED_EXPLAIN'	=> $this->lang->lang('USER_LAST_REMINDED', (int) $row['user_reminded'], $this->user->format_date($row['user_reminded_time'])),
 
 					'USERNAME_FULL'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], false, $this->helper->route('phpbb_acp_controller', array('category' => 'usergroup', 'mode' => 'manage-users'))),
 					'USERNAME'			=> get_username_string('username', $row['user_id'], $row['username'], $row['user_colour']),
@@ -700,7 +700,7 @@ class index
 			{
 				$this->template->assign_vars(array(
 					'S_SEARCH_INDEX_MISSING'	=> true,
-					'L_NO_SEARCH_INDEX'			=> $this->user->lang('NO_SEARCH_INDEX', $search->get_name(), '<a href="' . $this->helper->route('phpbb_acp_controller', array('category' => 'maintenance', 'mode' => 'search-index')) . '">', '</a>'),
+					'L_NO_SEARCH_INDEX'			=> $this->lang->lang('NO_SEARCH_INDEX', $search->get_name(), '<a href="' . $this->helper->route('phpbb_acp_controller', array('category' => 'maintenance', 'mode' => 'search-index')) . '">', '</a>'),
 				));
 			}
 		}

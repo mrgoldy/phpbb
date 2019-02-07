@@ -28,3 +28,19 @@ services:
             - '@request'
             - '@template'
             - '@user'
+
+    acp_board:
+        class: phpbb\acp\general\board
+        arguments:
+            - '@cache.driver'
+            - '@config'
+            - '@service_container'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@controller.helper'
+            - '@language'
+            - '@log'
+            - '@path_helper'
+            - '@request'
+            - '@template'
+            - '@user'
