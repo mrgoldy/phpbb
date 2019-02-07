@@ -181,21 +181,27 @@ class cp_manager
 		// No category was found
 		if (empty($this->category_id))
 		{
-			// Check if it is a mode without a category
+			// Check if it is a mode without a category (/admin/index instead of admin/general/index)
 			if (isset($this->slugs[$this->category]))
 			{
 				$parent_id = (int) $this->slugs[$this->category]['parent_id'];
 				$parent = $this->modules[$parent_id];
 
+				$this->mode = $this->category;
+
 				switch ((int) $parent['parent_id'])
 				{
+					// It's a direct child
 					case 0:
+						$this->category = (string) $parent['module_slug'];
 						$this->category_id = (int) $parent['module_id'];
 					break;
 
+					// There is a subcategory in between
 					default:
 						$category = $this->modules[$parent['parent_id']];
 
+						$this->category = $category['module_slug'];
 						$this->category_id = (int) $category['module_id'];
 					break;
 				}
@@ -311,7 +317,7 @@ class cp_manager
 		switch ($type)
 		{
 			case 'category':
-				return (bool) $this->category === $module['module_slug'];
+				return (bool) ($this->category === $module['module_slug']);
 			break;
 
 			case 'subcategory':
@@ -322,7 +328,7 @@ class cp_manager
 			break;
 
 			case 'mode':
-				return (bool) $this->mode === $module['module_slug'];
+				return (bool) ($this->mode === $module['module_slug']);
 			break;
 
 			default:
