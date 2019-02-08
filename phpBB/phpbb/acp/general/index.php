@@ -609,7 +609,7 @@ class index
 			'U_ACTION'				=> $this->helper->route('phpbb_acp_controller'),
 			'U_ADMIN_LOG'			=> $this->helper->route('phpbb_acp_controller', array('category' => 'maintenance', 'mode' => 'admin-logs')),
 			'U_INACTIVE_USERS'		=> $this->helper->route('phpbb_acp_controller', array('category' => 'usergroup', 'mode' => 'inactive-users')),
-			'U_VERSIONCHECK'		=> $this->helper->route('phpbb_acp_controller', array('category' => 'server', 'mode' => 'version-check')),
+			'U_VERSIONCHECK'		=> $this->helper->route('phpbb_acp_controller', array('category' => 'system', 'mode' => 'version-check')),
 			'U_VERSIONCHECK_FORCE'	=> $this->helper->route('phpbb_acp_controller', array('category' => 'general', 'mode' => 'index', 'versioncheck_force' => true)),
 			'U_ATTACH_ORPHAN'		=> $this->helper->route('phpbb_acp_controller', array('category' => 'posting', 'mode' => 'orphan-attachments')),
 

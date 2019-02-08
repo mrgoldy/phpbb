@@ -7,6 +7,7 @@ use phpbb\db\driver\driver_interface as db;
 use phpbb\language\language;
 use phpbb\template\template;
 use phpbb\controller\helper;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class cp_manager
 {
@@ -17,14 +18,7 @@ class cp_manager
 	protected $template;
 	protected $table;
 
-	protected $class		= '';
-	protected $category 	= '';
-	protected $mode			= '';
-	protected $category_id	= 0;
-	protected $mode_id		= 0;
-	protected $modules		= array();
-	protected $parents		= array();
-	protected $slugs		= array();
+	protected $default = 'index'; // @todo
 
 	public function __construct(ContainerInterface $container, db $db, helper $helper, language $lang, template $template, $modules_table)
 	{
@@ -36,274 +30,291 @@ class cp_manager
 		$this->table		= $modules_table;
 	}
 
-	public function build($class, $category, $mode)
+	public function build($class, $slug)
 	{
-		// @todo migration
 		$this->update();
 
-		$this->class	= (string) $class;
-		$this->category = (string) $category;
-		$this->mode		= (string) $mode;
+		$module = $index = array();
+		$modules = $parents = array();
+		$first = array();
+		$allowed = array(
+			'categories'	=> array(),
+			'subcategories'	=> array(),
+		);
+		$show = array(
+			'modes'			=> array(),
+			'categories'	=> array(),
+			'subcategories'	=> array(),
+		);
 
-		if (!in_array($this->class, array('acp', 'mcp', 'ucp')))
+		$sql = 'SELECT *
+				FROM ' . $this->table . '
+				WHERE module_class = "' . $this->db->sql_escape($class) . '"
+				ORDER by left_id ASC';
+		$result = $this->db->sql_query($sql);
+		$rowset = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+
+		foreach ($rowset as $row)
 		{
-			trigger_error('0'); // @todo throw exception
+			$module_id = (int) $row['module_id'];
+			$parent_id = (int) $row['parent_id'];
+
+			$modules[$module_id] = $row;
+			$parents[$parent_id][$module_id] = $row;
+
+			// Grab the default ACP page
+			if ($row['module_slug'] === $this->default)
+			{
+				$index = $row;
+			}
+
+			$check = $this->module_check($row);
+			$type = $this->module_type($row);
+
+			if ($row['module_slug'] === $slug && in_array($type, array('category', 'mode')))
+			{
+				$module = $row;
+			}
+
+			if (empty($check))
+			{
+				switch ($type)
+				{
+					case 'category':
+						$allowed['categories'][] = $module_id;
+					break;
+
+					case 'subcategory':
+						if (in_array($parent_id, $allowed['categories']))
+						{
+							$allowed['subcategories'][] = $module_id;
+						}
+					break;
+
+					case 'mode':
+						// Parent's parent id
+						$category_id = $modules[$parent_id]['parent_id'];
+
+						if (
+							(!empty($category_id) && in_array($category_id, $allowed['categories']) && in_array($parent_id, $allowed['subcategories']))
+							|| (empty($category_id) && in_array($parent_id, $allowed['categories']))
+						)
+						{
+							$show['modes'][] = $module_id;
+
+							if (!empty($category_id))
+							{
+								$show['categories'][] = $category_id;
+								$show['subcategories'][] = $parent_id;
+							}
+							else
+							{
+								$show['categories'][] = $parent_id;
+							}
+
+							$first_id = $category_id ? $category_id : $parent_id;
+
+							if (empty($first[$first_id]))
+							{
+								$first[$first_id] = $module_id;
+							}
+						}
+					break;
+				}
+			}
 		}
 
-		$this->get_modules();
+		// Default to index page if no module was found
+		$active = $module ? $module : $index;
 
-		$this->build_navigation();
+		// Default to first mode if the slug is a category
+		$active = $this->module_type($active) !== 'category' ? $active : $modules[$first[$active['module_id']]];
 
-		if (!isset($this->modules[$this->category_id]))
+		// Default to index page if mode is not accessible
+		$active = !$this->module_check($active, false) ? $active : $index;
+
+		// Get active category and subcategory
+		$active_category = (int) $active['parent_id'];
+		$active_subcategory = 0;
+
+		if (!empty($modules[$active_category]['parent_id']))
 		{
-			trigger_error('1'); // @todo throw exception
+			$active_subcategory = (int) $modules[$active_category]['module_id'];
+			$active_category = (int) $modules[$active_category]['parent_id'];
 		}
 
-		if (!$this->modules[$this->category_id]['module_enabled'])
+		// Build categories
+		foreach ($parents[0] as $category_id => $category)
 		{
-			trigger_error('2'); // @todo throw exception
+			if (!in_array($category_id, $allowed['categories']))
+			{
+				continue;
+			}
+
+			if (!in_array($category_id, $show['categories']))
+			{
+				continue;
+			}
+
+			$this->template->assign_block_vars($class . '_categories', $this->assign_tpl_vars($category, $active_category));
 		}
 
-		# Check category authentication
-		if (!true)
+		// Build subcategories and modes
+		// Children of a category can either be a subcategory or a mode, so lets call them "child"
+		foreach ($parents[$active_category] as $child_id => $child)
 		{
-			trigger_error('3'); // @todo throw exception
-		}
-	}
+			$active_id = 0;
 
-	public function display()
-	{
-		if (!isset($this->modules[$this->mode_id]))
-		{
-			trigger_error('4'); // @todo throw exception
+			switch ($this->module_type($child))
+			{
+				case 'subcategory':
+					if (!in_array($child_id, $allowed['subcategories']))
+					{
+						continue 2;
+					}
+
+					if (!in_array($child_id, $show['subcategories']))
+					{
+						continue 2;
+					}
+
+					$active_id = $active_subcategory;
+				break;
+
+				case 'mode':
+					if (!in_array($child_id, $show['modes']))
+					{
+						continue 2;
+					}
+
+					$active_id = $active['module_id'];
+				break;
+			}
+
+			$this->template->assign_block_vars($class . '_menu', $this->assign_tpl_vars($child, $active_id));
+
+			if (!empty($parents[$child_id]))
+			{
+				foreach ($parents[$child_id] as $mode_id => $mode)
+				{
+					if (!in_array($mode_id, $show['modes']))
+					{
+						continue;
+					}
+
+					$this->template->assign_block_vars($class . '_menu.modes', $this->assign_tpl_vars($mode, $active['module_id']));
+				}
+			}
 		}
 
-		if (!$this->modules[$this->mode_id]['module_enabled'])
-		{
-			trigger_error('5'); // @todo throw exception
-		}
+		// Error checking on mode and parents
 
-		# Check mode authentication
-		if (!true)
-		{
-			trigger_error('6'); // @todo throw exception
-		}
-
-		$module = $this->modules[$this->mode_id];
-		$basename = $module['module_basename'];
-		$function = $module['module_mode'];
-		$service = null;
+		// Display the page
+		$basename = $active['module_basename'];
+		$function = $active['module_mode'];
+		$object = null;
 
 		try
 		{
-			$service = $this->container->get($basename);
+			// Try to get the basename as a service declaration
+			$object = $this->container->get($basename);
+		}
+		catch (ServiceNotFoundException $e)
+		{
+			// If the service declaration was not found
+			// try to find it as a class
+			if (class_exists($basename))
+			{
+				$object = new $basename;
+			}
+			else
+			{
+				trigger_error('no service nor class');
+			}
 		}
 		catch (\Exception $e)
 		{
-			trigger_error("Service needs to be declared for: <code>$basename</code><br>With either of the functions: <code>$function()</code> or <code>main()</code>"); // @todo throw exception
+			trigger_error('container->get() error');
 		}
 
-		if ($s_main = !method_exists($service, $function))
-		{
-			if (!method_exists($service, 'main'))
-			{
-				trigger_error("Service <code>$basename</code> does not have the correct function(s): <code>$function()</code> or <code>main()</code>"); // @todo throw exception
-			}
-		}
+		return $object->$function();
+	}
 
-		if ($s_main)
+	protected function module_type($module)
+	{
+		if (empty($module['parent_id']))
 		{
-			return $service->main($function);
+			return 'category';
+		}
+		else if (empty($module['module_basename']))
+		{
+			return 'subcategory';
 		}
 		else
 		{
-			return $service->$function();
+			return 'mode';
 		}
 	}
 
-	public function get_modules()
+	protected function module_check($module, $check_display = true)
 	{
-		$sql = 'SELECT *
-				FROM ' . $this->table . '
-				WHERE module_class = "' . $this->db->sql_escape($this->class) . '"
-				ORDER BY left_id ASC';
-		$result = $this->db->sql_query($sql);
-		while($row = $this->db->sql_fetchrow($result))
+		# Enabled
+		if ($module['module_disabled'])
 		{
-			$pid = (int) $row['parent_id'];
-			$mid = (int) $row['module_id'];
-
-			$this->modules[$mid] = $row;
-			$this->parents[$pid][$mid] = $row;
-
-			# Only set first occurrence
-			if (!isset($this->slugs[$row['module_slug']]))
-			{
-				$this->slugs[$row['module_slug']] = $row;
-			}
-
+			return 'Module disabled'; // @todo
 		}
-		$this->db->sql_freeresult($result);
+
+		# Display
+		if (!$module['module_display'] && $check_display)
+		{
+			return true;
+		}
+
+		# Authorised
+		if (!true)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
-	public function build_navigation()
-	{
-		# Categories
-		foreach ($this->parents[0] as $category)
-		{
-			# Enabled and Display
-			if (!$category['module_enabled'] || !$category['module_display'])
-			{
-				continue;
-			}
-
-			# Empty
-			if ($this->is_empty($category['module_id']))
-			{
-				continue;
-			}
-
-			# Authorised
-			if (!true)
-			{
-				continue;
-			}
-
-			# Assign vars
-			$this->template->assign_block_vars($this->class . '_categories', $this->assign_tpl_vars($category, 'category'));
-
-			if ($this->category === $category['module_slug'])
-			{
-				$this->category_id = (int) $category['module_id'];
-			}
-		}
-
-		// No category was found
-		if (empty($this->category_id))
-		{
-			// Check if it is a mode without a category (/admin/index instead of admin/general/index)
-			if (isset($this->slugs[$this->category]))
-			{
-				$parent_id = (int) $this->slugs[$this->category]['parent_id'];
-				$parent = $this->modules[$parent_id];
-
-				$this->mode = $this->category;
-
-				switch ((int) $parent['parent_id'])
-				{
-					// It's a direct child
-					case 0:
-						$this->category = (string) $parent['module_slug'];
-						$this->category_id = (int) $parent['module_id'];
-					break;
-
-					// There is a subcategory in between
-					default:
-						$category = $this->modules[$parent['parent_id']];
-
-						$this->category = $category['module_slug'];
-						$this->category_id = (int) $category['module_id'];
-					break;
-				}
-			}
-		}
-
-		# Subcategories
-		foreach ($this->parents[$this->category_id] as $subcategory)
-		{
-			if ($this->mode === $subcategory['module_slug'])
-			{
-				$this->mode_id = (int) $subcategory['module_id'];
-			}
-
-			# Enabled and Display
-			if (!$subcategory['module_enabled'] || !$subcategory['module_display'])
-			{
-				continue;
-			}
-
-			# Empty
-			if ($this->is_empty($subcategory['module_id']))
-			{
-				continue;
-			}
-
-			# Authorised
-			if (!true)
-			{
-				continue;
-			}
-
-			$this->template->assign_block_vars($this->class . '_subcategories', $this->assign_tpl_vars($subcategory, 'subcategory'));
-
-			foreach ($this->parents[$subcategory['module_id']] as $mode)
-			{
-				if ($this->mode == $mode['module_slug'])
-				{
-					$this->mode_id = (int) $mode['module_id'];
-				}
-
-				# Enabled and Display
-				if (!$mode['module_enabled'] || !$mode['module_display'])
-				{
-					continue;
-				}
-
-				# Authorised
-				if (!true)
-				{
-					continue;
-				}
-
-				$this->template->assign_block_vars($this->class . '_subcategories.modes', $this->assign_tpl_vars($mode, 'mode'));
-			}
-		}
-	}
-
-	public function is_empty($module_id)
-	{
-		if (!empty($this->parents[$module_id]))
-		{
-			foreach ($this->parents[$module_id] as $module)
-			{
-				if (!$module['module_enabled'] || !$module['module_display'])
-				{
-					continue;
-				}
-
-				if (!empty($this->parents[$module['module_id']]))
-				{
-					$this->is_empty($module['module_id']);
-				}
-
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	public function assign_tpl_vars($module, $type)
+	protected function assign_tpl_vars($module, $selected)
 	{
 		return array(
-			'ID'			=> $module['module_id'],
-			'L_TITLE'		=> (string) $this->get_title($module),
-			'S_SELECTED'	=> (bool) $this->is_selected($module, $type),
-			'U_VIEW'		=> (string) $this->get_route($module, $type),
+			'ID'			=> (int) $module['module_id'],
+			'L_TITLE'		=> (string) $this->module_title($module),
+			'S_SELECTED'	=> (bool) ($module['module_id'] == $selected),
+			'U_VIEW'		=> (string) $this->module_route($module),
 		);
 	}
 
-	public function get_title($module)
+	protected function module_title($module)
 	{
 		$title = $this->lang->lang($module['module_langname']);
 
-		$function = 'module_title_' . utf8_strtolower($module['module_langname']);
-
 		if ($module['module_basename'])
 		{
+			$function = 'module_title_' . utf8_strtolower($module['module_langname']);
+
 			if (method_exists($module['module_basename'], $function))
 			{
-				$object = new $module['module_basename'];
+				if (class_exists($module['module_basename']))
+				{
+					$object = new $module['module_basename'];
+				}
+				else
+				{
+					try
+					{
+						$object = $this->container->get($module['module_basename']);
+					}
+					catch (\Exception $e)
+					{
+						return $title;
+					}
+				}
 
 				$title = $object->$function();
 			}
@@ -312,64 +323,21 @@ class cp_manager
 		return $title;
 	}
 
-	public function is_selected($module, $type)
+	protected function module_route($module)
 	{
-		switch ($type)
+		if ($this->module_type($module) === 'subcategory')
 		{
-			case 'category':
-				return (bool) ($this->category === $module['module_slug']);
-			break;
-
-			case 'subcategory':
-				# Get all slugs from the modes belonging to this subcategory
-				$slugs = array_column($this->parents[$module['module_id']], 'module_slug');
-
-				return (bool) in_array($this->mode, $slugs);
-			break;
-
-			case 'mode':
-				return (bool) ($this->mode === $module['module_slug']);
-			break;
-
-			default:
-				return false;
-			break;
+			return '';
 		}
-	}
 
-	public function get_route($module, $type)
-	{
-		$controller = 'phpbb_' . $this->class . '_controller';
-
-		$slug = $module['module_slug'];
-
-		switch ($type)
-		{
-			case 'category':
-				return (string) $this->helper->route($controller, array('category' => $slug));
-			break;
-
-			case 'mode':
-				$subcategory_id = $module['parent_id'];
-				$category_id = $this->modules[$subcategory_id]['parent_id'];
-				$category = $this->modules[$category_id]['module_slug'];
-
-				return (string) $this->helper->route($controller, array('category' => $category, 'mode' => $slug));
-			break;
-
-			default:
-				return '';
-			break;
-		}
+		return $this->helper->route('phpbb_acp_controller', array('slug' => $module['module_slug']));
 	}
 
 	/** @todo migration */
-	public function update()
+	protected function update()
 	{
-		global $phpbb_container;
-
 		/** @var \phpbb\db\tools\tools_interface $db_tools */
-		$db_tools = $phpbb_container->get('dbal.tools');
+		$db_tools = $this->container->get('dbal.tools');
 
 		if ($db_tools->sql_column_exists($this->table, 'module_slug'))
 		{
@@ -380,7 +348,8 @@ class cp_manager
 
 		$sql = 'UPDATE ' . $this->table . '
 				SET module_slug = LOWER(REPLACE(REPLACE(REPLACE(module_langname, "ACP_", ""), "CAT_", ""), "_", "-"))
-				WHERE 1 = 1';
+				WHERE module_basename != ""
+					OR parent_id = 0';
 		$this->db->sql_query($sql);
 	}
 }

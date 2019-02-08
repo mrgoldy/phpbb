@@ -127,19 +127,23 @@
 						<strong>{USERNAME}</strong> [&nbsp;<a href="{U_LOGOUT}">{L_LOGOUT}</a>&nbsp;][&nbsp;<a href="{U_ADM_LOGOUT}">{L_ADM_LOGOUT}</a>&nbsp;]
 					</p>
 
-					{% for subcategory in acp_subcategories %}
-						<div class="menu-block">
-							<a class="header" href="javascript:void(0);">{{ subcategory.L_TITLE }}</a>
-							<ul>
-								{% for mode in subcategory.modes %}
-									<li{{ mode.S_SELECTED ? ' id="activemenu"' : '' }}>
-										<a href="{{ mode.U_VIEW }}">
-											<span>{{ mode.L_TITLE }}</span>
-										</a>
-									</li>
-								{% endfor %}
-							</ul>
-						</div>
+					{% for item in acp_menu %}
+						{% if item.modes %}
+							<div class="menu-block">
+								<a class="header" href="javascript:void(0);">{{ item.L_TITLE }}</a>
+								<ul>
+									{% for mode in item.modes %}
+										<li{{ mode.S_SELECTED ? ' id="activemenu"' : '' }}>
+											<a href="{{ mode.U_VIEW }}">
+												<span>{{ mode.L_TITLE }}</span>
+											</a>
+										</li>
+									{% endfor %}
+								</ul>
+							</div>
+						{% else %}
+							<a href="{{ item.U_VIEW }}">{{ item.L_TITLE }}</a>
+						{% endif %}
 					{% endfor %}
 				</div>
 

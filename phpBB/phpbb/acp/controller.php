@@ -38,7 +38,7 @@ class controller
 		$this->admin_path	= $this->root_path . $path_helper->get_adm_relative_path();
 	}
 
-	public function handle($category, $mode)
+	public function handle($slug, $page)
 	{
 		define('ADMIN_START', true);
 		define('NEED_SID', true);
@@ -81,10 +81,7 @@ class controller
 		// Define controller in admin
 		$this->helper->set_in_admin(true);
 
-		// Build navigation
-		$this->modules->build('acp', $category, $mode);
-
-		// Display mode
-		return $this->modules->display();
+		// Build navigation and display mode
+		return $this->modules->build('acp', $slug);
 	}
 }

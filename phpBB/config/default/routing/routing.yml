@@ -9,11 +9,18 @@
 #
 
 phpbb_acp_controller:
-    path: /admin/{category}/{mode}
+    path: /admin/{slug}
     defaults:
         _controller: phpbb.acp.controller:handle
-        category: general
-        mode: index
+        slug: 'index'
+        page: 1
+
+phpbb_acp_pagination:
+    path: /admin/{slug}/page-{page}
+    defaults:
+        _controller: phpbb.acp.controller:handle
+    requirements:
+        page: \d+
 
 phpbb_cron_routing:
     resource: cron.yml
