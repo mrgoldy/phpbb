@@ -128,22 +128,24 @@
 					</p>
 
 					{% for item in acp_menu %}
-						{% if item.modes %}
-							<div class="menu-block">
-								<a class="header" href="javascript:void(0);">{{ item.L_TITLE }}</a>
-								<ul>
-									{% for mode in item.modes %}
-										<li{{ mode.S_SELECTED ? ' id="activemenu"' : '' }}>
-											<a href="{{ mode.U_VIEW }}">
-												<span>{{ mode.L_TITLE }}</span>
-											</a>
-										</li>
-									{% endfor %}
-								</ul>
-							</div>
-						{% else %}
-							<a href="{{ item.U_VIEW }}">{{ item.L_TITLE }}</a>
-						{% endif %}
+						<div class="menu-block{{ item.modes ? '' : ' no-header' }}{{ item.S_SELECTED ? ' active' : '' }}">
+							{% if item.modes %}<a class="header" href="javascript:void(0);">{{ item.L_TITLE }}</a>{% endif %}
+							<ul>
+								{% for mode in item.modes %}
+									<li{{ mode.S_SELECTED ? ' id="activemenu"' : '' }}>
+										<a href="{{ mode.U_VIEW }}">
+											<span>{{ mode.L_TITLE }}</span>
+										</a>
+									</li>
+								{% else %}
+									<li{{ item.S_SELECTED ? ' id="activemenu"' : '' }}>
+										<a href="{{ item.U_VIEW }}">
+											<span>{{ item.L_TITLE }}</span>
+										</a>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
 					{% endfor %}
 				</div>
 

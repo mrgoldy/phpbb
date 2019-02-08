@@ -2,12 +2,15 @@
 
 namespace phpbb\module;
 
+use phpbb\exception\http_exception;
+use phpbb\module\exception\module_not_found_exception;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use phpbb\db\driver\driver_interface as db;
 use phpbb\language\language;
 use phpbb\template\template;
 use phpbb\controller\helper;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class cp_manager
 {
@@ -33,6 +36,8 @@ class cp_manager
 	public function build($class, $slug)
 	{
 		$this->update();
+
+		$this->lang->add_lang('acp/modules');
 
 		$module = $index = array();
 		$modules = $parents = array();
@@ -63,7 +68,7 @@ class cp_manager
 			$modules[$module_id] = $row;
 			$parents[$parent_id][$module_id] = $row;
 
-			// Grab the default ACP page
+			// Grab the default *CP page
 			if ($row['module_slug'] === $this->default)
 			{
 				$index = $row;
@@ -130,6 +135,7 @@ class cp_manager
 
 		// Default to first mode if the slug is a category
 		$active = $this->module_type($active) !== 'category' ? $active : $modules[$first[$active['module_id']]];
+		$module = $this->module_type($module) !== 'category' ? $module : $modules[$first[$module['module_id']]];
 
 		// Default to index page if mode is not accessible
 		$active = !$this->module_check($active, false) ? $active : $index;
@@ -161,7 +167,6 @@ class cp_manager
 		}
 
 		// Build subcategories and modes
-		// Children of a category can either be a subcategory or a mode, so lets call them "child"
 		foreach ($parents[$active_category] as $child_id => $child)
 		{
 			$active_id = 0;
@@ -208,11 +213,34 @@ class cp_manager
 			}
 		}
 
-		// Error checking on mode and parents
+		// If the module was not found
+		if (empty($module))
+		{
+			throw new module_not_found_exception('NO_MODULE');
+		}
 
-		// Display the page
-		$basename = $active['module_basename'];
-		$function = $active['module_mode'];
+		// Check the module and its parents
+		$check_modules = array($modules['parent_id'], $module);
+
+		if (!empty($modules[$module['parent_id']]['parent_id']))
+		{
+			$category_id = $modules[$module['parent_id']]['parent_id'];
+
+			// Add the category to the top, so the check is top to bottom
+			array_unshift($check_modules, $modules[$category_id]);
+		}
+
+		foreach ($check_modules as $check_module)
+		{
+			if ($exception = $this->module_check($check_module, false))
+			{
+				throw new http_exception(403, $exception);
+			}
+		}
+
+		// Get the controller and function
+		$basename = $module['module_basename'];
+		$function = $module['module_mode'];
 		$object = null;
 
 		try
@@ -222,22 +250,24 @@ class cp_manager
 		}
 		catch (ServiceNotFoundException $e)
 		{
-			// If the service declaration was not found
-			// try to find it as a class
+			// If the service declaration was not found,
+			// Try to find it as a class
 			if (class_exists($basename))
 			{
 				$object = new $basename;
 			}
 			else
 			{
-				trigger_error('no service nor class');
+				throw new http_exception(400, "No service or class could be found for: “{$basename}”"); // @todo
 			}
 		}
-		catch (\Exception $e)
+
+		if (!method_exists($object, $function))
 		{
-			trigger_error('container->get() error');
+			throw new http_exception(400, "The object “{$basename}” does not have a required function: “{$function}”"); // @todo
 		}
 
+		// Send it off to the controller
 		return $object->$function();
 	}
 

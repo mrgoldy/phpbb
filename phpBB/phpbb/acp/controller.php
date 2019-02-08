@@ -48,7 +48,7 @@ class controller
 		# Extension languages
 
 		// Functions
-		include ('./includes/functions_acp.' . $this->php_ext);
+		include ($this->root_path . 'includes/functions_acp.' . $this->php_ext);
 		include ($this->root_path . 'includes/functions_admin.' . $this->php_ext);
 
 		// Have they authenticated (again) as an admin for this session?

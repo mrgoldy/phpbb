@@ -607,11 +607,11 @@ class index
 			'BOARD_VERSION'		=> $this->config['version'],
 
 			'U_ACTION'				=> $this->helper->route('phpbb_acp_controller'),
-			'U_ADMIN_LOG'			=> $this->helper->route('phpbb_acp_controller', array('category' => 'maintenance', 'mode' => 'admin-logs')),
-			'U_INACTIVE_USERS'		=> $this->helper->route('phpbb_acp_controller', array('category' => 'usergroup', 'mode' => 'inactive-users')),
-			'U_VERSIONCHECK'		=> $this->helper->route('phpbb_acp_controller', array('category' => 'system', 'mode' => 'version-check')),
-			'U_VERSIONCHECK_FORCE'	=> $this->helper->route('phpbb_acp_controller', array('category' => 'general', 'mode' => 'index', 'versioncheck_force' => true)),
-			'U_ATTACH_ORPHAN'		=> $this->helper->route('phpbb_acp_controller', array('category' => 'posting', 'mode' => 'orphan-attachments')),
+			'U_ADMIN_LOG'			=> $this->helper->route('phpbb_acp_controller', array('slug' => 'admin-logs')),
+			'U_INACTIVE_USERS'		=> $this->helper->route('phpbb_acp_controller', array('slug' => 'inactive-users')),
+			'U_VERSIONCHECK'		=> $this->helper->route('phpbb_acp_controller', array('slug' => 'version-check')),
+			'U_VERSIONCHECK_FORCE'	=> $this->helper->route('phpbb_acp_controller', array('versioncheck_force' => true)),
+			'U_ATTACH_ORPHAN'		=> $this->helper->route('phpbb_acp_controller', array('slug' => 'orphan-attachments')),
 
 			'S_VERSIONCHECK'	=> ($this->auth->acl_get('a_board')) ? true : false,
 			'S_ACTION_OPTIONS'	=> ($this->auth->acl_get('a_board')) ? true : false,
@@ -660,11 +660,11 @@ class index
 
 					'REMINDED_EXPLAIN'	=> $this->lang->lang('USER_LAST_REMINDED', (int) $row['user_reminded'], $this->user->format_date($row['user_reminded_time'])),
 
-					'USERNAME_FULL'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], false, $this->helper->route('phpbb_acp_controller', array('category' => 'usergroup', 'mode' => 'manage-users'))),
+					'USERNAME_FULL'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], false, $this->helper->route('phpbb_acp_controller', array('slug' => 'manage-users'))),
 					'USERNAME'			=> get_username_string('username', $row['user_id'], $row['username'], $row['user_colour']),
 					'USER_COLOR'		=> get_username_string('colour', $row['user_id'], $row['username'], $row['user_colour']),
 
-					'U_USER_ADMIN'	=> $this->helper->route('phpbb_acp_controller', array('category' => 'usergroup', 'mode' => 'manage-users', 'u' => (int) $row['user_id'])),
+					'U_USER_ADMIN'	=> $this->helper->route('phpbb_acp_controller', array('slug' => 'manage-users', 'u' => (int) $row['user_id'])),
 					'U_SEARCH_USER'	=> ($this->auth->acl_get('u_search')) ? append_sid("{$this->root_path}search.$this->php_ext", "author_id={$row['user_id']}&amp;sr=posts") : '',
 				));
 			}
@@ -700,7 +700,7 @@ class index
 			{
 				$this->template->assign_vars(array(
 					'S_SEARCH_INDEX_MISSING'	=> true,
-					'L_NO_SEARCH_INDEX'			=> $this->lang->lang('NO_SEARCH_INDEX', $search->get_name(), '<a href="' . $this->helper->route('phpbb_acp_controller', array('category' => 'maintenance', 'mode' => 'search-index')) . '">', '</a>'),
+					'L_NO_SEARCH_INDEX'			=> $this->lang->lang('NO_SEARCH_INDEX', $search->get_name(), '<a href="' . $this->helper->route('phpbb_acp_controller', array('slug' => 'search-index')) . '">', '</a>'),
 				));
 			}
 		}
