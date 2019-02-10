@@ -71,7 +71,6 @@ class module_auth
 			return true;
 		}
 
-		// With the code below we make sure only those elements get eval'd we really want to be checked
 		preg_match_all(
 			'/(?:
 				"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"         |
@@ -80,21 +79,25 @@ class module_auth
 				[^\s(),]+
 			)/x',
 			$module_auth,
-			$match
+			$matches
 		);
 
-		$tokens = $match[0];
+		$tokens = $matches[0];
 		for ($i = 0, $size = count($tokens); $i < $size; $i++)
 		{
+			// Make sure we are not transferring preg_match data
+			unset($match);
+
+			// Get the current value by reference
 			$token = &$tokens[$i];
+
 			switch ($token)
 			{
-				// Preserve operators
 				case ')':
 				case '(':
 				case '&&':
 				case '||':
-					// do nothing
+					// Preserve operators
 				break;
 
 				// Unset "," as that is used to join "$id" with "acl_*"
@@ -103,8 +106,13 @@ class module_auth
 				break;
 
 				// Auth: $auth->acl_get() with possible $forum_id
-				case (preg_match('#acl_(a-z0-9_]+)#', $token, $match) ? true : false):
-					if ($tokens[$i + 1] === ',' && $tokens[$i + 2] === '$id')
+				case (preg_match('#acl_([a-z0-9_]+)#', $token, $match) ? true : false):
+					if (
+						!empty($tokens[$i + 1]) &&
+						$tokens[$i + 1] === ',' &&
+						!empty($tokens[$i + 2]) &&
+						$tokens[$i + 2] === '$id'
+					)
 					{
 						$token = (bool) $this->auth->acl_get($match[1], (int) $forum_id);
 					}
@@ -115,32 +123,32 @@ class module_auth
 				break;
 
 				// Auth global: $auth->acl_getf_global()
-				case (preg_match('#aclf_([a-z0-9_]+)#', $token) ? true : false):
+				case (preg_match('#aclf_([a-z0-9_]+)#', $token, $match) ? true : false):
 					$token = (bool) $this->auth->acl_getf_global($match[1]);
 				break;
 
 				// Forum identifier: $id or !$id
-				case (preg_match('#(!)*\$id#', $token) ? true : false):
+				case (preg_match('#(!)*\$id#', $token, $match) ? true : false):
 					$token = (bool) ($match[1] === '!' ? empty($forum_id) : !empty($forum_id));
 				break;
 
 				// Config setting: $config['']
-				case (preg_match('#cfg_([a-z0-9_]+)#', $token) ? true : false):
+				case (preg_match('#cfg_([a-z0-9_]+)#', $token, $match) ? true : false):
 					$token = (bool) $this->config[$match[1]];
 				break;
 
 				// Request variable: $request->variable('', false)
-				case (preg_match('#request_([a-zA-Z0-9_]+)#', $token) ? true : false):
+				case (preg_match('#request_([a-zA-Z0-9_]+)#', $token, $match) ? true : false):
 					$token = (bool) $this->request->variable($match[1], false);
 				break;
 
 				// Extension is enabled
-				case (preg_match('#ext_([a-zA-Z0-9_/]+)#', $token) ? true : false):
+				case (preg_match('#ext_([a-zA-Z0-9_/]+)#', $token, $match) ? true : false):
 					$token = (bool) in_array($match[1], $this->extensions);
 				break;
 
 				// Config auth_method comparison
-				case (preg_match('#authmethod_([a-z0-9_\\\\]+)#', $token) ? true : false):
+				case (preg_match('#authmethod_([a-z0-9_\\\\]+)#', $token, $match) ? true : false):
 					$token = (bool) ($this->config['auth_method'] === $match[1]);
 				break;
 
@@ -203,7 +211,7 @@ class module_auth
 					// and the value is "false"
 					// and the operator is "&&"
 					// the authorisation is "false"
-					if (isset($operator[$i]) && $i === 0 && $operator[$i] === '&&')
+					if ($i === 0 && isset($operator[$i]) && $operator[$i] === '&&')
 					{
 						return false;
 					}
@@ -245,7 +253,10 @@ class module_auth
 				case ($value === ')'):
 					$j = $i--;
 
-					switch ($operator[$i])
+					// Is there an operator, otherwise default to "and"
+					$switch = !empty($operator[$i]) ? $operator[$i] : '&&';
+
+					switch ($switch)
 					{
 						case '||':
 							// Preserve a "true" value
@@ -273,7 +284,6 @@ class module_auth
 			}
 		}
 
-		// All checks passed, user is authorised
-		return true;
+		return isset($auth[0]) ? (bool) $auth[0] : false;
 	}
 }
