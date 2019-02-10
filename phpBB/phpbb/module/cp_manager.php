@@ -1,4 +1,15 @@
 <?php
+/**
+ *
+ * This file is part of the phpBB Forum Software package.
+ *
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ * For full copyright and license information, please see
+ * the docs/CREDITS.txt file.
+ *
+ */
 
 namespace phpbb\module;
 
@@ -18,17 +29,31 @@ class cp_manager
 	protected $db;
 	protected $helper;
 	protected $lang;
+	protected $module_auth;
 	protected $template;
 	protected $table;
 
-	protected $default = 'index'; // @todo
+	protected $default = array(
+		'acp' => 'index',
+		'mcp' => '', // @todo
+		'ucp' => '', // @todo
+	);
 
-	public function __construct(ContainerInterface $container, db $db, helper $helper, language $lang, template $template, $modules_table)
+	public function __construct(
+		ContainerInterface $container,
+		db $db,
+		helper $helper,
+		language $lang,
+		module_auth $module_auth,
+		template $template,
+		$modules_table
+	)
 	{
 		$this->container	= $container;
 		$this->db			= $db;
 		$this->helper		= $helper;
 		$this->lang			= $lang;
+		$this->module_auth	= $module_auth;
 		$this->template		= $template;
 		$this->table		= $modules_table;
 	}
@@ -69,7 +94,7 @@ class cp_manager
 			$parents[$parent_id][$module_id] = $row;
 
 			// Grab the default *CP page
-			if ($row['module_slug'] === $this->default)
+			if ($row['module_slug'] === $this->default[$class])
 			{
 				$index = $row;
 			}
@@ -292,7 +317,7 @@ class cp_manager
 		# Enabled
 		if ($module['module_disabled'])
 		{
-			return 'Module disabled'; // @todo
+			return 'MODULE_NOT_ACCESS';
 		}
 
 		# Display
@@ -302,9 +327,9 @@ class cp_manager
 		}
 
 		# Authorised
-		if (!true)
+		if (!$this->module_auth->check_auth($module['module_auth']))
 		{
-			return true;
+			return 'NOT_AUTHORISED';
 		}
 
 		return false;
@@ -326,7 +351,7 @@ class cp_manager
 
 		if ($module['module_basename'])
 		{
-			$function = 'module_title_' . utf8_strtolower($module['module_langname']);
+			$function = 'module_title';
 
 			if (method_exists($module['module_basename'], $function))
 			{

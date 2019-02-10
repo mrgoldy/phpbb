@@ -723,14 +723,14 @@ class board
 		}
 
 		$this->template->assign_vars(array(
-								   'L_TITLE'			=> $this->lang->lang($display_vars['title']),
-								   'L_TITLE_EXPLAIN'	=> $this->lang->lang($display_vars['title'] . '_EXPLAIN'),
+			'L_TITLE'			=> $this->lang->lang($display_vars['title']),
+			'L_TITLE_EXPLAIN'	=> $this->lang->lang($display_vars['title'] . '_EXPLAIN'),
 
-								   'S_ERROR'			=> (count($error)) ? true : false,
-								   'ERROR_MSG'			=> implode('<br />', $error),
+			'S_ERROR'			=> (count($error)) ? true : false,
+			'ERROR_MSG'			=> implode('<br />', $error),
 
-								   'U_ACTION'			=> $this->helper->get_current_url())
-		);
+			'U_ACTION'			=> $this->helper->get_current_url()
+		));
 
 		// Output relevant page
 		foreach ($display_vars['vars'] as $config_key => $vars)

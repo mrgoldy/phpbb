@@ -1,0 +1,279 @@
+<?php
+/**
+ *
+ * This file is part of the phpBB Forum Software package.
+ *
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ * For full copyright and license information, please see
+ * the docs/CREDITS.txt file.
+ *
+ */
+
+namespace phpbb\module;
+
+use phpbb\auth\auth;
+use phpbb\config\config;
+use phpbb\event\dispatcher;
+use phpbb\extension\manager;
+use phpbb\request\request;
+
+class module_auth
+{
+	/** @var \phpbb\auth\auth */
+	protected $auth;
+
+	/** @var \phpbb\config\config */
+	protected $config;
+
+	/** @var \phpbb\event\dispatcher */
+	protected $dispatcher;
+
+	/** @var \phpbb\request\request */
+	protected $request;
+
+	/** @var array All enabled extensions */
+	protected $extensions;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param \phpbb\auth\auth         $auth
+	 * @param \phpbb\config\config     $config
+	 * @param \phpbb\event\dispatcher  $dispatcher
+	 * @param \phpbb\extension\manager $ext_manager
+	 * @param \phpbb\request\request   $request
+	 */
+	public function __construct(auth $auth, config $config, dispatcher $dispatcher, manager $ext_manager, request $request)
+	{
+		$this->auth			= $auth;
+		$this->config		= $config;
+		$this->dispatcher	= $dispatcher;
+		$this->request		= $request;
+
+		$this->extensions	= array_keys($ext_manager->all_enabled());
+	}
+
+	/**
+	 * Check module authorisation.
+	 *
+	 * @param string	$module_auth	The module authorisation string
+	 * @param int		$forum_id		The forum identifier
+	 * @return bool						Whether the current user is allowed to access this module
+	 */
+	public function check_auth($module_auth, $forum_id = 0)
+	{
+		$module_auth = trim($module_auth);
+
+		if (empty($module_auth))
+		{
+			return true;
+		}
+
+		// With the code below we make sure only those elements get eval'd we really want to be checked
+		preg_match_all(
+			'/(?:
+				"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"         |
+				\'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'     |
+				[(),]                                  |
+				[^\s(),]+
+			)/x',
+			$module_auth,
+			$match
+		);
+
+		$tokens = $match[0];
+		for ($i = 0, $size = count($tokens); $i < $size; $i++)
+		{
+			$token = &$tokens[$i];
+			switch ($token)
+			{
+				// Preserve operators
+				case ')':
+				case '(':
+				case '&&':
+				case '||':
+					// do nothing
+				break;
+
+				// Unset "," as that is used to join "$id" with "acl_*"
+				case ',':
+					unset($tokens[$i]);
+				break;
+
+				// Auth: $auth->acl_get() with possible $forum_id
+				case (preg_match('#acl_(a-z0-9_]+)#', $token, $match) ? true : false):
+					if ($tokens[$i + 1] === ',' && $tokens[$i + 2] === '$id')
+					{
+						$token = (bool) $this->auth->acl_get($match[1], (int) $forum_id);
+					}
+					else
+					{
+						$token = (bool) $this->auth->acl_get($match[1]);
+					}
+				break;
+
+				// Auth global: $auth->acl_getf_global()
+				case (preg_match('#aclf_([a-z0-9_]+)#', $token) ? true : false):
+					$token = (bool) $this->auth->acl_getf_global($match[1]);
+				break;
+
+				// Forum identifier: $id or !$id
+				case (preg_match('#(!)*\$id#', $token) ? true : false):
+					$token = (bool) ($match[1] === '!' ? empty($forum_id) : !empty($forum_id));
+				break;
+
+				// Config setting: $config['']
+				case (preg_match('#cfg_([a-z0-9_]+)#', $token) ? true : false):
+					$token = (bool) $this->config[$match[1]];
+				break;
+
+				// Request variable: $request->variable('', false)
+				case (preg_match('#request_([a-zA-Z0-9_]+)#', $token) ? true : false):
+					$token = (bool) $this->request->variable($match[1], false);
+				break;
+
+				// Extension is enabled
+				case (preg_match('#ext_([a-zA-Z0-9_/]+)#', $token) ? true : false):
+					$token = (bool) in_array($match[1], $this->extensions);
+				break;
+
+				// Config auth_method comparison
+				case (preg_match('#authmethod_([a-z0-9_\\\\]+)#', $token) ? true : false):
+					$token = (bool) ($this->config['auth_method'] === $match[1]);
+				break;
+
+				default:
+					$auth_token = '';
+
+					/**
+					 * Check custom tokens for module authorisation.
+					 *
+					 * @event core.module_auth
+					 * @var string	auth_token		Set to a boolean as string ('true'/'false')
+					 *             					for the custom check
+					 * @var string	module_auth		The module_auth of the current module
+					 * @var int		forum_id		The current forum_id
+					 * @since 3.1.0-a3
+					 */
+					$vars = array('auth_token', 'module_auth', 'forum_id');
+					extract($this->dispatcher->trigger_event('core.module_auth', compact($vars)));
+
+					switch ($auth_token)
+					{
+						case 'true':
+							$token = true;
+						break;
+
+						case 'false':
+							$token = false;
+						break;
+
+						default:
+							unset($tokens[$i]);
+						break;
+					}
+				break;
+			}
+		}
+
+		return $this->array_reduce_auth($tokens);
+	}
+
+	/**
+	 * Reduce an array with operators and booleans to a single boolean.
+	 *
+	 * @param array		$array		Array produced by check_auth()
+	 * @return bool					The reduced boolean value
+	 */
+	protected function array_reduce_auth($array)
+	{
+		$i = 0;
+		$auth = array();
+		$operator = array();
+
+		foreach ($array as $value)
+		{
+			switch (true)
+			{
+				/** @noinspection PhpMissingBreakStatementInspection */
+				case ($value === false):
+					// If at base level
+					// and the value is "false"
+					// and the operator is "&&"
+					// the authorisation is "false"
+					if (isset($operator[$i]) && $i === 0 && $operator[$i] === '&&')
+					{
+						return false;
+					}
+				# no break;
+				case ($value === true):
+					// Is there an operator
+					$switch = !empty($operator[$i]) ? $operator[$i] : '';
+
+					switch ($switch)
+					{
+						case '||':
+							// Preserve a "true" value
+							$auth[$i] = $auth[$i] ? $auth[$i] : $value;
+						break;
+
+						case '&&';
+							// Preserve a "false" value
+							$auth[$i] = !$auth[$i] ? $auth[$i] : $value;
+						break;
+
+						default:
+							$auth[$i] = $value;
+						break;
+					}
+				break;
+
+				// Set the operator
+				case ($value === '&&'):
+				case ($value === '||'):
+					$operator[$i] = $value;
+				break;
+
+				// Open new depth level
+				case ($value === '('):
+					$i++;
+				break;
+
+				// Close depth level
+				case ($value === ')'):
+					$j = $i--;
+
+					switch ($operator[$i])
+					{
+						case '||':
+							// Preserve a "true" value
+							$auth[$i] = $auth[$i] ? $auth[$i] : $auth[$j];
+						break;
+
+						case '&&':
+							// If back to base level
+							// and the depth level auth is "false"
+							// and the operator is "&&"
+							// the authorisation is "false"
+							if ($i === 0 && $auth[$j] === false)
+							{
+								return false;
+							}
+
+							// Preserve a "false" value
+							$auth[$i] = !$auth[$i] ? $auth[$i] : $auth[$j];
+						break;
+					}
+
+					// Unset this depth level
+					unset ($auth[$j], $operator[$j], $j);
+				break;
+			}
+		}
+
+		// All checks passed, user is authorised
+		return true;
+	}
+}
