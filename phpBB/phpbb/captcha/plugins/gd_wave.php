@@ -13,6 +13,8 @@
 
 namespace phpbb\captcha\plugins;
 
+use phpbb\exception\http_exception;
+
 class gd_wave extends captcha_abstract
 {
 	public function is_available()
@@ -33,10 +35,16 @@ class gd_wave extends captcha_abstract
 		return '\\phpbb\\captcha\\gd_wave';
 	}
 
-	function acp_page($id, &$module)
+	function acp_page($id)
 	{
-		global $user;
+		global $phpbb_container;
 
-		trigger_error($user->lang['CAPTCHA_NO_OPTIONS'] . adm_back_link($module->u_action));
+		/** @var \phpbb\controller\helper $helper */
+		$helper = $phpbb_container->get('controller.helper');
+
+		/** @var \phpbb\language\language $language */
+		$language = $phpbb_container->get('language');
+
+		throw new http_exception(404, $language->lang('CAPTCHA_NO_OPTIONS') . adm_back_link($helper->route('phpbb_acp_controller', array('slug' => $id))));
 	}
 }

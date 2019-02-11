@@ -187,9 +187,12 @@ class helper
 			'MESSAGE_TITLE'	=> $message_title,
 		));
 
-		$template_file = $this->in_admin ? 'acp/message_body.html' : 'message_body.html';
+		if ($this->in_admin)
+		{
+			$this->template->assign_var('S_USER_NOTICE', $code === 200);
+		}
 
-		return $this->render($template_file, $message_title, $code);
+		return $this->render('message_body.html', $message_title, $code);
 	}
 
 	/**

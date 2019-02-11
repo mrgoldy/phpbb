@@ -21,16 +21,16 @@ use phpbb\request\request;
 
 class module_auth
 {
-	/** @var \phpbb\auth\auth */
+	/** @var auth */
 	protected $auth;
 
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\event\dispatcher */
+	/** @var dispatcher */
 	protected $dispatcher;
 
-	/** @var \phpbb\request\request */
+	/** @var request */
 	protected $request;
 
 	/** @var array All enabled extensions */
@@ -39,11 +39,11 @@ class module_auth
 	/**
 	 * Constructor.
 	 *
-	 * @param \phpbb\auth\auth         $auth
-	 * @param \phpbb\config\config     $config
-	 * @param \phpbb\event\dispatcher  $dispatcher
-	 * @param \phpbb\extension\manager $ext_manager
-	 * @param \phpbb\request\request   $request
+	 * @param auth			$auth			Auth object
+	 * @param config		$config			Config object
+	 * @param dispatcher	$dispatcher		Event dispatcher object
+	 * @param manager		$ext_manager	Extension manager object
+	 * @param request		$request		Request object
 	 */
 	public function __construct(auth $auth, config $config, dispatcher $dispatcher, manager $ext_manager, request $request)
 	{
@@ -195,7 +195,7 @@ class module_auth
 	 * @param array		$array		Array produced by check_auth()
 	 * @return bool					The reduced boolean value
 	 */
-	protected function array_reduce_auth($array)
+	protected function array_reduce_auth(array $array)
 	{
 		$i = 0;
 		$auth = array();

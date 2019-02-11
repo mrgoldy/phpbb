@@ -13,6 +13,8 @@
 
 namespace phpbb\captcha\plugins;
 
+use phpbb\exception\http_exception;
+
 class recaptcha extends captcha_abstract
 {
 	var $recaptcha_server = 'http://www.google.com/recaptcha/api';
@@ -66,17 +68,22 @@ class recaptcha extends captcha_abstract
 		throw new \Exception('No generator class given.');
 	}
 
-	function acp_page($id, &$module)
+	function acp_page($id)
 	{
 		global $config, $template, $user, $phpbb_log, $request;
+		global $phpbb_container;
+
+		/** @var \phpbb\controller\helper $helper */
+		$helper = $phpbb_container->get('controller.helper');
+
+		/** @var \phpbb\language\language $language */
+		$language = $phpbb_container->get('language');
 
 		$captcha_vars = array(
 			'recaptcha_pubkey'				=> 'RECAPTCHA_PUBKEY',
 			'recaptcha_privkey'				=> 'RECAPTCHA_PRIVKEY',
 		);
 
-		$module->tpl_name = 'captcha_recaptcha_acp';
-		$module->page_title = 'ACP_VC_SETTINGS';
 		$form_key = 'acp_captcha';
 		add_form_key($form_key);
 
@@ -95,11 +102,12 @@ class recaptcha extends captcha_abstract
 			}
 
 			$phpbb_log->add('admin', $user->data['user_id'], $user->ip, 'LOG_CONFIG_VISUAL');
-			trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($module->u_action));
+
+			return $helper->message($language->lang('CONFIG_UPDATED') . adm_back_link($helper->get_current_url()));
 		}
 		else if ($submit)
 		{
-			trigger_error($user->lang['FORM_INVALID'] . adm_back_link($module->u_action));
+			throw new http_exception(400, $language->lang('FORM_INVALID') . adm_back_link($helper->get_current_url()));
 		}
 		else
 		{
@@ -112,10 +120,12 @@ class recaptcha extends captcha_abstract
 			$template->assign_vars(array(
 				'CAPTCHA_PREVIEW'	=> $this->get_demo_template($id),
 				'CAPTCHA_NAME'		=> $this->get_service_name(),
-				'U_ACTION'			=> $module->u_action,
+				'U_ACTION'			=> $helper->get_current_url(),
 			));
 
 		}
+
+		return $helper->render('captcha_recaptcha_acp.html', $language->lang('ACP_VC_SETTINGS'));
 	}
 
 	// not needed

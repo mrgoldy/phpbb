@@ -10,7 +10,7 @@ services:
             - '@template'
             - '@user'
 
-    # General
+# ----- ACP General -----
     acp_main:
         class: phpbb\acp\general\index
         arguments:
@@ -44,3 +44,27 @@ services:
             - '@request'
             - '@template'
             - '@user'
+
+    acp_captcha:
+        class: phpbb\acp\general\captcha
+        arguments:
+            - '@config'
+            - '@captcha.factory'
+            - '@controller.helper'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+
+    acp_contact:
+        class: phpbb\acp\general\contact
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '%core.root_path%'
+            - '%core.php_ext%'

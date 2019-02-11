@@ -25,20 +25,63 @@ use phpbb\controller\helper;
 
 class cp_manager
 {
+	/** @var ContainerInterface */
 	protected $container;
+
+	/** @var db */
 	protected $db;
+
+	/** @var helper */
 	protected $helper;
+
+	/** @var language */
 	protected $lang;
+
+	/** @var module_auth */
 	protected $module_auth;
+
+	/** @var template */
 	protected $template;
+
+	/** @var string */
 	protected $table;
 
+	/** @var array Default CP pages */
 	protected $default = array(
 		'acp' => 'index',
-		'mcp' => '', // @todo
-		'ucp' => '', // @todo
+		'mcp' => 'index', // @todo
+		'ucp' => 'index', // @todo
 	);
 
+	/** @var array */
+	protected $actives;
+
+	/** @var array */
+	protected $module;
+
+	/** @var array */
+	protected $modules;
+
+	/** @var array */
+	protected $parents;
+
+	/** @var string */
+	protected $class;
+
+	/** @var string */
+	protected $slug;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param ContainerInterface	$container		Service container object
+	 * @param db					$db				Database object
+	 * @param helper				$helper			Controller helper object
+	 * @param language				$lang			Language object
+	 * @param module_auth			$module_auth	Module auth object
+	 * @param template				$template		Template object
+	 * @param string				$modules_table	Modules table
+	 */
 	public function __construct(
 		ContainerInterface $container,
 		db $db,
@@ -155,25 +198,44 @@ class cp_manager
 			}
 		}
 
-		// Default to index page if no module was found
-		$active = $module ? $module : $index;
+		if (!empty($module))
+		{
+			// Default to first mode if the module is category
+			if ($this->module_type($module) === 'category')
+			{
+				if (!empty($modules[$first[$module['module_id']]]))
+				{
+					$module = $modules[$first[$module['module_id']]];
+				}
+				else
+				{
+					$module = array();
+				}
+			}
+		}
 
-		// Default to first mode if the slug is a category
-		$active = $this->module_type($active) !== 'category' ? $active : $modules[$first[$active['module_id']]];
-		$module = $this->module_type($module) !== 'category' ? $module : $modules[$first[$module['module_id']]];
+		if (!empty($module))
+		{
+			$tree = $this->module_parents($module, $modules);
 
-		// Default to index page if mode is not accessible
-		$active = !$this->module_check($active, false) ? $active : $index;
+			// Check the module and its parents
+			foreach ($tree as $modules_check)
+			{
+				if ($this->module_check($modules_check, false))
+				{
+					$module = array();
+
+					break;
+				}
+			}
+		}
+
+		$active = !empty($module) ? $module : $index;
+		$tree = !empty($module) && !empty($tree) ? $tree : $this->module_parents($active, $modules);
 
 		// Get active category and subcategory
-		$active_category = (int) $active['parent_id'];
-		$active_subcategory = 0;
-
-		if (!empty($modules[$active_category]['parent_id']))
-		{
-			$active_subcategory = (int) $modules[$active_category]['module_id'];
-			$active_category = (int) $modules[$active_category]['parent_id'];
-		}
+		$active_category = $tree['category']['module_id'];
+		$active_subcategory = !empty($tree['subcategory']) ? $tree['subcategory']['module_id'] : 0;
 
 		// Build categories
 		foreach ($parents[0] as $category_id => $category)
@@ -188,7 +250,7 @@ class cp_manager
 				continue;
 			}
 
-			$this->template->assign_block_vars($class . '_categories', $this->assign_tpl_vars($category, $active_category));
+			$this->template->assign_block_vars($class . '_categories', $this->module_variables($category, $active_category));
 		}
 
 		// Build subcategories and modes
@@ -222,7 +284,7 @@ class cp_manager
 				break;
 			}
 
-			$this->template->assign_block_vars($class . '_menu', $this->assign_tpl_vars($child, $active_id));
+			$this->template->assign_block_vars($class . '_menu', $this->module_variables($child, $active_id));
 
 			if (!empty($parents[$child_id]))
 			{
@@ -233,7 +295,7 @@ class cp_manager
 						continue;
 					}
 
-					$this->template->assign_block_vars($class . '_menu.modes', $this->assign_tpl_vars($mode, $active['module_id']));
+					$this->template->assign_block_vars($class . '_menu.modes', $this->module_variables($mode, $active['module_id']));
 				}
 			}
 		}
@@ -245,55 +307,57 @@ class cp_manager
 		}
 
 		// Check the module and its parents
-		$check_modules = array($modules['parent_id'], $module);
-
-		if (!empty($modules[$module['parent_id']]['parent_id']))
+		foreach ($this->module_parents($module, $modules) as $modules_check)
 		{
-			$category_id = $modules[$module['parent_id']]['parent_id'];
-
-			// Add the category to the top, so the check is top to bottom
-			array_unshift($check_modules, $modules[$category_id]);
-		}
-
-		foreach ($check_modules as $check_module)
-		{
-			if ($exception = $this->module_check($check_module, false))
+			if ($exception = $this->module_check($modules_check, false))
 			{
 				throw new http_exception(403, $exception);
 			}
 		}
 
-		// Get the controller and function
-		$basename = $module['module_basename'];
-		$function = $module['module_mode'];
-		$object = null;
+		$base = $module['module_basename'];
+		$mode = $module['module_mode'];
 
 		try
 		{
 			// Try to get the basename as a service declaration
-			$object = $this->container->get($basename);
+			$object = $this->container->get($base);
 		}
 		catch (ServiceNotFoundException $e)
 		{
 			// If the service declaration was not found,
 			// Try to find it as a class
-			if (class_exists($basename))
+			if (class_exists($base))
 			{
-				$object = new $basename;
+				$object = new $base;
 			}
 			else
 			{
-				throw new http_exception(400, "No service or class could be found for: “{$basename}”"); // @todo
+				throw new http_exception(400, "No service or class could be found for: “{$base}”"); // @todo
 			}
 		}
 
-		if (!method_exists($object, $function))
+		// Check if the controller needs the slug
+		if (method_exists($object, 'module_slug'))
 		{
-			throw new http_exception(400, "The object “{$basename}” does not have a required function: “{$function}”"); // @todo
+			$object->module_slug($this->module['module_slug']);
 		}
 
 		// Send it off to the controller
-		return $object->$function();
+		if (method_exists($object, $mode))
+		{
+			// If the mode is a function in the object
+			return $object->$mode();
+		}
+		else if (method_exists($object, 'main'))
+		{
+			// If main() is a function in the object
+			return $object->main($mode);
+		}
+		else
+		{
+			throw new http_exception(400, "The object “{$base}” does not have a required function: “{$mode}()” or “main(\$mode)”"); // @todo
+		}
 	}
 
 	protected function module_type($module)
@@ -335,7 +399,25 @@ class cp_manager
 		return false;
 	}
 
-	protected function assign_tpl_vars($module, $selected)
+	protected function module_parents($module, $modules)
+	{
+		$array = array('mode' => $module);
+
+		if ($modules[$module['parent_id']])
+		{
+			$array['category'] = $parent = $modules[$module['parent_id']];
+		}
+
+		if (!empty($parent) && !empty($modules[$parent['parent_id']]))
+		{
+			$array['subcategory'] = $array['category'];
+			$array['category'] = $modules[$parent['parent_id']];
+		}
+
+		return $array;
+	}
+
+	protected function module_variables($module, $selected)
 	{
 		return array(
 			'ID'			=> (int) $module['module_id'],
@@ -351,9 +433,11 @@ class cp_manager
 
 		if ($module['module_basename'])
 		{
-			$function = 'module_title';
-
-			if (method_exists($module['module_basename'], $function))
+			try
+			{
+				$object = $this->container->get($module['module_basename']);
+			}
+			catch (\Exception $e)
 			{
 				if (class_exists($module['module_basename']))
 				{
@@ -361,17 +445,13 @@ class cp_manager
 				}
 				else
 				{
-					try
-					{
-						$object = $this->container->get($module['module_basename']);
-					}
-					catch (\Exception $e)
-					{
-						return $title;
-					}
+					return $title;
 				}
+			}
 
-				$title = $object->$function();
+			if (method_exists($object, 'module_title'))
+			{
+				$title = $object->module_title();
 			}
 		}
 
@@ -383,6 +463,11 @@ class cp_manager
 		if ($this->module_type($module) === 'subcategory')
 		{
 			return '';
+		}
+
+		if ($module['module_slug'] === '')
+		{
+			trigger_error(''); // @todo
 		}
 
 		return $this->helper->route('phpbb_acp_controller', array('slug' => $module['module_slug']));

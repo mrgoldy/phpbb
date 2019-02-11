@@ -17,27 +17,80 @@ use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\user;
 
+/**
+ * ACP Controller: Index
+ */
 class index
 {
+	/** @var auth */
 	protected $auth;
+
+	/** @var cache */
 	protected $cache;
+
+	/** @var config */
 	protected $config;
+
+	/** @var ContainerInterface */
 	protected $container;
+
+	/** @var db */
 	protected $db;
+
+	/** @var dispatcher */
 	protected $dispatcher;
+
+	/** @var filesystem */
 	protected $filesystem;
+
+	/** @var helper */
 	protected $helper;
+
+	/** @var language */
 	protected $lang;
+
+	/** @var log */
 	protected $log;
+
+	/** @var path_helper */
 	protected $path_helper;
+
+	/** @var request */
 	protected $request;
+
+	/** @var template */
 	protected $template;
+
+	/** @var user */
 	protected $user;
 
+	/** @var string */
 	protected $admin_path;
+
+	/** @var string */
 	protected $root_path;
+
+	/** @var string */
 	protected $php_ext;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param auth					$auth			Auth object
+	 * @param cache					$cache			Cache object
+	 * @param config				$config			Config object
+	 * @param ContainerInterface	$container		Service container object
+	 * @param db					$db				Database object
+	 * @param dispatcher			$dispatcher		Event dispatcher objecct
+	 * @param filesystem			$filesystem		Filesystem object
+	 * @param helper				$helper			Controller helper object
+	 * @param language				$lang			Language object
+	 * @param log					$log			Log object
+	 * @param path_helper			$path_helper	Path helper object
+	 * @param request				$request		Request object
+	 * @param template				$template		Template object
+	 * @param user					$user			User object
+	 */
 	public function __construct(
 		auth $auth,
 		cache $cache,
@@ -547,7 +600,7 @@ class index
 		$upload_dir_size = get_formatted_filesize($this->config['upload_dir_size']);
 
 		$storage_avatar = $this->container->get('storage.avatar');
-		$avatar_dir_size = 0;#get_formatted_filesize($storage_avatar->get_size()); @todo
+		$avatar_dir_size = get_formatted_filesize($storage_avatar->get_size());
 
 		if ($posts_per_day > $total_posts)
 		{

@@ -13,6 +13,8 @@
 
 namespace phpbb\captcha\plugins;
 
+use phpbb\exception\http_exception;
+
 /**
 * And now to something completely different. Let's make a captcha without extending the abstract class.
 * QA CAPTCHA sample implementation
@@ -638,20 +640,24 @@ class qa
 	/**
 	*  API function - The ACP backend, this marks the end of the easy methods
 	*/
-	function acp_page($id, &$module)
+	function acp_page($id)
 	{
 		global $config, $request, $phpbb_log, $template, $user;
+		global $phpbb_container;
 
-		$user->add_lang('acp/board');
-		$user->add_lang('captcha_qa');
+		/** @var \phpbb\controller\helper $helper */
+		$helper = $phpbb_container->get('controller.helper');
+
+		/** @var \phpbb\language\language $language */
+		$language = $phpbb_container->get('language');
+
+		$language->add_lang(array('acp/board', 'captcha_qa'));
 
 		if (!self::is_installed())
 		{
 			$this->install();
 		}
 
-		$module->tpl_name = 'captcha_qa_acp';
-		$module->page_title = 'ACP_VC_SETTINGS';
 		$form_key = 'acp_captcha';
 		add_form_key($form_key);
 
@@ -660,10 +666,10 @@ class qa
 		$action = $request->variable('action', '');
 
 		// we have two pages, so users might want to navigate from one to the other
-		$list_url = $module->u_action . "&amp;configure=1&amp;select_captcha=" . $this->get_service_name();
+		$list_url = $helper->route('phpbb_acp_controller', array('slug' => $id, 'configure' => true, 'select_captcha' => $this->get_service_name()));
 
 		$template->assign_vars(array(
-			'U_ACTION'		=> $module->u_action,
+			'U_ACTION'		=> $helper->get_current_url(),
 			'QUESTION_ID'	=> $question_id ,
 			'CLASS'			=> $this->get_service_name(),
 		));
@@ -671,7 +677,7 @@ class qa
 		// show the list?
 		if (!$question_id && $action != 'add')
 		{
-			$this->acp_question_list($module);
+			$this->acp_question_list($list_url);
 		}
 		else if ($question_id && $action == 'delete')
 		{
@@ -681,7 +687,7 @@ class qa
 				{
 					$this->acp_delete_question($question_id);
 
-					trigger_error($user->lang['QUESTION_DELETED'] . adm_back_link($list_url));
+					return $helper->message($language->lang('QUESTION_DELETED') . adm_back_link($list_url));
 				}
 				else
 				{
@@ -696,7 +702,7 @@ class qa
 			}
 			else
 			{
-				trigger_error($user->lang['QA_LAST_QUESTION'] . adm_back_link($list_url), E_USER_WARNING);
+				throw new http_exception($language->lang('QA_LAST_QUESTION') . adm_back_link($list_url));
 			}
 		}
 		else
@@ -730,7 +736,7 @@ class qa
 				}
 				else
 				{
-					trigger_error($user->lang['FORM_INVALID'] . adm_back_link($list_url));
+					throw new http_exception(400, $language->lang('FORM_INVALID') . adm_back_link($list_url));
 				}
 			}
 			else
@@ -763,20 +769,26 @@ class qa
 					}
 
 					$phpbb_log->add('admin', $user->data['user_id'], $user->ip, 'LOG_CONFIG_VISUAL');
-					trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($list_url));
+
+					return $helper->message($language->lang('CONFIG_UPDATED') . adm_back_link($list_url));
 				}
 			}
 			else if ($submit)
 			{
-				trigger_error($user->lang['FORM_INVALID'] . adm_back_link($list_url), E_USER_WARNING);
+				throw new http_exception(400, $language->lang('FORM_INVALID') . adm_back_link($list_url));
 			}
 		}
+
+		return $helper->render('captcha_qa_acp.html', $language->lang('ACP_VC_SETTINGS'));
 	}
 
 	/**
-	*  This handles the list overview
-	*/
-	function acp_question_list(&$module)
+	 * This handles the list overview
+	 *
+	 * @param string $list_url
+	 * @return void
+	 */
+	function acp_question_list($list_url)
 	{
 		global $db, $template;
 
@@ -790,7 +802,7 @@ class qa
 
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$url = $module->u_action . "&amp;question_id={$row['question_id']}&amp;configure=1&amp;select_captcha=" . $this->get_service_name() . '&amp;';
+			$url = $list_url . "&amp;question_id={$row['question_id']}&amp;";
 
 			$template->assign_block_vars('questions', array(
 				'QUESTION_TEXT'		=> $row['question_text'],

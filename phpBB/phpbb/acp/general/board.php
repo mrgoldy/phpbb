@@ -34,24 +34,72 @@ use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\user;
 
+/**
+ * ACP Controller: Board
+ */
 class board
 {
+	/** @var cache */
 	protected $cache;
+
+	/** @var config */
 	protected $config;
+
+	/** @var array */
 	protected $new_config = array();
+
+	/** @var ContainerInterface */
 	protected $container;
+
+	/** @var db */
 	protected $db;
+
+	/** @var dispatcher */
 	protected $dispatcher;
+
+	/** @var helper */
 	protected $helper;
+
+	/** @var language */
 	protected $lang;
+
+	/** @var log */
 	protected $log;
+
+	/** @var path_helper */
 	protected $path_helper;
+
+	/** @var request */
 	protected $request;
+
+	/** @var template */
 	protected $template;
+
+	/** @var user */
 	protected $user;
+
+	/** @var string */
 	protected $root_path;
+
+	/** @var string */
 	protected $php_ext;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param cache					$cache			Cache object
+	 * @param config				$config			Config object
+	 * @param ContainerInterface	$container		Service container object
+	 * @param db					$db				Database object
+	 * @param dispatcher			$dispatcher		Event dispatcher object
+	 * @param helper				$helper			Controller helper object
+	 * @param language				$lang			Language object
+	 * @param log					$log			Log object
+	 * @param path_helper			$path_helper	Path helper object
+	 * @param request				$request		Request object
+	 * @param template				$template		Template object
+	 * @param user					$user			User object
+	 */
 	public function __construct(
 		cache $cache,
 		config $config,

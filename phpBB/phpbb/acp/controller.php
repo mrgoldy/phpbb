@@ -2,28 +2,63 @@
 
 namespace phpbb\acp;
 
+use phpbb\exception\http_exception;
+
 use phpbb\auth\auth;
 use phpbb\controller\helper;
 use phpbb\language\language;
-use phpbb\module\cp_manager as modules;
+use phpbb\module\cp_manager;
 use phpbb\path_helper;
 use phpbb\template\template;
 use phpbb\user;
 
+/**
+ * ACP Controller
+ */
 class controller
 {
+	/** @var auth */
 	protected $auth;
+
+	/** @var helper */
 	protected $helper;
+
+	/** @var language */
 	protected $lang;
+
+	/** @var cp_manager */
 	protected $modules;
+
+	/** @var path_helper */
 	protected $path_helper;
+
+	/** @var template */
 	protected $template;
+
+	/** @var user */
 	protected $user;
+
+	/** @var string */
 	protected $admin_path;
+
+	/** @var string */
 	protected $root_path;
+
+	/** @var string */
 	protected $php_ext;
 
-	public function __construct(auth $auth, helper $helper, language $lang, modules $modules, path_helper $path_helper, template $template, user $user)
+	/**
+	 * Constructor.
+	 *
+	 * @param auth			$auth
+	 * @param helper		$helper
+	 * @param language		$lang
+	 * @param cp_manager	$modules
+	 * @param path_helper	$path_helper
+	 * @param template		$template
+	 * @param user			$user
+	 */
+	public function __construct(auth $auth, helper $helper, language $lang, cp_manager $modules, path_helper $path_helper, template $template, user $user)
 	{
 		$this->auth			= $auth;
 		$this->helper		= $helper;
@@ -38,6 +73,13 @@ class controller
 		$this->admin_path	= $this->root_path . $path_helper->get_adm_relative_path();
 	}
 
+	/**
+	 * Handle ACP pages.
+	 *
+	 * @param string	$slug		The module slug
+	 * @param string	$page		The page number for pagination
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function handle($slug, $page)
 	{
 		define('ADMIN_START', true);
@@ -45,7 +87,7 @@ class controller
 
 		// Language
 		$this->lang->add_lang('acp/common');
-		# Extension languages
+		# Extension languages // @todo
 
 		// Functions
 		include ($this->root_path . 'includes/functions_acp.' . $this->php_ext);
@@ -61,8 +103,7 @@ class controller
 		// check specific permissions but this is a catchall
 		if (!$this->auth->acl_get('a_'))
 		{
-			send_status_line(403, 'Forbidden');
-			trigger_error('NO_ADMIN'); // @todo throw exception
+			throw new http_exception(403, 'NO_ADMIN');
 		}
 
 		// We define the admin variables now, because the user is now able to use the admin related features...
@@ -72,9 +113,10 @@ class controller
 		$this->template->set_custom_style(array(
 			array(
 				'name' 		=> 'adm',
-				'ext_path' 	=> 'adm/style/',
+				'ext_path' 	=> 'style',
 			),
 		), $this->admin_path . 'style');
+
 		$this->template->assign_var('T_ASSETS_PATH', $this->path_helper->update_web_root_path($this->root_path) . 'assets');
 		$this->template->assign_var('T_TEMPLATE_PATH', $this->path_helper->update_web_root_path($this->admin_path) . 'style');
 
