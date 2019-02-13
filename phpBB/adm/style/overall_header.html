@@ -127,23 +127,34 @@
 						<strong>{USERNAME}</strong> [&nbsp;<a href="{U_LOGOUT}">{L_LOGOUT}</a>&nbsp;][&nbsp;<a href="{U_ADM_LOGOUT}">{L_ADM_LOGOUT}</a>&nbsp;]
 					</p>
 
+					{% macro links(links) %}
+						{% for link in links %}
+							<li{{ link.S_SELECTED ? ' id="activemenu"' : '' }}>
+								<a href="{{ link.U_VIEW }}">
+									<span>{{ link.L_TITLE }}</span>
+								</a>
+								{% if link.CHILDREN %}
+									<ul>
+										{{ _self.links(link.CHILDREN) }}
+									</ul>
+								{% endif %}
+							</li>
+						{% endfor %}
+					{% endmacro %}
+
 					{% for item in acp_menu %}
-						<div class="menu-block{{ item.modes ? '' : ' no-header' }}{{ item.S_SELECTED ? ' active' : '' }}">
-							{% if item.modes %}<a class="header" href="javascript:void(0);">{{ item.L_TITLE }}</a>{% endif %}
+						<div class="menu-block{{ item.CHILDREN ? '' : ' no-header' }}{{ item.S_SELECTED ? ' active' : '' }}">
+							{% if item.CHILDREN %}<a class="header" href="javascript:void(0);">{{ item.L_TITLE }}</a>{% endif %}
 							<ul>
-								{% for mode in item.modes %}
-									<li{{ mode.S_SELECTED ? ' id="activemenu"' : '' }}>
-										<a href="{{ mode.U_VIEW }}">
-											<span>{{ mode.L_TITLE }}</span>
-										</a>
-									</li>
+								{% if item.CHILDREN %}
+									{{ _self.links(item.CHILDREN) }}
 								{% else %}
 									<li{{ item.S_SELECTED ? ' id="activemenu"' : '' }}>
 										<a href="{{ item.U_VIEW }}">
 											<span>{{ item.L_TITLE }}</span>
 										</a>
 									</li>
-								{% endfor %}
+								{% endif %}
 							</ul>
 						</div>
 					{% endfor %}

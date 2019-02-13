@@ -1,4 +1,15 @@
 <?php
+/**
+ *
+ * This file is part of the phpBB Forum Software package.
+ *
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ * For full copyright and license information, please see
+ * the docs/CREDITS.txt file.
+ *
+ */
 
 namespace phpbb\module;
 
@@ -8,11 +19,26 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class module_controller
 {
+	/** @var ContainerInterface */
 	protected $container;
+
+	/** @var module_helper */
 	protected $module_helper;
+
+	/** @var module_render */
 	protected $module_render;
+
+	/** @var module_routing */
 	protected $module_routing;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param ContainerInterface	$container			Service container object
+	 * @param module_helper			$module_helper		Module helper object
+	 * @param module_render			$module_render		Module render object
+	 * @param module_routing		$module_routing		Module routing object
+	 */
 	public function __construct(ContainerInterface $container, module_helper $module_helper, module_render $module_render, module_routing $module_routing)
 	{
 		$this->container = $container;
@@ -48,6 +74,11 @@ class module_controller
 		$this->build_navigation($class);
 	}
 
+	/**
+	 * Get a module object and call the module mode's function.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function load()
 	{
 		$module = $this->module_helper->get_module();
@@ -64,6 +95,12 @@ class module_controller
 		return $this->call_function($object, $module['module_mode']);
 	}
 
+	/**
+	 * Build navigation for the module class.
+	 *
+	 * @param string	$class		The module class
+	 * @return void
+	 */
 	public function build_navigation($class)
 	{
 		$active = $this->module_helper->get_active();
@@ -77,6 +114,12 @@ class module_controller
 		$this->module_render->navigation($categories, $children, $active, $class);
 	}
 
+	/**
+	 * Get a module object.
+	 *
+	 * @param string	$basename	The module basename
+	 * @return object|null			The module object
+	 */
 	public function get_object($basename)
 	{
 		try
@@ -98,6 +141,18 @@ class module_controller
 		return null;
 	}
 
+	/**
+	 * Make the module route available to the module.
+	 *
+	 * Looks for either of two functions in the module object:
+	 * 	- module_action()
+	 * 	- set_page_url()
+	 *
+	 * @param object	$object		The module object
+	 * @param string	$class		The module class
+	 * @param string	$slug		The module slug
+	 * @return void
+	 */
 	public function set_action($object, $class, $slug)
 	{
 		if (method_exists($object, 'module_action'))
@@ -114,6 +169,17 @@ class module_controller
 		}
 	}
 
+	/**
+	 * Call the module mode's function.
+	 *
+	 * Looks for either of two functions in the module object:
+	 * 	- $mode()
+	 * 	- main($mode)
+	 *
+	 * @param object	$object		The module object
+	 * @param string	$mode		The module mode
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function call_function($object, $mode)
 	{
 		if (method_exists($object, $mode))

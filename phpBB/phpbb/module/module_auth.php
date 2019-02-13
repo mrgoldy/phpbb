@@ -13,39 +13,24 @@
 
 namespace phpbb\module;
 
-use phpbb\auth\auth;
-use phpbb\config\config;
-use phpbb\event\dispatcher;
-use phpbb\extension\manager;
-use phpbb\request\request;
-
 class module_auth
 {
-	/** @var auth */
+	/** @var \phpbb\auth\auth */
 	protected $auth;
 
-	/** @var config */
+	/** @var \phpbb\config\config  */
 	protected $config;
 
-	/** @var dispatcher */
+	/** @var \phpbb\event\dispatcher  */
 	protected $dispatcher;
 
-	/** @var request */
+	/** @var \phpbb\request\request  */
 	protected $request;
 
 	/** @var array All enabled extensions */
 	protected $extensions;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param auth			$auth			Auth object
-	 * @param config		$config			Config object
-	 * @param dispatcher	$dispatcher		Event dispatcher object
-	 * @param manager		$ext_manager	Extension manager object
-	 * @param request		$request		Request object
-	 */
-	public function __construct(auth $auth, config $config, dispatcher $dispatcher, manager $ext_manager, request $request)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\event\dispatcher $dispatcher, \phpbb\extension\manager $ext_manager, \phpbb\request\request $request)
 	{
 		$this->auth			= $auth;
 		$this->config		= $config;
@@ -56,9 +41,9 @@ class module_auth
 	}
 
 	/**
-	 * Check module authorisation.
+	 * Check the module authorisation.
 	 *
-	 * @param string	$module_auth	The module authorisation string
+	 * @param string	$module_auth	The module authorisation
 	 * @param int		$forum_id		The forum identifier
 	 * @return bool						Whether the current user is allowed to access this module
 	 */

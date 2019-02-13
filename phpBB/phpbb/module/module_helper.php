@@ -1,4 +1,15 @@
 <?php
+/**
+ *
+ * This file is part of the phpBB Forum Software package.
+ *
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ * For full copyright and license information, please see
+ * the docs/CREDITS.txt file.
+ *
+ */
 
 namespace phpbb\module;
 
@@ -7,17 +18,40 @@ use phpbb\module\exception\module_not_found_exception;
 
 class module_helper
 {
+	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
+
+	/** @var \phpbb\module\module_auth */
 	protected $module_auth;
+
+	/** @var string */
 	protected $table;
 
+	/** @var array */
 	protected $checked;
+
+	/** @var array */
 	protected $modules;
+
+	/** @var array */
 	protected $module;
+
+	/** @var string */
 	protected $class;
+
+	/** @var int */
 	protected $forum;
+
+	/** @var array */
 	protected $tree;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param \phpbb\db\driver\driver_interface	$db				Database object
+	 * @param \phpbb\module\module_auth			$module_auth	Module auth object
+	 * @param string							$table			Modules table
+	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, module_auth $module_auth, $table)
 	{
 		$this->db = $db;
@@ -25,6 +59,12 @@ class module_helper
 		$this->table = $table;
 	}
 
+	/**
+	 * Set the modules class.
+	 *
+	 * @param string	$class		The modules class
+	 * @return void
+	 */
 	public function set_class($class)
 	{
 		$class = (string) $class;
@@ -37,11 +77,22 @@ class module_helper
 		$this->class = $class;
 	}
 
+	/**
+	 * Set the forum identifier.
+	 *
+	 * @param int		$forum_id	The forum identifier
+	 * @return void
+	 */
 	public function set_forum($forum_id)
 	{
 		$this->forum = (int) $forum_id;
 	}
 
+	/**
+	 * Set the modules for this class.
+	 *
+	 * @return void
+	 */
 	public function set_modules()
 	{
 		$sql = 'SELECT *
@@ -62,6 +113,11 @@ class module_helper
 		$this->db->sql_freeresult($result);
 	}
 
+	/**
+	 * Build the modules tree for this class.
+	 *
+	 * @return void
+	 */
 	public function build_modules()
 	{
 		$tree = $this->build_tree();
@@ -69,6 +125,12 @@ class module_helper
 		$this->tree = $tree;
 	}
 
+	/**
+	 * Set the active module for this class.
+	 *
+	 * @param string	$slug		The module slug
+	 * @return void
+	 */
 	public function set_active($slug)
 	{
 		if (empty($this->modules['slugs'][$slug]))
@@ -104,6 +166,13 @@ class module_helper
 		$this->module = $module;
 	}
 
+	/**
+	 * Get active (selected) module identifiers.
+	 *
+	 * The top module category (parent_id = 0) is last in the array.
+	 *
+	 * @return array				Array with active module identifiers
+	 */
 	public function get_active()
 	{
 		if (empty($this->module))
@@ -128,6 +197,11 @@ class module_helper
 		return $active;
 	}
 
+	/**
+	 * Get categories module data.
+	 *
+	 * @return array				Array with module data for the categories
+	 */
 	public function get_categories()
 	{
 		$categories = [];
@@ -140,6 +214,13 @@ class module_helper
 		return $categories;
 	}
 
+	/**
+	 * Get subcategories and modes module data.
+	 *
+	 * @param int		$category_id	The module category identifier
+	 * @return array					Array with module data for the subcategories and modes
+	 * @access public
+	 */
 	public function get_children($category_id)
 	{
 		$category_id = (int) $category_id;
@@ -147,11 +228,22 @@ class module_helper
 		return !empty($this->tree[$category_id]['module_children']) ? $this->tree[$category_id]['module_children'] : [];
 	}
 
+	/**
+	 * Get module data array.
+	 *
+	 * @return array					The module data array
+	 */
 	public function get_module()
 	{
 		return $this->module;
 	}
 
+	/**
+	 * Build a binary module tree.
+	 *
+	 * @param int		$parent_id		The module parent identifier
+	 * @return array					Array with module data for the children
+	 */
 	protected function build_tree($parent_id = 0)
 	{
 		$branch = [];
@@ -194,6 +286,17 @@ class module_helper
 		return $branch;
 	}
 
+	/**
+	 * Get first "active" child for a module (sub)category.
+	 *
+	 * Where "active" means the module is enabled and
+	 * the user is authorised to access the module.
+	 *
+	 * @param int		$module_id		The module identifier
+	 * @param int		$left_id		The module left identifier
+	 * @param int		$right_id		The module right identifier
+	 * @return array					The module data array
+	 */
 	protected function get_active_child($module_id, $left_id, $right_id)
 	{
 		$offset = array_search($module_id, array_keys($this->modules['modules']));
