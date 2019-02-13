@@ -7,7 +7,7 @@ use phpbb\exception\http_exception;
 use phpbb\auth\auth;
 use phpbb\controller\helper;
 use phpbb\language\language;
-use phpbb\module\cp_manager;
+use phpbb\module\module_controller;
 use phpbb\path_helper;
 use phpbb\template\template;
 use phpbb\user;
@@ -26,7 +26,7 @@ class controller
 	/** @var language */
 	protected $lang;
 
-	/** @var cp_manager */
+	/** @var module_controller */
 	protected $modules;
 
 	/** @var path_helper */
@@ -50,20 +50,20 @@ class controller
 	/**
 	 * Constructor.
 	 *
-	 * @param auth			$auth
-	 * @param helper		$helper
-	 * @param language		$lang
-	 * @param cp_manager	$modules
-	 * @param path_helper	$path_helper
-	 * @param template		$template
-	 * @param user			$user
+	 * @param auth				$auth
+	 * @param helper			$helper
+	 * @param language			$lang
+	 * @param module_controller	$module_controller
+	 * @param path_helper		$path_helper
+	 * @param template			$template
+	 * @param user				$user
 	 */
-	public function __construct(auth $auth, helper $helper, language $lang, cp_manager $modules, path_helper $path_helper, template $template, user $user)
+	public function __construct(auth $auth, helper $helper, language $lang, module_controller $module_controller, path_helper $path_helper, template $template, user $user)
 	{
 		$this->auth			= $auth;
 		$this->helper		= $helper;
 		$this->lang			= $lang;
-		$this->modules		= $modules;
+		$this->modules		= $module_controller;
 		$this->path_helper	= $path_helper;
 		$this->template		= $template;
 		$this->user			= $user;
@@ -123,7 +123,10 @@ class controller
 		// Define controller in admin
 		$this->helper->set_in_admin(true);
 
-		// Build navigation and display mode
-		return $this->modules->build('acp', $slug);
+		// Build navigation
+		$this->modules->build('acp', $slug);
+
+		// Build and call module
+		return $this->modules->load();
 	}
 }

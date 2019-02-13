@@ -1,0 +1,16 @@
+phpbb_acp_controller:
+    path: /{slug}
+    methods: [GET, POST]
+    defaults:
+        _controller: phpbb.acp.controller:handle
+        slug: 'index'
+        page: 1
+
+phpbb_acp_pagination:
+    path: /{slug}/page-{page}
+    methods: [GET, POST]
+    defaults:
+        _controller: phpbb.acp.controller:handle
+        slug: 'index'
+    requirements:
+        page: \d+

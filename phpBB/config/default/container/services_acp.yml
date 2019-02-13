@@ -5,7 +5,7 @@ services:
             - '@auth'
             - '@controller.helper'
             - '@language'
-            - '@module.cp.manager'
+            - '@module.controller'
             - '@path_helper'
             - '@template'
             - '@user'

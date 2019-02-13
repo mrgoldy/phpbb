@@ -9,17 +9,6 @@ services:
             - '%core.root_path%'
             - '%core.php_ext%'
 
-    module.cp.manager:
-        class: phpbb\module\cp_manager
-        arguments:
-            - '@service_container'
-            - '@dbal.conn'
-            - '@controller.helper'
-            - '@language'
-            - '@module.auth'
-            - '@template'
-            - '%tables.modules%'
-
     module.auth:
         class: phpbb\module\module_auth
         arguments:
@@ -28,3 +17,31 @@ services:
             - '@dispatcher'
             - '@ext.manager'
             - '@request'
+
+    module.helper:
+        class: phpbb\module\module_helper
+        arguments:
+            - '@dbal.conn'
+            - '@module.auth'
+            - '%tables.modules%'
+
+    module.controller:
+        class: phpbb\module\module_controller
+        arguments:
+            - '@service_container'
+            - '@module.helper'
+            - '@module.render'
+            - '@module.routing'
+
+    module.render:
+        class: phpbb\module\module_render
+        arguments:
+            - '@service_container'
+            - '@language'
+            - '@module.routing'
+            - '@template'
+
+    module.routing:
+        class: phpbb\module\module_routing
+        arguments:
+            - '@controller.helper'
