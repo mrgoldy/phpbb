@@ -129,34 +129,38 @@
 
 					{% macro links(links) %}
 						{% for link in links %}
-							<li{{ link.S_SELECTED ? ' id="activemenu"' : '' }}>
-								<a href="{{ link.U_VIEW }}">
-									<span>{{ link.L_TITLE }}</span>
-								</a>
-								{% if link.CHILDREN %}
-									<ul>
-										{{ _self.links(link.CHILDREN) }}
-									</ul>
-								{% endif %}
-							</li>
+							{% if link.S_DISPLAY %}
+								<li{{ link.S_SELECTED ? ' id="activemenu"' : '' }}>
+									<a href="{{ link.U_VIEW }}">
+										<span>{{ link.L_TITLE }}</span>
+									</a>
+									{% if link.CHILDREN %}
+										<ul>
+											{{ _self.links(link.CHILDREN) }}
+										</ul>
+									{% endif %}
+								</li>
+							{% endif %}
 						{% endfor %}
 					{% endmacro %}
 
 					{% for item in acp_menu %}
-						<div class="menu-block{{ item.CHILDREN ? '' : ' no-header' }}{{ item.S_SELECTED ? ' active' : '' }}">
-							{% if item.CHILDREN %}<a class="header" href="javascript:void(0);">{{ item.L_TITLE }}</a>{% endif %}
-							<ul>
-								{% if item.CHILDREN %}
-									{{ _self.links(item.CHILDREN) }}
-								{% else %}
-									<li{{ item.S_SELECTED ? ' id="activemenu"' : '' }}>
-										<a href="{{ item.U_VIEW }}">
-											<span>{{ item.L_TITLE }}</span>
-										</a>
-									</li>
-								{% endif %}
-							</ul>
-						</div>
+						{% if item.S_DISPLAY %}
+							<div class="menu-block{{ item.CHILDREN ? '' : ' no-header' }}{{ item.S_SELECTED ? ' active' : '' }}">
+								{% if item.CHILDREN %}<a class="header" href="javascript:void(0);">{{ item.L_TITLE }}</a>{% endif %}
+								<ul>
+									{% if item.CHILDREN %}
+										{{ _self.links(item.CHILDREN) }}
+									{% else %}
+										<li{{ item.S_SELECTED ? ' id="activemenu"' : '' }}>
+											<a href="{{ item.U_VIEW }}">
+												<span>{{ item.L_TITLE }}</span>
+											</a>
+										</li>
+									{% endif %}
+								</ul>
+							</div>
+						{% endif %}
 					{% endfor %}
 				</div>
 

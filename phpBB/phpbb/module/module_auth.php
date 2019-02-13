@@ -27,7 +27,7 @@ class module_auth
 	/** @var \phpbb\request\request  */
 	protected $request;
 
-	/** @var array All enabled extensions */
+	/** @var array Array with enabled extensions */
 	protected $extensions;
 
 	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\event\dispatcher $dispatcher, \phpbb\extension\manager $ext_manager, \phpbb\request\request $request)

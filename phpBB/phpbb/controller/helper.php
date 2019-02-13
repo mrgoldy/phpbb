@@ -22,22 +22,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class helper
 {
-	/**
-	 * Template object
-	 * @var \phpbb\template\template
-	 */
+	/** @var \phpbb\template\template */
 	protected $template;
 
-	/**
-	 * User object
-	 * @var \phpbb\user
-	 */
+	/** @var \phpbb\user */
 	protected $user;
 
-	/**
-	 * config object
-	 * @var \phpbb\config\config
-	 */
+	/** @var \phpbb\config\config */
 	protected $config;
 
 	/* @var \phpbb\symfony_request */
@@ -46,22 +37,21 @@ class helper
 	/* @var \phpbb\request\request_interface */
 	protected $request;
 
-	/**
-	 * @var \phpbb\routing\helper
-	 */
+	/** @var \phpbb\routing\helper */
 	protected $routing_helper;
 
+	/** @var bool */
 	protected $in_admin = false;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\template\template $template Template object
-	 * @param \phpbb\user $user User object
-	 * @param \phpbb\config\config $config Config object
-	 * @param \phpbb\symfony_request $symfony_request Symfony Request object
-	 * @param \phpbb\request\request_interface $request phpBB request object
-	 * @param \phpbb\routing\helper $routing_helper Helper to generate the routes
+	 * @param \phpbb\template\template			$template			Template object
+	 * @param \phpbb\user						$user				User object
+	 * @param \phpbb\config\config				$config				Config object
+	 * @param \phpbb\symfony_request			$symfony_request	Symfony Request object
+	 * @param \phpbb\request\request_interface	$request			phpBB request object
+	 * @param \phpbb\routing\helper				$routing_helper		Helper to generate the routes
 	 */
 	public function __construct(\phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, \phpbb\symfony_request $symfony_request, \phpbb\request\request_interface $request, \phpbb\routing\helper $routing_helper)
 	{
@@ -75,21 +65,22 @@ class helper
 
 	public function set_in_admin($bool)
 	{
-		$this->in_admin = $bool;
+		$this->in_admin = (bool) $bool;
 	}
 
 	/**
 	 * Automate setting up the page and creating the response object.
 	 *
-	 * @param string $template_file The template handle to render
-	 * @param string $page_title The title of the page to output
-	 * @param int $status_code The status code to be sent to the page header
-	 * @param bool $display_online_list Do we display online users list
-	 * @param int $item_id Restrict online users to item id
-	 * @param string $item Restrict online users to a certain session item, e.g. forum for session_forum_id
-	 * @param bool $send_headers Whether headers should be sent by page_header(). Defaults to false for controllers.
-	 *
-	 * @return Response object containing rendered page
+	 * @param string	$template_file			The template handle to render
+	 * @param string	$page_title				The title of the page to output
+	 * @param int		$status_code			The status code to be sent to the page header
+	 * @param bool		$display_online_list	Do we display online users list
+	 * @param int		$item_id				Restrict online users to item id
+	 * @param string	$item					Restrict online users to a certain session item,
+	 *                     							e.g. forum for session_forum_id
+	 * @param bool		$send_headers			Whether headers should be sent by page_header().
+	 * 												Defaults to false for controllers.
+	 * @return Response							Object containing rendered page
 	 */
 	public function render($template_file, $page_title = '', $status_code = 200, $display_online_list = false, $item_id = 0, $item = 'forum', $send_headers = false)
 	{
@@ -121,14 +112,14 @@ class helper
 	}
 
 	/**
-	 * Generate a URL to a route
+	 * Generate a URL to a route.
 	 *
-	 * @param string	$route		Name of the route to travel
-	 * @param array	$params		String or array of additional url parameters
-	 * @param bool	$is_amp		Is url using &amp; (true) or & (false)
-	 * @param string|bool		$session_id	Possibility to use a custom session id instead of the global one
-	 * @param bool|string		$reference_type The type of reference to be generated (one of the constants)
-	 * @return string The URL already passed through append_sid()
+	 * @param string		$route			Name of the route to travel
+	 * @param array			$params			String or array of additional url parameters
+	 * @param bool		 	$is_amp			Is url using &amp; (true) or & (false)
+	 * @param string|bool	$session_id		Possibility to use a custom session id instead of the global one
+	 * @param bool|string	$reference_type	The type of reference to be generated (one of the constants)
+	 * @return string 						The URL already passed through append_sid()
 	 */
 	public function route($route, array $params = array(), $is_amp = true, $session_id = false, $reference_type = UrlGeneratorInterface::ABSOLUTE_PATH)
 	{
@@ -138,9 +129,9 @@ class helper
 	/**
 	 * Output an error, effectively the same thing as trigger_error
 	 *
-	 * @param string $message The error message
-	 * @param int $code The error code (e.g. 404, 500, 503, etc.)
-	 * @return Response A Response instance
+	 * @param string	$message	The error message
+	 * @param int		$code		The error code (e.g. 404, 500, 503, etc.)
+	 * @return Response 			A Response instance
 	 *
 	 * @deprecated 3.1.3 (To be removed: 3.3.0) Use exceptions instead.
 	 */
@@ -154,11 +145,11 @@ class helper
 	 *
 	 * In case of an error, please throw an exception instead
 	 *
-	 * @param string $message The message to display (must be a language variable)
-	 * @param array $parameters The parameters to use with the language var
-	 * @param string $title Title for the message (must be a language variable)
-	 * @param int $code The HTTP status code (e.g. 404, 500, 503, etc.)
-	 * @return Response A Response instance
+	 * @param string	$message	The message to display (must be a language variable)
+	 * @param array		$parameters	The parameters to use with the language var
+	 * @param string	$title		Title for the message (must be a language variable)
+	 * @param int		$code		The HTTP status code (e.g. 404, 500, 503, etc.)
+	 * @return Response 			A Response instance
 	 */
 	public function message($message, array $parameters = array(), $title = 'INFORMATION', $code = 200)
 	{
@@ -196,11 +187,11 @@ class helper
 	}
 
 	/**
-	 * Assigns automatic refresh time meta tag in template
+	 * Assigns automatic refresh time meta tag in template.
 	 *
-	 * @param	int		$time	time in seconds, when redirection should occur
-	 * @param	string	$url	the URL where the user should be redirected
-	 * @return	null
+	 * @param	int		$time	Time in seconds, when redirection should occur
+	 * @param	string	$url	The URL where the user should be redirected
+	 * @return	void
 	 */
 	public function assign_meta_refresh_var($time, $url)
 	{
@@ -210,9 +201,9 @@ class helper
 	}
 
 	/**
-	 * Return the current url
+	 * Get the current URL.
 	 *
-	 * @return string
+	 * @return string			The current URL
 	 */
 	public function get_current_url()
 	{

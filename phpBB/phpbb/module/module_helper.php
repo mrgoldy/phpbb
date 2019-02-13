@@ -24,25 +24,25 @@ class module_helper
 	/** @var \phpbb\module\module_auth */
 	protected $module_auth;
 
-	/** @var string */
+	/** @var string Modules table */
 	protected $table;
 
-	/** @var array */
+	/** @var array Array with module identifiers that are enabled and authorised */
 	protected $checked;
 
-	/** @var array */
+	/** @var array Array with modules data */
 	protected $modules;
 
-	/** @var array */
+	/** @var array Array with active module data */
 	protected $module;
 
-	/** @var string */
+	/** @var string Module class (acp|mcp|ucp) */
 	protected $class;
 
-	/** @var int */
+	/** @var int Forum identifier */
 	protected $forum;
 
-	/** @var array */
+	/** @var array Array with binary module tree */
 	protected $tree;
 
 	/**
@@ -329,7 +329,7 @@ class module_helper
 		return [];
 	}
 
-	/** @todo migration */
+	// @todo migration
 	public function update($container)
 	{
 		/** @var \phpbb\db\tools\tools_interface $db_tools */

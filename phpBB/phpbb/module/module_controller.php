@@ -52,6 +52,8 @@ class module_controller
 		// @todo
 		$this->module_helper->update($this->container);
 
+		// @todo add language for exceptions?
+
 		$this->module_helper->set_class($class);
 
 		$this->module_helper->set_forum($forum_id);

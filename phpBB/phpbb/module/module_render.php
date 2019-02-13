@@ -13,12 +13,10 @@
 
 namespace phpbb\module;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 class module_render
 {
-	/** @var ContainerInterface */
-	protected $container;
+	/** @var \phpbb\event\dispatcher */
+	protected $dispatcher;
 
 	/** @var \phpbb\language\language */
 	protected $lang;
@@ -32,14 +30,14 @@ class module_render
 	/**
 	 * Constructor.
 	 *
-	 * @param ContainerInterface			$container			Service container objects
+	 * @param \phpbb\event\dispatcher		$dispatcher			Event dispatcher object
 	 * @param \phpbb\language\language		$lang				Language object
 	 * @param \phpbb\module\module_routing	$module_routing		Module routing object
 	 * @param \phpbb\template\template		$template			Template object
 	 */
-	public function __construct(ContainerInterface $container, \phpbb\language\language $lang, module_routing $module_routing, \phpbb\template\template $template)
+	public function __construct(\phpbb\event\dispatcher $dispatcher, \phpbb\language\language $lang, module_routing $module_routing, \phpbb\template\template $template)
 	{
-		$this->container		= $container;
+		$this->dispatcher		= $dispatcher;
 		$this->lang				= $lang;
 		$this->module_routing	= $module_routing;
 		$this->template			= $template;
@@ -109,9 +107,10 @@ class module_render
 	protected function get_template_vars(array $module, array $active, $class)
 	{
 		return [
-			'ID'		=> (int) $module['module_id'],
+			'ID'			=> (int) $module['module_id'],
 
 			'L_TITLE'		=> (string) $this->get_title($module),
+			'S_DISPLAY'		=> (bool) $module['module_display'],
 			'S_SELECTED'	=> (bool) in_array($module['module_id'], $active),
 			'U_VIEW'		=> (string) $this->module_routing->route($class, $module['module_slug']),
 		];
@@ -120,39 +119,23 @@ class module_render
 	/**
 	 * Get module title.
 	 *
-	 * Looks for the function in the  module object:
-	 * 	- module_title()
-	 *
 	 * @param array		$module		The module data array
-	 * @return string
+	 * @return string				The module title
 	 */
 	protected function get_title(array $module)
 	{
 		$title = $this->lang->lang($module['module_langname']);
 
-		if ($module['module_basename'])
-		{
-			try
-			{
-				$object = $this->container->get($module['module_basename']);
-			}
-			catch (\Exception $e)
-			{
-				if (class_exists($module['module_basename']))
-				{
-					$object = new $module['module_basename'];
-				}
-				else
-				{
-					return (string) $title;
-				}
-			}
-
-			if (method_exists($object, 'module_title'))
-			{
-				$title = $object->module_title();
-			}
-		}
+		/**
+		 * This event allows to modify the modules title when building navigation.
+		 *
+		 * @event core.modify_module_title
+		 * @var	string		title		The module title
+		 * @var	array		module		The module data array
+		 * @since 4.0.0 @todo
+		 */
+		$vars = array('title', 'module');
+		extract($this->dispatcher->trigger_event('core.modify_module_title', compact($vars)));
 
 		return (string) $title;
 	}
