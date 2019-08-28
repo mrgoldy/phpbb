@@ -32,6 +32,14 @@ $http_kernel = $phpbb_container->get('http_kernel');
 
 /* @var $symfony_request \phpbb\symfony_request */
 $symfony_request = $phpbb_container->get('symfony_request');
+
+$path = $symfony_request->getPathInfo();
+
+if (strpos($path, '/admin') === 0)
+{
+	
+}
+
 $response = $http_kernel->handle($symfony_request);
 $response->send();
 $http_kernel->terminate($symfony_request, $response);
