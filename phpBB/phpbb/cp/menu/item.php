@@ -65,8 +65,7 @@ class item implements item_interface
 	{
 		return $this->auth;
 	}
-
-	/**
+/**
 	 * {@inheritdoc}
 	 */
 	public function get_icon()
