@@ -50,12 +50,14 @@ class cp extends Loader
 	 */
 	public function load($resource, $type = null)
 	{
+		$collection = new RouteCollection();
+
 		if ($this->cp_manager === null)
 		{
-			return [];
+			return $collection;
 		}
 
-		$collection = new RouteCollection();
+		return $collection;
 
 		foreach ($this->cp_manager->get_collections() as $cp => $items)
 		{
