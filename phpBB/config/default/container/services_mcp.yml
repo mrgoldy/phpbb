@@ -1,0 +1,16 @@
+services:
+    # --- Helpers --- #
+    mcp.constructor:
+        class: phpbb\mcp\helper\constructor
+        arguments:
+            - '@auth'
+            - '@cp.identifiers'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables%'

@@ -1,0 +1,14 @@
+services:
+# --- Helpers --- #
+    acp.constructor:
+        class: phpbb\acp\helper\constructor
+        arguments:
+            - '@auth'
+            - '@controller.helper'
+            - '@language'
+            - '@path_helper'
+            - '@template'
+            - '@user'
+            - '%core.adm_relative_path%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
