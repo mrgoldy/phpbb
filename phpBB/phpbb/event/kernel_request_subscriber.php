@@ -51,20 +51,20 @@ class kernel_request_subscriber implements EventSubscriberInterface
 	{
 		if ($this->cp_manager !== null && $this->cp_constructor !== null)
 		{
-			$route = $event->getRequest()->attributes->get('_route');
+	#		$route = $event->getRequest()->attributes->get('_route');
 
-			$route = str_replace($this->cp_manager->get_route_pagination(), '', $route);
+	#		$route = str_replace($this->cp_manager->get_route_pagination(), '', $route);
 
-			/** @var \phpbb\di\service_collection $services */
-			foreach ($this->cp_manager->get_collections() as $cp => $services)
-			{
-				if ($services->offsetExists($route))
-				{
-					$this->cp_constructor->setup($cp, $route);
+	#		/** @var \phpbb\di\service_collection $services */
+	#		foreach ($this->cp_manager->get_collections() as $cp => $services)
+	#		{
+	#			if ($services->offsetExists($route))
+	#			{
+	#				$this->cp_constructor->setup($cp, $route);
 
-					break;
-				}
-			}
+	#				break;
+	#			}
+	#		}
 		}
 	}
 
