@@ -47,7 +47,7 @@ class item implements item_interface
 	 * @param string		$page		Item's pagination variable
 	 * @param bool			$display	Item's display property
 	 */
-	public function __construct($auth = '', $icon = '', $route = '', $parent = '', $before = '', $page = '', $display = true)
+	public function __construct($auth = '', $icon = '', $parent = '', $before = '', $page = '', $display = true, $route = '')
 	{
 		$this->auth 	= $auth;
 		$this->icon		= $icon;

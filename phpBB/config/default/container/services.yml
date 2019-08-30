@@ -1,5 +1,4 @@
 imports:
-    - { resource: services_acp_menu.yml }
     - { resource: services_attachment.yml }
     - { resource: services_auth.yml }
     - { resource: services_avatar.yml }
@@ -32,7 +31,6 @@ imports:
     - { resource: services_text_formatter.yml }
     - { resource: services_text_reparser.yml }
     - { resource: services_twig.yml }
-    - { resource: services_ucp_menu.yml }
     - { resource: services_user.yml }
 
     - { resource: tables.yml }
