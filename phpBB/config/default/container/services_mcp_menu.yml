@@ -8,7 +8,7 @@ services:
 
     # --- MCP > Main --- #
     mcp_cat_main:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: ''
@@ -17,7 +17,7 @@ services:
             $route: 'mcp_index'
 
     mcp_index:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: ''
@@ -29,7 +29,7 @@ services:
                     _controller: mcp.front:main
 
     mcp_view_forum:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: '($forum_id || $topic_id || $post_id) && acl_m_,$forum_id'
@@ -44,7 +44,7 @@ services:
                     page: 1
 
     mcp_view_topic:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: '($topic_id || $post_id) && acl_m_,$forum_id'
@@ -59,7 +59,7 @@ services:
                     page: 1
 
     mcp_view_post:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: '$post_id && (acl_m_,$forum_id || (!$forum_id && aclf_m_))'
@@ -73,7 +73,7 @@ services:
 
     # --- MCP > Moderation --- #
     mcp_cat_moderation:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: ''
@@ -82,7 +82,7 @@ services:
             $route: 'mcp_unapproved_topics'
 
     mcp_unapproved_topics:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'aclf_m_approve'
@@ -95,7 +95,7 @@ services:
                     mode: 'unapproved_topics'
 
     mcp_unapproved_posts:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'aclf_m_approve'
@@ -108,7 +108,7 @@ services:
                     mode: 'unapproved_posts'
 
     mcp_approve_details:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'aclf_m_approve'
@@ -123,7 +123,7 @@ services:
                     mode: 'approve_details'
 
     mcp_deleted_topics:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'aclf_m_approve'
@@ -136,7 +136,7 @@ services:
                     mode: 'deleted_topics'
 
     mcp_deleted_posts:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'aclf_m_approve'
@@ -150,7 +150,7 @@ services:
 
     # --- MCP > Reports --- #
     mcp_cat_reports:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: ''
@@ -159,7 +159,7 @@ services:
             $route: 'mcp_reports_open'
 
     mcp_reports_open:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'aclf_m_report'
@@ -174,7 +174,7 @@ services:
                     page: 1
 
     mcp_reports_closed:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'aclf_m_report'
@@ -189,7 +189,7 @@ services:
                     page: 1
 
     mcp_report_details:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'aclf_m_report'
@@ -204,7 +204,7 @@ services:
                     mode: 'details'
 
     mcp_pm_reports_open:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'acl_m_pm_report'
@@ -219,7 +219,7 @@ services:
                     mode: 'open'
 
     mcp_pm_reports_closed:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'acl_m_pm_report'
@@ -234,7 +234,7 @@ services:
                     mode: 'closed'
 
     mcp_pm_report_details:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'aclf_m_report'
@@ -250,7 +250,7 @@ services:
 
     # --- MCP > Warnings --- #
     mcp_cat_warnings:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: ''
@@ -259,7 +259,7 @@ services:
             $route: 'mcp_warn_overview'
 
     mcp_warn_overview:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'aclf_m_warn'
@@ -271,7 +271,7 @@ services:
                     _controller: mcp.warn:warn_overview
 
     mcp_warn_list:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'aclf_m_warn'
@@ -284,7 +284,7 @@ services:
                     page: 1
 
     mcp_warn_user:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'aclf_m_warn'
@@ -297,7 +297,7 @@ services:
                     u: 0
 
     mcp_warn_post:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'acl_m_warn && acl_f_read,$forum_id && $post_id'
@@ -310,7 +310,7 @@ services:
 
     # --- MCP > Notes --- #
     mcp_cat_notes:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: ''
@@ -319,7 +319,7 @@ services:
             $route: 'mcp_notes_user'
 
     mcp_notes_user:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: ''
@@ -333,7 +333,7 @@ services:
 
     # --- MCP > Logs --- #
     mcp_cat_logs:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: ''
@@ -342,7 +342,7 @@ services:
             $route: 'mcp_logs_overview'
 
     mcp_logs_overview:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'acl_m_ || aclf_m_'
@@ -356,7 +356,7 @@ services:
                     page: 1
 
     mcp_logs_forum:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'acl_m_,$forum_id && ($forum_id || $topic_id)'
@@ -370,7 +370,7 @@ services:
                     page: 1
 
     mcp_logs_topic:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'acl_m_,$forum_id && $topic_id'
@@ -385,7 +385,7 @@ services:
 
     # --- MCP > Bans ---- #
     mcp_cat_bans:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: ''
@@ -394,7 +394,7 @@ services:
             $route: 'mcp_ban_email'
 
     mcp_ban_email:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'acl_m_ban'
@@ -407,7 +407,7 @@ services:
                     mode: 'email'
 
     mcp_ban_user:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'acl_m_ban'
@@ -420,7 +420,7 @@ services:
                     mode: 'user'
 
     mcp_ban_ip:
-        tags: { name: mcp }
+        tags: [{ name: mcp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'acl_m_ban'
