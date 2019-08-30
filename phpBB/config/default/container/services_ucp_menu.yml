@@ -7,7 +7,7 @@ services:
             - { name: service_collection, tag: ucp }
 
     ucp_account:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -27,7 +27,7 @@ services:
 
     # --- UCP > Overview -- #
     ucp_cat_overview:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -37,7 +37,7 @@ services:
             $route: 'ucp_index'
 
     ucp_index:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -51,7 +51,7 @@ services:
 
     # --- UCP > Manage --- #
     ucp_cat_manage:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -61,7 +61,7 @@ services:
             $route: 'ucp_manage_subscriptions'
 
     ucp_manage_subscriptions:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -75,7 +75,7 @@ services:
                     mode: 'subscriptions'
 
     ucp_manage_bookmarks:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -92,7 +92,7 @@ services:
                     page: 1
 
     ucp_manage_notifications:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -109,7 +109,7 @@ services:
                     page: 1
 
     ucp_manage_drafts:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -126,7 +126,7 @@ services:
                     page: 1
 
     ucp_manage_attachments:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -142,7 +142,7 @@ services:
                     page: 1
 
     ucp_manage_remember_me:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -156,7 +156,7 @@ services:
                     mode: 'remember_me'
 
     ucp_manage_oauth:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -170,7 +170,7 @@ services:
 
     # --- UCP > Profile --- #
     ucp_cat_profile:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -180,7 +180,7 @@ services:
             $route: ucp_profile_account
 
     ucp_profile_account:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -194,7 +194,7 @@ services:
                     mode: 'account'
 
     ucp_profile_profile:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -208,7 +208,7 @@ services:
                     mode: 'profile'
 
     ucp_profile_avatar:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -222,7 +222,7 @@ services:
                     mode: 'avatar'
 
     ucp_profile_signature:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -237,7 +237,7 @@ services:
 
     # --- UCP > Settings --- #
     ucp_cat_settings:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -247,7 +247,7 @@ services:
             $route: ucp_settings_global
 
     ucp_settings_global:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -261,7 +261,7 @@ services:
                     mode: 'global'
 
     ucp_settings_post:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -275,7 +275,7 @@ services:
                     mode: 'post'
 
     ucp_settings_display:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -289,7 +289,7 @@ services:
                     mode: 'display'
 
     ucp_settings_notifications:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -304,7 +304,7 @@ services:
 
     # --- UCP > Groups --- #
     ucp_cat_groups:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -314,7 +314,7 @@ services:
             $route: ucp_groups_edit
 
     ucp_groups_edit:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -328,7 +328,7 @@ services:
                     mode: 'membership'
 
     ucp_groups_manage:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -348,7 +348,7 @@ services:
 
     # --- UCP > Zebra --- #
     ucp_cat_zebra:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -358,7 +358,7 @@ services:
             $route: ucp_zebra_friends
 
     ucp_zebra_friends:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -372,7 +372,7 @@ services:
                     mode: 'friends'
 
     ucp_zebra_foes:
-        tags: { name: ucp }
+        tags: [{ name: ucp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:

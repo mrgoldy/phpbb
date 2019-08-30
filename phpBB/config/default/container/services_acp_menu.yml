@@ -8,7 +8,7 @@ services:
 
     # --- ACP > Configuration --- #
     acp_cat_configuration:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -17,7 +17,7 @@ services:
             $route: acp_index
 
     acp_index:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -31,7 +31,7 @@ services:
 
     # --- ACP > Configuration > Board configuration --- #
     acp_configuration_board:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -41,7 +41,7 @@ services:
             $route: acp_settings_board
 
     acp_settings_board:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -55,7 +55,7 @@ services:
                     mode: 'board'
 
     acp_settings_features:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -69,7 +69,7 @@ services:
                     mode: 'features'
 
     acp_settings_attachment:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -83,7 +83,7 @@ services:
                     mode: 'attach'
 
     acp_settings_avatar:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -97,7 +97,7 @@ services:
                     mode: 'avatar'
 
     acp_settings_signature:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -111,7 +111,7 @@ services:
                     mode: 'signature'
 
     acp_settings_post:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -125,7 +125,7 @@ services:
                     mode: 'post'
 
     acp_settings_pm:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -139,7 +139,7 @@ services:
                     mode: 'pm'
 
     acp_settings_registration:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -153,7 +153,7 @@ services:
                     mode: 'registration'
 
     acp_settings_captcha:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -166,7 +166,7 @@ services:
                     _controller: acp.captcha:main
 
     acp_settings_contact:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -179,7 +179,7 @@ services:
                     _controller: acp.contact:main
 
     acp_settings_feed:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -194,7 +194,7 @@ services:
 
     # --- ACP > Configuration > Server configuration --- #
     acp_configuration_server:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -204,7 +204,7 @@ services:
             $route: acp_settings_server
 
     acp_settings_server:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -218,7 +218,7 @@ services:
                     mode: 'server'
 
     acp_settings_cookie:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -232,7 +232,7 @@ services:
                     mode: 'cookie'
 
     acp_settings_load:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -246,7 +246,7 @@ services:
                     mode: 'load'
 
     acp_settings_security:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -260,7 +260,7 @@ services:
                     mode: 'security'
 
     acp_settings_search:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -274,7 +274,7 @@ services:
                     mode: 'settings'
 
     acp_settings_storage:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -288,7 +288,7 @@ services:
 
     # --- ACP > Configuration > Client communication --- #
     acp_client_communication:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -298,7 +298,7 @@ services:
             $route: acp_settings_auth
 
     acp_settings_auth:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -312,7 +312,7 @@ services:
                     mode: 'auth'
 
     acp_settings_email:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -326,7 +326,7 @@ services:
                     mode: 'email'
 
     acp_settings_jabber:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -340,7 +340,7 @@ services:
 
     # --- ACP > Management --- #
     acp_cat_management:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -351,7 +351,7 @@ services:
 
     # --- ACP > Management > User management --- #
     acp_management_users:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -361,7 +361,7 @@ services:
             $route: acp_users_manage
 
     acp_users_manage:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -378,7 +378,7 @@ services:
                     u: 0
 
     acp_users_inactive:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -394,7 +394,7 @@ services:
                     page: 1
 
     acp_users_prune:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -409,7 +409,7 @@ services:
 
     # --- ACP > Management > Groups management
     acp_management_groups:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -419,7 +419,7 @@ services:
             $route: acp_groups_manage
 
     acp_groups_manage:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -438,7 +438,7 @@ services:
                     page: 1
 
     acp_groups_positions:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -453,7 +453,7 @@ services:
 
     # --- ACP > Management > Forum management --- #
     acp_management_forums:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -463,7 +463,7 @@ services:
             $route: acp_forums_manage
 
     acp_forums_manage:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -479,7 +479,7 @@ services:
                     f: 0
 
     acp_forums_prune:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -494,7 +494,7 @@ services:
 
     # --- ACP > Management > Ban management --- #
     acp_management_ban:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -504,7 +504,7 @@ services:
             $route: acp_ban_emails
 
     acp_ban_emails:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -518,7 +518,7 @@ services:
                     mode: 'email'
 
     acp_ban_users:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -532,7 +532,7 @@ services:
                     mode: 'user'
 
     acp_ban_ips:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -547,7 +547,7 @@ services:
 
     # --- ACP > Management > Attachment management --- #
     acp_management_attachments:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -557,7 +557,7 @@ services:
             $route: acp_attachments_manage
 
     acp_attachments_manage:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -574,7 +574,7 @@ services:
                     page: 1
 
     acp_attachments_extensions:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -588,7 +588,7 @@ services:
                     mode: 'extensions'
 
     acp_attachments_ext_groups:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -602,7 +602,7 @@ services:
                     mode: 'ext_groups'
 
     acp_attachments_orphaned:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -620,7 +620,7 @@ services:
 
     # --- ACP > Permissions --- #
     acp_cat_permissions:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -630,7 +630,7 @@ services:
             $route: acp_permissions
 
     acp_permissions:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -647,7 +647,7 @@ services:
 
     # --- ACP > Permissions > Global permissions --- #
     acp_permissions_global:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -657,7 +657,7 @@ services:
             $route: acp_permissions_global_user
 
     acp_permissions_global_user:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -671,7 +671,7 @@ services:
                     mode: 'setting_user_global'
 
     acp_permissions_global_group:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -685,7 +685,7 @@ services:
                     mode: 'setting_group_global'
 
     acp_permissions_global_mods:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -699,7 +699,7 @@ services:
                     mode: 'setting_mod_global'
 
     acp_permissions_global_admins:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -714,7 +714,7 @@ services:
 
     # --- ACP > Permissions > Forum permissions --- #
     acp_permissions_forums:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -724,7 +724,7 @@ services:
             $route: acp_permissions_forum
 
     acp_permissions_forum:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -738,7 +738,7 @@ services:
                     mode: 'setting_forum_local'
 
     acp_permissions_forum_copy:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -752,7 +752,7 @@ services:
                     mode: 'setting_forum_copy'
 
     acp_permissions_forum_user:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -766,7 +766,7 @@ services:
                     mode: 'setting_user_local'
 
     acp_permissions_forum_group:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -780,7 +780,7 @@ services:
                     mode: 'setting_group_local'
 
     acp_permissions_forum_mods:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -795,7 +795,7 @@ services:
 
     # --- ACP > Permissions > Permission roles --- #
     acp_permissions_roles:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -805,7 +805,7 @@ services:
             $route: acp_permissions_roles_user
 
     acp_permissions_roles_user:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -819,7 +819,7 @@ services:
                     mode: 'user_roles'
 
     acp_permissions_roles_mod:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -833,7 +833,7 @@ services:
                     mode: 'mod_roles'
 
     acp_permissions_roles_admin:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -847,7 +847,7 @@ services:
                     mode: 'admin_roles'
 
     acp_permissions_roles_forum:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -862,7 +862,7 @@ services:
 
     # --- ACP > Permissions > Permission masks --- #
     acp_permissions_masks:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -872,7 +872,7 @@ services:
             $route: acp_permissions_masks_user
 
     acp_permissions_masks_user:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -886,7 +886,7 @@ services:
                     mode: 'view_user_global'
 
     acp_permissions_masks_mod_global:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -900,7 +900,7 @@ services:
                     mode: 'view_mod_global'
 
     acp_permissions_masks_mod_forum:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -914,7 +914,7 @@ services:
                     mode: 'view_mod_local'
 
     acp_permissions_masks_admin:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -928,7 +928,7 @@ services:
                     mode: 'view_admin_global'
 
     acp_permissions_masks_forum:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -943,7 +943,7 @@ services:
 
     # --- ACP > Content --- #
     acp_cat_content:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -954,7 +954,7 @@ services:
 
     # --- ACP > Content > Posting --- #
     acp_posting:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -964,7 +964,7 @@ services:
             $route: acp_bbcodes
 
     acp_bbcodes:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -980,7 +980,7 @@ services:
                     page: 1
 
     acp_smilies:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -997,7 +997,7 @@ services:
                     page: 1
 
     acp_topic_icons:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1011,7 +1011,7 @@ services:
                     mode: 'icons'
 
     acp_words:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1025,7 +1025,7 @@ services:
 
     # --- ACP > Content > Users
     acp_profiles:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1035,7 +1035,7 @@ services:
             $route: acp_cpf
 
     acp_cpf:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1048,7 +1048,7 @@ services:
                     _controller: acp.profile:main
 
     acp_disallow_usernames:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1061,7 +1061,7 @@ services:
                     _controller: acp.disallow:main
 
     acp_ranks:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1075,7 +1075,7 @@ services:
 
     # --- ACP > Content > General tasks
     acp_general_tasks:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1085,7 +1085,7 @@ services:
             $route: acp_mass_email
 
     acp_mass_email:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1098,7 +1098,7 @@ services:
                     _controller: acp.email:main
 
     acp_reasons:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1111,7 +1111,7 @@ services:
                     _controller: acp.reasons:main
 
     acp_bots:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1125,7 +1125,7 @@ services:
 
     # --- ACP > Customise --- #
     acp_cat_customise:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1136,7 +1136,7 @@ services:
 
     # --- ACP > Customise > Extensions management --- #
     acp_extensions_management:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1147,7 +1147,7 @@ services:
 
 
     acp_extensions_manage:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1164,7 +1164,7 @@ services:
                     ext: "[^?]+"
 
     acp_extensions_catalog:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1182,7 +1182,7 @@ services:
 
     # --- ACP > Customise > Style management
     acp_styles_management:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1192,7 +1192,7 @@ services:
             $route: acp_styles_manage
 
     acp_styles_manage:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1206,7 +1206,7 @@ services:
                     mode: 'manage'
 
     acp_styles_install:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1221,7 +1221,7 @@ services:
 
     # --- ACP > Customise > Language management
     acp_language_management:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1231,7 +1231,7 @@ services:
             $route: acp_language_manage
 
     acp_language_manage:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1245,7 +1245,7 @@ services:
 
     # -- ACP > Maintenance --- #
     acp_cat_maintenance:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1256,7 +1256,7 @@ services:
 
     # --- ACP > Maintenance > Logs --- #
     acp_logs:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1266,7 +1266,7 @@ services:
             $route: acp_logs_admin
 
     acp_logs_admin:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1283,7 +1283,7 @@ services:
                     page: 1
 
     acp_logs_mod:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1300,7 +1300,7 @@ services:
                     page: 1
 
     acp_logs_user:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1317,7 +1317,7 @@ services:
                     page: 1
 
     acp_logs_error:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1335,7 +1335,7 @@ services:
 
     # --- ACP > Maintenance > Database --- #
     acp_database:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1345,7 +1345,7 @@ services:
             $route: acp_backup
 
     acp_backup:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1359,7 +1359,7 @@ services:
                     mode: 'backup'
 
     acp_restore:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1373,7 +1373,7 @@ services:
                     mode: 'restore'
 
     acp_search_index:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1388,7 +1388,7 @@ services:
 
     # --- ACP > Maintenance > phpBB --- #
     acp_phpbb:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1398,7 +1398,7 @@ services:
             $route: acp_update
 
     acp_update:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1411,7 +1411,7 @@ services:
                     _controller: acp.update:main
 
     acp_php_info:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1424,7 +1424,7 @@ services:
                     _controller: acp.php_info:main
 
     acp_help_phpbb:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
@@ -1438,7 +1438,7 @@ services:
 
     # --- ACP > Extensions --- #
     acp_cat_extensions:
-        tags: { name: acp }
+        tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         shared: false
         arguments:
