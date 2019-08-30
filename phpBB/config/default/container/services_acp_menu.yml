@@ -12,16 +12,17 @@ services:
         class: phpbb\cp\menu\item
         arguments:
             $auth: ''
-            $icon: cogs
-            $route: acp_index
+            $icon: ''
+            $parent: ''
+            $route: 'acp_index'
 
     acp_index:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
         arguments:
             $auth: 'acl_a_board'
-            $icon: home
-            $parent: acp_cat_configuration
+            $icon: ''
+            $parent: 'acp_cat_configuration'
             $route:
                 path: /index
                 defaults:
@@ -34,8 +35,8 @@ services:
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
-            $parent: acp_cat_configuration
-            $route: acp_settings_board
+            $parent: 'acp_cat_configuration'
+            $route: 'acp_settings_board'
 
     acp_settings_board:
         tags: [{ name: acp }]
@@ -43,7 +44,7 @@ services:
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
-            $parent: acp_configuration_board
+            $parent: 'acp_configuration_board'
             $route:
                 path: /settings/board
                 defaults:
@@ -56,7 +57,7 @@ services:
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
-            $parent: acp_configuration_board
+            $parent: 'acp_configuration_board'
             $route:
                 path: /settings/features
                 defaults:
@@ -69,7 +70,7 @@ services:
         arguments:
             $auth: 'acl_a_attach'
             $icon: ''
-            $parent: acp_configuration_board
+            $parent: 'acp_configuration_board'
             $route:
                 path: /settings/attachments
                 defaults:
@@ -82,7 +83,7 @@ services:
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
-            $parent: acp_configuration_board
+            $parent: 'acp_configuration_board'
             $route:
                 path: /settings/avatars
                 defaults:
@@ -95,7 +96,7 @@ services:
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
-            $parent: acp_configuration_board
+            $parent: 'acp_configuration_board'
             $route:
                 path: /settings/signature
                 defaults:
@@ -108,7 +109,7 @@ services:
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
-            $parent: acp_configuration_board
+            $parent: 'acp_configuration_board'
             $route:
                 path: /settings/post
                 defaults:
@@ -121,7 +122,7 @@ services:
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
-            $parent: acp_configuration_board
+            $parent: 'acp_configuration_board'
             $route:
                 path: /settings/pm
                 defaults:
@@ -134,7 +135,7 @@ services:
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
-            $parent: acp_configuration_board
+            $parent: 'acp_configuration_board'
             $route:
                 path: /settings/registration
                 defaults:
@@ -147,7 +148,7 @@ services:
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
-            $parent: acp_configuration_board
+            $parent: 'acp_configuration_board'
             $route:
                 path: /settings/captcha
                 defaults:
@@ -159,7 +160,7 @@ services:
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
-            $parent: acp_configuration_board
+            $parent: 'acp_configuration_board'
             $route:
                 path: /settings/contact
                 defaults:
@@ -171,7 +172,7 @@ services:
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
-            $parent: acp_configuration_board
+            $parent: 'acp_configuration_board'
             $route:
                 path: /settings/feed
                 defaults:
@@ -185,8 +186,8 @@ services:
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
-            $parent: acp_cat_configuration
-            $route: acp_settings_server
+            $parent: 'acp_cat_configuration'
+            $route: 'acp_settings_server'
 
     acp_settings_server:
         tags: [{ name: acp }]
@@ -194,7 +195,7 @@ services:
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
-            $parent: acp_configuration_server
+            $parent: 'acp_configuration_server'
             $route:
                 path: /settings/server
                 defaults:
@@ -207,7 +208,7 @@ services:
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
-            $parent: acp_configuration_server
+            $parent: 'acp_configuration_server'
             $route:
                 path: /settings/cookie
                 defaults:
@@ -220,7 +221,7 @@ services:
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
-            $parent: acp_configuration_server
+            $parent: 'acp_configuration_server'
             $route:
                 path: /settings/load
                 defaults:
@@ -233,7 +234,7 @@ services:
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
-            $parent: acp_configuration_server
+            $parent: 'acp_configuration_server'
             $route:
                 path: /settings/security
                 defaults:
@@ -246,7 +247,7 @@ services:
         arguments:
             $auth: 'acl_a_search'
             $icon: ''
-            $parent: acp_configuration_server
+            $parent: 'acp_configuration_server'
             $route:
                 path: /settings/search
                 defaults:
@@ -259,7 +260,7 @@ services:
         arguments:
             $auth: 'acl_a_storage'
             $icon: ''
-            $parent: acp_configuration_server
+            $parent: 'acp_configuration_server'
             $route:
                 path: /settings/storage
                 defaults:
@@ -272,8 +273,8 @@ services:
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
-            $parent: acp_cat_configuration
-            $route: acp_settings_auth
+            $parent: 'acp_cat_configuration'
+            $route: 'acp_settings_auth'
 
     acp_settings_auth:
         tags: [{ name: acp }]
@@ -281,7 +282,7 @@ services:
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
-            $parent: acp_client_communication
+            $parent: 'acp_client_communication'
             $route:
                 path: /settings/authentication
                 defaults:
@@ -294,7 +295,7 @@ services:
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
-            $parent: acp_client_communication
+            $parent: 'acp_client_communication'
             $route:
                 path: /settings/email
                 defaults:
@@ -307,7 +308,7 @@ services:
         arguments:
             $auth: 'acl_a_jabber'
             $icon: ''
-            $parent: acp_client_communication
+            $parent: 'acp_client_communication'
             $route:
                 path: /settings/jabber
                 defaults:
@@ -321,7 +322,7 @@ services:
             $auth: ''
             $icon: ''
             $parent: ''
-            $route: acp_users_manage
+            $route: 'acp_users_manage'
 
     # --- ACP > Management > User management --- #
     acp_management_users:
@@ -330,8 +331,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_management
-            $route: acp_users_manage
+            $parent: 'acp_cat_management'
+            $route: 'acp_users_manage'
 
     acp_users_manage:
         tags: [{ name: acp }]
@@ -339,7 +340,7 @@ services:
         arguments:
             $auth: 'acl_a_user'
             $icon: ''
-            $parent: acp_management_users
+            $parent: 'acp_management_users'
             $route:
                 path: /users/manage/{mode}/{u}
                 defaults:
@@ -354,7 +355,7 @@ services:
         arguments:
             $auth: 'acl_a_user'
             $icon: ''
-            $parent: acp_management_users
+            $parent: 'acp_management_users'
             $route:
                 path: /users/inactive
                 defaults:
@@ -367,7 +368,7 @@ services:
         arguments:
             $auth: 'acl_a_userdel'
             $icon: ''
-            $parent: acp_management_users
+            $parent: 'acp_management_users'
             $route:
                 path: /users/prune
                 defaults:
@@ -381,8 +382,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_management
-            $route: acp_groups_manage
+            $parent: 'acp_cat_management'
+            $route: 'acp_groups_manage'
 
     acp_groups_manage:
         tags: [{ name: acp }]
@@ -390,7 +391,7 @@ services:
         arguments:
             $auth: 'acl_a_group'
             $icon: ''
-            $parent: acp_management_groups
+            $parent: 'acp_management_groups'
             $route:
                 path: /groups/manage/{action}/{g}
                 defaults:
@@ -406,7 +407,7 @@ services:
         arguments:
             $auth: 'acl_a_group'
             $icon: ''
-            $parent: acp_management_groups
+            $parent: 'acp_management_groups'
             $route:
                 path: /groups/position
                 defaults:
@@ -420,8 +421,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_management
-            $route: acp_forums_manage
+            $parent: 'acp_cat_management'
+            $route: 'acp_forums_manage'
 
     acp_forums_manage:
         tags: [{ name: acp }]
@@ -429,7 +430,7 @@ services:
         arguments:
             $auth: 'acl_a_forum'
             $icon: ''
-            $parent: acp_management_forums
+            $parent: 'acp_management_forums'
             $route:
                 path: /forums/manage/{p}/{action}/{f}
                 defaults:
@@ -444,7 +445,7 @@ services:
         arguments:
             $auth: 'acl_a_prune'
             $icon: ''
-            $parent: acp_management_forums
+            $parent: 'acp_management_forums'
             $route:
                 path: /forums/prune
                 defaults:
@@ -458,8 +459,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_management
-            $route: acp_ban_emails
+            $parent: 'acp_cat_management'
+            $route: 'acp_ban_emails'
 
     acp_ban_emails:
         tags: [{ name: acp }]
@@ -467,7 +468,7 @@ services:
         arguments:
             $auth: 'acl_a_ban'
             $icon: ''
-            $parent: acp_management_ban
+            $parent: 'acp_management_ban'
             $route:
                 path: /ban/emails
                 defaults:
@@ -480,7 +481,7 @@ services:
         arguments:
             $auth: 'acl_a_ban'
             $icon: ''
-            $parent: acp_management_ban
+            $parent: 'acp_management_ban'
             $route:
                 path: /ban/users
                 defaults:
@@ -493,7 +494,7 @@ services:
         arguments:
             $auth: 'acl_a_ban'
             $icon: ''
-            $parent: acp_management_ban
+            $parent: 'acp_management_ban'
             $route:
                 path: /ban/ips
                 defaults:
@@ -507,8 +508,8 @@ services:
         arguments:
             $auth: 'acl_a_attach'
             $icon: ''
-            $parent: acp_cat_management
-            $route: acp_attachments_manage
+            $parent: 'acp_cat_management'
+            $route: 'acp_attachments_manage'
 
     acp_attachments_manage:
         tags: [{ name: acp }]
@@ -516,7 +517,7 @@ services:
         arguments:
             $auth: 'acl_a_attach'
             $icon: ''
-            $parent: acp_management_attachments
+            $parent: 'acp_management_attachments'
             $route:
                 path: /attachments/manage
                 defaults:
@@ -530,7 +531,7 @@ services:
         arguments:
             $auth: 'acl_a_attach'
             $icon: ''
-            $parent: acp_management_attachments
+            $parent: 'acp_management_attachments'
             $route:
                 path: /attachments/extensions
                 defaults:
@@ -543,7 +544,7 @@ services:
         arguments:
             $auth: 'acl_a_attach'
             $icon: ''
-            $parent: acp_management_attachments
+            $parent: 'acp_management_attachments'
             $route:
                 path: /attachments/extension_groups
                 defaults:
@@ -556,7 +557,7 @@ services:
         arguments:
             $auth: 'acl_a_attach'
             $icon: ''
-            $parent: acp_management_attachments
+            $parent: 'acp_management_attachments'
             $route:
                 path: /attachments/orphaned
                 defaults:
@@ -572,7 +573,7 @@ services:
             $auth: ''
             $icon: ''
             $parent: ''
-            $route: acp_permissions
+            $route: 'acp_permissions'
 
     acp_permissions:
         tags: [{ name: acp }]
@@ -580,7 +581,7 @@ services:
         arguments:
             $auth: 'acl_a_authusers || acl_a_authgroups || acl_a_viewauth'
             $icon: ''
-            $parent: acp_cat_permissions
+            $parent: 'acp_cat_permissions'
             $route:
                 path: /permissions/{mode}
                 defaults:
@@ -596,8 +597,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_permissions
-            $route: acp_permissions_global_user
+            $parent: 'acp_cat_permissions'
+            $route: 'acp_permissions_global_user'
 
     acp_permissions_global_user:
         tags: [{ name: acp }]
@@ -605,7 +606,7 @@ services:
         arguments:
             $auth: 'acl_a_authusers && (acl_a_aauth || acl_a_mauth || acl_a_uauth)'
             $icon: ''
-            $parent: acp_permissions_global
+            $parent: 'acp_permissions_global'
             $route:
                 path: /permissions/global/user
                 defaults:
@@ -618,7 +619,7 @@ services:
         arguments:
             $auth: 'acl_a_authgroups && (acl_a_aauth || acl_a_mauth || acl_a_uauth)'
             $icon: ''
-            $parent: acp_permissions_global
+            $parent: 'acp_permissions_global'
             $route:
                 path: /permissions/global/group
                 defaults:
@@ -631,7 +632,7 @@ services:
         arguments:
             $auth: 'acl_a_mauth && (acl_a_authusers || acl_a_authgroups)'
             $icon: ''
-            $parent: acp_permissions_global
+            $parent: 'acp_permissions_global'
             $route:
                 path: /permissions/global/mod
                 defaults:
@@ -644,7 +645,7 @@ services:
         arguments:
             $auth: 'acl_a_aauth && (acl_a_authusers || acl_a_authgroups)'
             $icon: ''
-            $parent: acp_permissions_global
+            $parent: 'acp_permissions_global'
             $route:
                 path: /permissions/global/admin
                 defaults:
@@ -658,8 +659,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_permissions
-            $route: acp_permissions_forum
+            $parent: 'acp_cat_permissions'
+            $route: 'acp_permissions_forum'
 
     acp_permissions_forum:
         tags: [{ name: acp }]
@@ -667,7 +668,7 @@ services:
         arguments:
             $auth: 'acl_a_fauth && (acl_a_authusers || acl_a_authgroups)'
             $icon: ''
-            $parent: acp_permissions_forums
+            $parent: 'acp_permissions_forums'
             $route:
                 path: /permissions/forum
                 defaults:
@@ -680,7 +681,7 @@ services:
         arguments:
             $auth: 'acl_a_fauth && acl_a_authusers && acl_a_authgroups && acl_a_mauth'
             $icon: ''
-            $parent: acp_permissions_forums
+            $parent: 'acp_permissions_forums'
             $route:
                 path: /permissions/forum/copy
                 defaults:
@@ -693,7 +694,7 @@ services:
         arguments:
             $auth: 'acl_a_authusers && (acl_a_mauth || acl_a_fauth)'
             $icon: ''
-            $parent: acp_permissions_forums
+            $parent: 'acp_permissions_forums'
             $route:
                 path: /permissions/forum/user
                 defaults:
@@ -706,7 +707,7 @@ services:
         arguments:
             $auth: 'acl_a_authgroups && (acl_a_mauth || acl_a_fauth)'
             $icon: ''
-            $parent: acp_permissions_forums
+            $parent: 'acp_permissions_forums'
             $route:
                 path: /permissions/forum/group
                 defaults:
@@ -719,7 +720,7 @@ services:
         arguments:
             $auth: 'acl_a_mauth && (acl_a_authusers || acl_a_authgroups)'
             $icon: ''
-            $parent: acp_permissions_forums
+            $parent: 'acp_permissions_forums'
             $route:
                 path: /permissions/forum/mod
                 defaults:
@@ -733,8 +734,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_permissions
-            $route: acp_permissions_roles_user
+            $parent: 'acp_cat_permissions'
+            $route: 'acp_permissions_roles_user'
 
     acp_permissions_roles_user:
         tags: [{ name: acp }]
@@ -742,7 +743,7 @@ services:
         arguments:
             $auth: 'acl_a_roles && acl_a_uauth'
             $icon: ''
-            $parent: acp_permissions_roles
+            $parent: 'acp_permissions_roles'
             $route:
                 path: /permissions/roles/user
                 defaults:
@@ -755,7 +756,7 @@ services:
         arguments:
             $auth: 'acl_a_roles && acl_a_mauth'
             $icon: ''
-            $parent: acp_permissions_roles
+            $parent: 'acp_permissions_roles'
             $route:
                 path: /permissions/roles/mod
                 defaults:
@@ -768,7 +769,7 @@ services:
         arguments:
             $auth: 'acl_a_roles && acl_a_aauth'
             $icon: ''
-            $parent: acp_permissions_roles
+            $parent: 'acp_permissions_roles'
             $route:
                 path: /permissions/roles/admin
                 defaults:
@@ -781,7 +782,7 @@ services:
         arguments:
             $auth: 'acl_a_roles && acl_a_fauth'
             $icon: ''
-            $parent: acp_permissions_roles
+            $parent: 'acp_permissions_roles'
             $route:
                 path: /permissions/roles/forum
                 defaults:
@@ -795,8 +796,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_permissions
-            $route: acp_permissions_masks_user
+            $parent: 'acp_cat_permissions'
+            $route: 'acp_permissions_masks_user'
 
     acp_permissions_masks_user:
         tags: [{ name: acp }]
@@ -804,7 +805,7 @@ services:
         arguments:
             $auth: 'acl_a_viewauth'
             $icon: ''
-            $parent: acp_permissions_masks
+            $parent: 'acp_permissions_masks'
             $route:
                 path: /permissions/masks/user
                 defaults:
@@ -817,7 +818,7 @@ services:
         arguments:
             $auth: 'acl_a_viewauth'
             $icon: ''
-            $parent: acp_permissions_masks
+            $parent: 'acp_permissions_masks'
             $route:
                 path: /permissions/masks/mod/global
                 defaults:
@@ -830,7 +831,7 @@ services:
         arguments:
             $auth: 'acl_a_viewauth'
             $icon: ''
-            $parent: acp_permissions_masks
+            $parent: 'acp_permissions_masks'
             $route:
                 path: /permissions/masks/mod/forum
                 defaults:
@@ -843,7 +844,7 @@ services:
         arguments:
             $auth: 'acl_a_viewauth'
             $icon: ''
-            $parent: acp_permissions_masks
+            $parent: 'acp_permissions_masks'
             $route:
                 path: /permissions/masks/admin
                 defaults:
@@ -856,7 +857,7 @@ services:
         arguments:
             $auth: 'acl_a_viewauth'
             $icon: ''
-            $parent: acp_permissions_masks
+            $parent: 'acp_permissions_masks'
             $route:
                 path: /permissions/masks/forum
                 defaults:
@@ -871,7 +872,7 @@ services:
             $auth: ''
             $icon: ''
             $parent: ''
-            $route: acp_bbcodes
+            $route: 'acp_bbcodes'
 
     # --- ACP > Content > Posting --- #
     acp_posting:
@@ -880,8 +881,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_content
-            $route: acp_bbcodes
+            $parent: 'acp_cat_content'
+            $route: 'acp_bbcodes'
 
     acp_bbcodes:
         tags: [{ name: acp }]
@@ -889,7 +890,7 @@ services:
         arguments:
             $auth: 'acl_a_bbcode'
             $icon: ''
-            $parent: acp_posting
+            $parent: 'acp_posting'
             $route:
                 path: /bbcodes
                 defaults:
@@ -902,7 +903,7 @@ services:
         arguments:
             $auth: 'acl_a_icons'
             $icon: ''
-            $parent: acp_posting
+            $parent: 'acp_posting'
             $route:
                 path: /smilies
                 defaults:
@@ -916,7 +917,7 @@ services:
         arguments:
             $auth: 'acl_a_icons'
             $icon: ''
-            $parent: acp_posting
+            $parent: 'acp_posting'
             $route:
                 path: /topic_icons
                 defaults:
@@ -929,7 +930,7 @@ services:
         arguments:
             $auth: 'acl_a_words'
             $icon: ''
-            $parent: acp_posting
+            $parent: 'acp_posting'
             $route:
                 path: /disallow/words
                 defaults:
@@ -942,8 +943,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_content
-            $route: acp_cpf
+            $parent: 'acp_cat_content'
+            $route: 'acp_cpf'
 
     acp_cpf:
         tags: [{ name: acp }]
@@ -951,7 +952,7 @@ services:
         arguments:
             $auth: 'acl_a_profile'
             $icon: ''
-            $parent: acp_profiles
+            $parent: 'acp_profiles'
             $route:
                 path: /cpf
                 defaults:
@@ -963,7 +964,7 @@ services:
         arguments:
             $auth: 'acl_a_names'
             $icon: ''
-            $parent: acp_profiles
+            $parent: 'acp_profiles'
             $route:
                 path: /disallow/usernames
                 defaults:
@@ -975,7 +976,7 @@ services:
         arguments:
             $auth: 'acl_a_ranks'
             $icon: ''
-            $parent: acp_profiles
+            $parent: 'acp_profiles'
             $route:
                 path: /ranks
                 defaults:
@@ -988,8 +989,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_content
-            $route: acp_mass_email
+            $parent: 'acp_cat_content'
+            $route: 'acp_mass_email'
 
     acp_mass_email:
         tags: [{ name: acp }]
@@ -997,7 +998,7 @@ services:
         arguments:
             $auth: 'acl_a_email && cfg_email_enable'
             $icon: ''
-            $parent: acp_general_tasks
+            $parent: 'acp_general_tasks'
             $route:
                 path: /mass_email
                 defaults:
@@ -1009,7 +1010,7 @@ services:
         arguments:
             $auth: 'acl_a_reasons'
             $icon: ''
-            $parent: acp_general_tasks
+            $parent: 'acp_general_tasks'
             $route:
                 path: /reasons
                 defaults:
@@ -1021,7 +1022,7 @@ services:
         arguments:
             $auth: 'acl_a_bots'
             $icon: ''
-            $parent: acp_general_tasks
+            $parent: 'acp_general_tasks'
             $route:
                 path: /robots
                 defaults:
@@ -1035,7 +1036,7 @@ services:
             $auth: ''
             $icon: ''
             $parent: ''
-            $route: acp_extensions_manage
+            $route: 'acp_extensions_manage'
 
     # --- ACP > Customise > Extensions management --- #
     acp_extensions_management:
@@ -1044,8 +1045,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_customise
-            $route: acp_extensions_manage
+            $parent: 'acp_cat_customise'
+            $route: 'acp_extensions_manage'
 
 
     acp_extensions_manage:
@@ -1054,7 +1055,7 @@ services:
         arguments:
             $auth: 'acl_a_extensions'
             $icon: ''
-            $parent: acp_extensions_management
+            $parent: 'acp_extensions_management'
             $route:
                 path: /extensions/manage/{action}/{ext}
                 defaults:
@@ -1070,7 +1071,7 @@ services:
         arguments:
             $auth: 'acl_a_extensions'
             $icon: ''
-            $parent: acp_extensions_management
+            $parent: 'acp_extensions_management'
             $route:
                 path: /extensions/catalog/{action}
                 defaults:
@@ -1085,8 +1086,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_customise
-            $route: acp_styles_manage
+            $parent: 'acp_cat_customise'
+            $route: 'acp_styles_manage'
 
     acp_styles_manage:
         tags: [{ name: acp }]
@@ -1094,7 +1095,7 @@ services:
         arguments:
             $auth: 'acl_a_styles'
             $icon: ''
-            $parent: acp_styles_management
+            $parent: 'acp_styles_management'
             $route:
                 path: /styles/manage
                 defaults:
@@ -1107,7 +1108,7 @@ services:
         arguments:
             $auth: 'acl_a_styles'
             $icon: ''
-            $parent: acp_styles_management
+            $parent: 'acp_styles_management'
             $route:
                 path: /styles/install
                 defaults:
@@ -1121,8 +1122,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_customise
-            $route: acp_language_manage
+            $parent: 'acp_cat_customise'
+            $route: 'acp_language_manage'
 
     acp_language_manage:
         tags: [{ name: acp }]
@@ -1130,7 +1131,7 @@ services:
         arguments:
             $auth: 'acl_a_language'
             $icon: ''
-            $parent: acp_cat_customise
+            $parent: 'acp_cat_customise'
             $route:
                 path: /language
                 defaults:
@@ -1144,7 +1145,7 @@ services:
             $auth: ''
             $icon: ''
             $parent: ''
-            $route: acp_logs_admin
+            $route: 'acp_logs_admin'
 
     # --- ACP > Maintenance > Logs --- #
     acp_logs:
@@ -1153,8 +1154,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_maintenance
-            $route: acp_logs_admin
+            $parent: 'acp_cat_maintenance'
+            $route: 'acp_logs_admin'
 
     acp_logs_admin:
         tags: [{ name: acp }]
@@ -1162,7 +1163,7 @@ services:
         arguments:
             $auth: 'acl_a_viewlogs'
             $icon: ''
-            $parent: acp_logs
+            $parent: 'acp_logs'
             $route:
                 path: /logs/admin
                 defaults:
@@ -1176,7 +1177,7 @@ services:
         arguments:
             $auth: 'acl_a_viewlogs'
             $icon: ''
-            $parent: acp_logs
+            $parent: 'acp_logs'
             $route:
                 path: /logs/mod
                 defaults:
@@ -1190,7 +1191,7 @@ services:
         arguments:
             $auth: 'acl_a_viewlogs'
             $icon: ''
-            $parent: acp_logs
+            $parent: 'acp_logs'
             $route:
                 path: /logs/user
                 defaults:
@@ -1204,7 +1205,7 @@ services:
         arguments:
             $auth: 'acl_a_viewlogs'
             $icon: ''
-            $parent: acp_logs
+            $parent: 'acp_logs'
             $route:
                 path: /logs/error
                 defaults:
@@ -1219,8 +1220,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_maintenance
-            $route: acp_backup
+            $parent: 'acp_cat_maintenance'
+            $route: 'acp_backup'
 
     acp_backup:
         tags: [{ name: acp }]
@@ -1228,7 +1229,7 @@ services:
         arguments:
             $auth: 'acl_a_backup'
             $icon: ''
-            $parent: acp_database
+            $parent: 'acp_database'
             $route:
                 path: /database/backup
                 defaults:
@@ -1241,7 +1242,7 @@ services:
         arguments:
             $auth: 'acl_a_backup'
             $icon: ''
-            $parent: acp_database
+            $parent: 'acp_database'
             $route:
                 path: /database/restore
                 defaults:
@@ -1254,7 +1255,7 @@ services:
         arguments:
             $auth: 'acl_a_search'
             $icon: ''
-            $parent: acp_database
+            $parent: 'acp_database'
             $route:
                 path: /database/search
                 defaults:
@@ -1268,8 +1269,8 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_cat_maintenance
-            $route: acp_update
+            $parent: 'acp_cat_maintenance'
+            $route: 'acp_update'
 
     acp_update:
         tags: [{ name: acp }]
@@ -1277,7 +1278,7 @@ services:
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
-            $parent: acp_phpbb
+            $parent: 'acp_phpbb'
             $route:
                 path: /phpbb/update
                 defaults:
@@ -1289,7 +1290,7 @@ services:
         arguments:
             $auth: 'acl_a_phpinfo'
             $icon: ''
-            $parent: acp_phpbb
+            $parent: 'acp_phpbb'
             $route:
                 path: /php
                 defaults:
@@ -1301,7 +1302,7 @@ services:
         arguments:
             $auth: ''
             $icon: ''
-            $parent: acp_phpbb
+            $parent: 'acp_phpbb'
             $route:
                 path: /phpbb/help
                 defaults:
