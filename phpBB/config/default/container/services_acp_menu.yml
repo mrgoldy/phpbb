@@ -10,7 +10,6 @@ services:
     acp_cat_configuration:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: cogs
@@ -19,7 +18,6 @@ services:
     acp_index:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: home
@@ -33,7 +31,6 @@ services:
     acp_configuration_board:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
@@ -43,7 +40,6 @@ services:
     acp_settings_board:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
@@ -57,7 +53,6 @@ services:
     acp_settings_features:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
@@ -71,7 +66,6 @@ services:
     acp_settings_attachment:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_attach'
             $icon: ''
@@ -85,7 +79,6 @@ services:
     acp_settings_avatar:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
@@ -99,7 +92,6 @@ services:
     acp_settings_signature:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
@@ -113,7 +105,6 @@ services:
     acp_settings_post:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
@@ -127,7 +118,6 @@ services:
     acp_settings_pm:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
@@ -141,7 +131,6 @@ services:
     acp_settings_registration:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
@@ -155,7 +144,6 @@ services:
     acp_settings_captcha:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
@@ -168,7 +156,6 @@ services:
     acp_settings_contact:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
@@ -181,7 +168,6 @@ services:
     acp_settings_feed:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
@@ -196,7 +182,6 @@ services:
     acp_configuration_server:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
@@ -206,7 +191,6 @@ services:
     acp_settings_server:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
@@ -220,7 +204,6 @@ services:
     acp_settings_cookie:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
@@ -234,7 +217,6 @@ services:
     acp_settings_load:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
@@ -248,7 +230,6 @@ services:
     acp_settings_security:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
@@ -262,7 +243,6 @@ services:
     acp_settings_search:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_search'
             $icon: ''
@@ -276,7 +256,6 @@ services:
     acp_settings_storage:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_storage'
             $icon: ''
@@ -290,7 +269,6 @@ services:
     acp_client_communication:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
@@ -300,7 +278,6 @@ services:
     acp_settings_auth:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
@@ -314,7 +291,6 @@ services:
     acp_settings_email:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_server'
             $icon: ''
@@ -328,7 +304,6 @@ services:
     acp_settings_jabber:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_jabber'
             $icon: ''
@@ -342,7 +317,6 @@ services:
     acp_cat_management:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -353,7 +327,6 @@ services:
     acp_management_users:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -363,30 +336,25 @@ services:
     acp_users_manage:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_user'
             $icon: ''
             $parent: acp_management_users
-            $before: ''
-            $page: 'page'
             $route:
                 path: /users/manage/{mode}/{u}
                 defaults:
                     _controller: acp.users:main
                     mode: 'overview'
                     u: 0
+                    page: 1
 
     acp_users_inactive:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_user'
             $icon: ''
             $parent: acp_management_users
-            $before: ''
-            $page: 'page'
             $route:
                 path: /users/inactive
                 defaults:
@@ -396,7 +364,6 @@ services:
     acp_users_prune:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_userdel'
             $icon: ''
@@ -411,7 +378,6 @@ services:
     acp_management_groups:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -421,13 +387,10 @@ services:
     acp_groups_manage:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_group'
             $icon: ''
             $parent: acp_management_groups
-            $before: ''
-            $page: 'page'
             $route:
                 path: /groups/manage/{action}/{g}
                 defaults:
@@ -440,7 +403,6 @@ services:
     acp_groups_positions:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_group'
             $icon: ''
@@ -455,7 +417,6 @@ services:
     acp_management_forums:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -465,7 +426,6 @@ services:
     acp_forums_manage:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_forum'
             $icon: ''
@@ -481,7 +441,6 @@ services:
     acp_forums_prune:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_prune'
             $icon: ''
@@ -496,7 +455,6 @@ services:
     acp_management_ban:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -506,7 +464,6 @@ services:
     acp_ban_emails:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_ban'
             $icon: ''
@@ -520,7 +477,6 @@ services:
     acp_ban_users:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_ban'
             $icon: ''
@@ -534,7 +490,6 @@ services:
     acp_ban_ips:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_ban'
             $icon: ''
@@ -549,7 +504,6 @@ services:
     acp_management_attachments:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_attach'
             $icon: ''
@@ -559,13 +513,10 @@ services:
     acp_attachments_manage:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_attach'
             $icon: ''
             $parent: acp_management_attachments
-            $before: ''
-            $page: 'page'
             $route:
                 path: /attachments/manage
                 defaults:
@@ -576,7 +527,6 @@ services:
     acp_attachments_extensions:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_attach'
             $icon: ''
@@ -590,7 +540,6 @@ services:
     acp_attachments_ext_groups:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_attach'
             $icon: ''
@@ -604,13 +553,10 @@ services:
     acp_attachments_orphaned:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_attach'
             $icon: ''
             $parent: acp_management_attachments
-            $before: ''
-            $page: 'page'
             $route:
                 path: /attachments/orphaned
                 defaults:
@@ -622,7 +568,6 @@ services:
     acp_cat_permissions:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -632,7 +577,6 @@ services:
     acp_permissions:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_authusers || acl_a_authgroups || acl_a_viewauth'
             $icon: ''
@@ -649,7 +593,6 @@ services:
     acp_permissions_global:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -659,7 +602,6 @@ services:
     acp_permissions_global_user:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_authusers && (acl_a_aauth || acl_a_mauth || acl_a_uauth)'
             $icon: ''
@@ -673,7 +615,6 @@ services:
     acp_permissions_global_group:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_authgroups && (acl_a_aauth || acl_a_mauth || acl_a_uauth)'
             $icon: ''
@@ -687,7 +628,6 @@ services:
     acp_permissions_global_mods:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_mauth && (acl_a_authusers || acl_a_authgroups)'
             $icon: ''
@@ -701,7 +641,6 @@ services:
     acp_permissions_global_admins:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_aauth && (acl_a_authusers || acl_a_authgroups)'
             $icon: ''
@@ -716,7 +655,6 @@ services:
     acp_permissions_forums:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -726,7 +664,6 @@ services:
     acp_permissions_forum:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_fauth && (acl_a_authusers || acl_a_authgroups)'
             $icon: ''
@@ -740,7 +677,6 @@ services:
     acp_permissions_forum_copy:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_fauth && acl_a_authusers && acl_a_authgroups && acl_a_mauth'
             $icon: ''
@@ -754,7 +690,6 @@ services:
     acp_permissions_forum_user:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_authusers && (acl_a_mauth || acl_a_fauth)'
             $icon: ''
@@ -768,7 +703,6 @@ services:
     acp_permissions_forum_group:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_authgroups && (acl_a_mauth || acl_a_fauth)'
             $icon: ''
@@ -782,7 +716,6 @@ services:
     acp_permissions_forum_mods:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_mauth && (acl_a_authusers || acl_a_authgroups)'
             $icon: ''
@@ -797,7 +730,6 @@ services:
     acp_permissions_roles:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -807,7 +739,6 @@ services:
     acp_permissions_roles_user:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_roles && acl_a_uauth'
             $icon: ''
@@ -821,7 +752,6 @@ services:
     acp_permissions_roles_mod:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_roles && acl_a_mauth'
             $icon: ''
@@ -835,7 +765,6 @@ services:
     acp_permissions_roles_admin:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_roles && acl_a_aauth'
             $icon: ''
@@ -849,7 +778,6 @@ services:
     acp_permissions_roles_forum:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_roles && acl_a_fauth'
             $icon: ''
@@ -864,7 +792,6 @@ services:
     acp_permissions_masks:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -874,7 +801,6 @@ services:
     acp_permissions_masks_user:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_viewauth'
             $icon: ''
@@ -888,7 +814,6 @@ services:
     acp_permissions_masks_mod_global:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_viewauth'
             $icon: ''
@@ -902,7 +827,6 @@ services:
     acp_permissions_masks_mod_forum:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_viewauth'
             $icon: ''
@@ -916,7 +840,6 @@ services:
     acp_permissions_masks_admin:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_viewauth'
             $icon: ''
@@ -930,7 +853,6 @@ services:
     acp_permissions_masks_forum:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_viewauth'
             $icon: ''
@@ -945,7 +867,6 @@ services:
     acp_cat_content:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -956,7 +877,6 @@ services:
     acp_posting:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -966,13 +886,10 @@ services:
     acp_bbcodes:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_bbcode'
             $icon: ''
             $parent: acp_posting
-            $before: ''
-            $page: 'page'
             $route:
                 path: /bbcodes
                 defaults:
@@ -982,13 +899,10 @@ services:
     acp_smilies:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_icons'
             $icon: ''
             $parent: acp_posting
-            $before: ''
-            $page: 'page'
             $route:
                 path: /smilies
                 defaults:
@@ -999,7 +913,6 @@ services:
     acp_topic_icons:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_icons'
             $icon: ''
@@ -1013,7 +926,6 @@ services:
     acp_words:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_words'
             $icon: ''
@@ -1027,7 +939,6 @@ services:
     acp_profiles:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -1037,7 +948,6 @@ services:
     acp_cpf:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_profile'
             $icon: ''
@@ -1050,7 +960,6 @@ services:
     acp_disallow_usernames:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_names'
             $icon: ''
@@ -1063,7 +972,6 @@ services:
     acp_ranks:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_ranks'
             $icon: ''
@@ -1077,7 +985,6 @@ services:
     acp_general_tasks:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -1087,7 +994,6 @@ services:
     acp_mass_email:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_email && cfg_email_enable'
             $icon: ''
@@ -1100,7 +1006,6 @@ services:
     acp_reasons:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_reasons'
             $icon: ''
@@ -1113,7 +1018,6 @@ services:
     acp_bots:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_bots'
             $icon: ''
@@ -1127,7 +1031,6 @@ services:
     acp_cat_customise:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -1138,7 +1041,6 @@ services:
     acp_extensions_management:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -1149,7 +1051,6 @@ services:
     acp_extensions_manage:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_extensions'
             $icon: ''
@@ -1166,13 +1067,10 @@ services:
     acp_extensions_catalog:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_extensions'
             $icon: ''
             $parent: acp_extensions_management
-            $before: ''
-            $page: 'page'
             $route:
                 path: /extensions/catalog/{action}
                 defaults:
@@ -1184,7 +1082,6 @@ services:
     acp_styles_management:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -1194,7 +1091,6 @@ services:
     acp_styles_manage:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_styles'
             $icon: ''
@@ -1208,7 +1104,6 @@ services:
     acp_styles_install:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_styles'
             $icon: ''
@@ -1223,7 +1118,6 @@ services:
     acp_language_management:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -1233,7 +1127,6 @@ services:
     acp_language_manage:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_language'
             $icon: ''
@@ -1247,7 +1140,6 @@ services:
     acp_cat_maintenance:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -1258,7 +1150,6 @@ services:
     acp_logs:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -1268,13 +1159,10 @@ services:
     acp_logs_admin:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_viewlogs'
             $icon: ''
             $parent: acp_logs
-            $before: ''
-            $page: 'page'
             $route:
                 path: /logs/admin
                 defaults:
@@ -1285,13 +1173,10 @@ services:
     acp_logs_mod:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_viewlogs'
             $icon: ''
             $parent: acp_logs
-            $before: ''
-            $page: 'page'
             $route:
                 path: /logs/mod
                 defaults:
@@ -1302,13 +1187,10 @@ services:
     acp_logs_user:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_viewlogs'
             $icon: ''
             $parent: acp_logs
-            $before: ''
-            $page: 'page'
             $route:
                 path: /logs/user
                 defaults:
@@ -1319,13 +1201,10 @@ services:
     acp_logs_error:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_viewlogs'
             $icon: ''
             $parent: acp_logs
-            $before: ''
-            $page: 'page'
             $route:
                 path: /logs/error
                 defaults:
@@ -1337,7 +1216,6 @@ services:
     acp_database:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -1347,7 +1225,6 @@ services:
     acp_backup:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_backup'
             $icon: ''
@@ -1361,7 +1238,6 @@ services:
     acp_restore:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_backup'
             $icon: ''
@@ -1375,7 +1251,6 @@ services:
     acp_search_index:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_search'
             $icon: ''
@@ -1390,7 +1265,6 @@ services:
     acp_phpbb:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -1400,7 +1274,6 @@ services:
     acp_update:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_board'
             $icon: ''
@@ -1413,7 +1286,6 @@ services:
     acp_php_info:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: 'acl_a_phpinfo'
             $icon: ''
@@ -1426,7 +1298,6 @@ services:
     acp_help_phpbb:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''
@@ -1440,7 +1311,6 @@ services:
     acp_cat_extensions:
         tags: [{ name: acp }]
         class: phpbb\cp\menu\item
-        shared: false
         arguments:
             $auth: ''
             $icon: ''

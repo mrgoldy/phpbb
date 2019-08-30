@@ -35,7 +35,6 @@ services:
             $auth: '($forum_id || $topic_id || $post_id) && acl_m_,$forum_id'
             $icon: ''
             $parent: 'mcp_cat_main'
-            $before: ''
             $route:
                 path: /forum
                 defaults:
@@ -50,7 +49,6 @@ services:
             $auth: '($topic_id || $post_id) && acl_m_,$forum_id'
             $icon: ''
             $parent: 'mcp_cat_main'
-            $before: ''
             $route:
                 path: /topic
                 defaults:
@@ -165,7 +163,6 @@ services:
             $auth: 'aclf_m_report'
             $icon: ''
             $parent: 'mcp_cat_reports'
-            $before: ''
             $route:
                 path: /report/post/open
                 defaults:
@@ -180,7 +177,6 @@ services:
             $auth: 'aclf_m_report'
             $icon: ''
             $parent: 'mcp_cat_reports'
-            $before: ''
             $route:
                 path: /report/post/closed
                 defaults:
@@ -210,7 +206,6 @@ services:
             $auth: 'acl_m_pm_report'
             $icon: ''
             $parent: 'mcp_cat_reports'
-            $before: ''
             $route:
                 path: /report/pm/open
                 defaults:
@@ -225,7 +220,6 @@ services:
             $auth: 'acl_m_pm_report'
             $icon: ''
             $parent: 'mcp_cat_reports'
-            $before: ''
             $route:
                 path: /report/pm/closed
                 defaults:
