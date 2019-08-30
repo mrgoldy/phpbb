@@ -2,9 +2,9 @@ services:
     cp.manager:
         class: phpbb\cp\manager
         arguments:
-            - '@acp_collection'
-            - '@mcp_collection'
-            - '@ucp_collection'
+            - '@?acp_collection'
+            - '@?mcp_collection'
+            - '@?ucp_collection'
 
     cp.constructor:
         class: phpbb\cp\constructor
