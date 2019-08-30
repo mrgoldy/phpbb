@@ -30,9 +30,6 @@ class item implements item_interface
 	/** @var string Item's "before" sibling */
 	protected $before;
 
-	/** @var string Item's pagination "page" variable */
-	protected $page;
-
 	/** @var bool Item's display property */
 	protected $display;
 
@@ -44,17 +41,15 @@ class item implements item_interface
 	 * @param string|array	$route		Item's route
 	 * @param string		$parent		Item's parent
 	 * @param string		$before		Item's before sibling
-	 * @param string		$page		Item's pagination variable
 	 * @param bool			$display	Item's display property
 	 */
-	public function __construct($auth = '', $icon = '', $parent = '', $before = '', $page = '', $display = true, $route = '')
+	public function __construct($auth = '', $icon = '', $route = '', $parent = '', $before = '', $display = true)
 	{
 		$this->auth 	= $auth;
 		$this->icon		= $icon;
 		$this->route	= $route;
 		$this->parent	= $parent;
 		$this->before	= $before;
-		$this->page		= $page;
 		$this->display	= $display;
 	}
 
@@ -95,14 +90,6 @@ class item implements item_interface
 	public function get_route()
 	{
 		return $this->route;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function get_page()
-	{
-		return $this->page;
 	}
 
 	/**

@@ -107,34 +107,6 @@ interface item_interface
 	public function get_route();
 
 	/**
-	 * Get this item's pagination variable.
-	 *
-	 * This should only be defined if pagination is required for this controller.
-	 * The string defined here should be name of the variable used.
-	 *
-	 * If defined, an additional route will be created suffixed with "_pagination".
-	 * @see \phpbb\cp\manager::get_route_pagination()
-	 *
-	 * All the settings from the initial "$route" declaration will be taken,
-	 * where as the string defined here will be unset() from the "defaults".
-	 *
-	 * For example the BBCodes item looks as followed:
-	 * acp_bbcodes:
-	 * 		$page: 'page'
-	 * 		$route:
-	 * 			path: /bbcodes
-	 * 			defaults:
-	 * 				_controller: acp.bbcodes:main
-	 * 				page: 1
-	 *
-	 * This will create 2 routes, namely "acp_bbcodes" and "acp_bbcodes_pagination",
-	 * where "page" is unset() from the defaults in the pagination route.
-	 *
-	 * @return string
-	 */
-	public function get_page();
-
-	/**
 	 * Get this item's display property.
 	 *
 	 * This can be set to false,
