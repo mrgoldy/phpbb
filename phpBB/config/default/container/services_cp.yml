@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: true
+
+    phpbb\acp\menu\:
+        resource: '../phpbb/acp/menu/*'
+
+    _instanceof:
+        phpbb\acp\menu\acp:
+            tags: ['acp.menu.item']
+
+    cp.manager:
+        class: phpbb\cp\manager
+        arguments:
+            - !tagged acp.menu.item
