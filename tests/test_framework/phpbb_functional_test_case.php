@@ -305,7 +305,7 @@ class phpbb_functional_test_case extends phpbb_test_case
 			->with_custom_parameters([
 				'core.disable_super_globals' => false,
 				'installer.create_config_file.options' => [
-					'debug' => true,
+					'debug' => false,
 					'environment' => 'test',
 				],
 				'cache.driver.class' => 'phpbb\cache\driver\file'
