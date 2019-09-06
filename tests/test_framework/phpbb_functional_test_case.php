@@ -301,7 +301,7 @@ class phpbb_functional_test_case extends phpbb_test_case
 		$container = $container_builder
 			->with_environment('installer')
 			->without_extensions()
-			->without_cache()
+			->with_cache()
 			->with_custom_parameters([
 				'core.disable_super_globals' => false,
 				'installer.create_config_file.options' => [
@@ -311,7 +311,7 @@ class phpbb_functional_test_case extends phpbb_test_case
 				'cache.driver.class' => 'phpbb\cache\driver\file'
 			])
 			->with_config(new \phpbb\config_php_file($phpbb_root_path, $phpEx))
-			->without_compiled_container()
+			->with_compiled_container()
 			->get_container();
 
 		$container->register('installer.install_finish.notify_user')->setSynthetic(true);
