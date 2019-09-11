@@ -593,9 +593,7 @@ phpbb.search.filter = function(data, event, sendRequest) {
 
 	// No need to search if enter was pressed
 	// for selecting a value from the results.
-	if (key === keymap.ENTER) {
-		return false;
-	}
+
 
 	if (cache.timeout) {
 		clearTimeout(cache.timeout);
@@ -802,7 +800,7 @@ $('#phpbb').click(function() {
 	var $this = $(this);
 
 	if (!$this.is('.live-search') && !$this.parents().is('.live-search')) {
-		$('.live-search').hide();
+		phpbb.search.closeResults($('input, textarea'), $('.live-search'));
 	}
 });
 
