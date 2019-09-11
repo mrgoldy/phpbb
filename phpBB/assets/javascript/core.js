@@ -802,7 +802,7 @@ $('#phpbb').click(function() {
 	var $this = $(this);
 
 	if (!$this.is('.live-search') && !$this.parents().is('.live-search')) {
-		phpbb.search.closeResults($('input, textarea'), $('.live-search'));
+		$('.live-search').hide();
 	}
 });
 
