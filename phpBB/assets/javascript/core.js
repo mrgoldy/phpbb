@@ -718,7 +718,7 @@ phpbb.alertTime = 100;
 	 * @param {jQuery} $resultContainer	Search results list container.
 	 */
 	phpbb.search.navigateResults = function($input, $container, $resultContainer) {
-		$input.on('keyup.navigateResults', function(event) {
+		$input.on('keyup.phpbb.search', function(event) {
 			let key = event.keyCode || event.which,
 				$active = $resultContainer.children('.active');
 		});
