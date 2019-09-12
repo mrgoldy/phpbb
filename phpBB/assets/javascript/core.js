@@ -719,7 +719,9 @@ phpbb.alertTime = 100;
 	 */
 	phpbb.search.navigateResults = function($input, $container, $resultContainer) {
 		$input.on('keyup.phpbb.search', function(event) {
-			console.log('hello');
+			let key = event.which;
+
+			console.log(key);
 		});
 	};
 
