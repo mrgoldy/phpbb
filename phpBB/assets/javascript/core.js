@@ -717,7 +717,7 @@ phpbb.alertTime = 100;
 	 * @param {jQuery} $container Search results container.
 	 */
 	phpbb.search.closeResults = function($input, $container) {
-		$input.off('.searchNavigation');
+		$input.off('.phpbb.search');
 		$container.hide();
 	};
 
@@ -729,60 +729,27 @@ phpbb.alertTime = 100;
 	 * @param {jQuery} $resultContainer	Search results list container.
 	 */
 	phpbb.search.navigateResults = function($input, $container, $resultContainer) {
-		// Add a namespace to the event (.searchNavigation),
-		// so it can be unbound specifically later on.
-		$input.on('keydown.searchNavigation', function(event) {
+		$input.on('keydown.phpbb.search', function(e) {
 			let key = 12,
 				$active = $resultContainer.children('.active');
 
 			switch (key) {
 				// Set the value for the selected result
 				case keymap.ENTER:
-					if ($active.length) {
-						let value = $active.find('.search-result > span').text();
-
-						phpbb.search.setValue($input, value, $input.attr('data-multiline'));
-					}
-
-					phpbb.search.closeResults($input, $container);
-
-					// Do not submit the form
-					event.preventDefault();
+					console.log('enter');
 					break;
 
 				// Close the results
 				case keymap.ESC:
-					phpbb.search.closeResults($input, $container);
+					console.log('esc');
+
 					break;
 
 				// Navigate the results
 				case keymap.ARROW_DOWN:
 				case keymap.ARROW_UP:
-					let up = key === keymap.ARROW_UP;
+					console.log('arrows');
 
-					if (!$active.length) {
-						if (up) {
-							$resultContainer.children().last().addClass('active');
-						} else {
-							$resultContainer.children().first().addClass('active');
-						}
-					} else {
-						if (up) {
-							if ($active.is(':first-child')) {
-								$resultContainer.children().last().addClass('active');
-							} else {
-								$active.prev().addClass('active');
-							}
-						} else {
-							if ($active.is(':last-child')) {
-								$resultContainer.children().first().addClass('active');
-							} else {
-								$active.next().addClass('active');
-							}
-						}
-
-						$active.removeClass('active');
-					}
 					break;
 			}
 		});
