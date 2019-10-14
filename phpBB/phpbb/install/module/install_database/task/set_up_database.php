@@ -68,20 +68,12 @@ class set_up_database extends \phpbb\install\task_base
 								\phpbb\install\helper\iohandler\iohandler_interface $iohandler,
 								$phpbb_root_path)
 	{
+		$manager = new \phpbb\db\manager();
 		$dbms = $db_helper->get_available_dbms($config->get('dbms'));
-		$dbms = $dbms[$config->get('dbms')]['DRIVER'];
 
-		$this->db				= new $dbms();
-		$this->db->sql_connect(
-			$config->get('dbhost'),
-			$config->get('dbuser'),
-			$config->get('dbpasswd'),
-			$config->get('dbname'),
-			$config->get('dbport'),
-			false,
-			false
-		);
+		$config->set('dbms', $dbms[$config->get('dbms')]['DRIVER']);
 
+		$this->db				= $manager->get_connection_from_config($config);
 		$this->config			= $config;
 		$this->database_helper	= $db_helper;
 		$this->filesystem		= $filesystem;

@@ -27,10 +27,10 @@ require_once dirname(__FILE__) . '/migration/schema.php';
 
 class phpbb_dbal_migrator_test extends phpbb_database_test_case
 {
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
-	/** @var \phpbb\db\tools\tools_interface */
+	/** @var \phpbb\db\tools */
 	protected $db_tools;
 
 	/** @var \phpbb\db\migrator */
@@ -49,8 +49,7 @@ class phpbb_dbal_migrator_test extends phpbb_database_test_case
 		parent::setUp();
 
 		$this->db = $this->new_dbal();
-		$factory = new \phpbb\db\tools\factory();
-		$this->db_tools = $factory->get($this->db);
+		$this->db_tools = new \phpbb\db\tools($this->db);
 
 		$this->config = new \phpbb\config\db($this->db, new phpbb_mock_cache, 'phpbb_config');
 
@@ -70,7 +69,7 @@ class phpbb_dbal_migrator_test extends phpbb_database_test_case
 			'php',
 			'phpbb_',
 			$tools,
-			new \phpbb\db\migration\helper()
+			new \phpbb\db\migration\helper\helper()
 		);
 		$container->set('migrator', $this->migrator);
 		$container->set('dispatcher', new phpbb_mock_event_dispatcher());

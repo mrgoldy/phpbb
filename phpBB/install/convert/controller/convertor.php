@@ -504,9 +504,17 @@ class convertor
 
 			if ($src_dbms != $dbms || $src_dbhost != $dbhost || $src_dbport != $dbport || $src_dbname != $dbname || $src_dbuser != $dbuser)
 			{
-				/** @var \phpbb\db\connection $src_db */
-				$src_db = new $src_dbms();
-				$src_db->sql_connect($src_dbhost, $src_dbuser, htmlspecialchars_decode($src_dbpasswd), $src_dbname, $src_dbport, false, true);
+				$manager = new \phpbb\db\manager();
+
+				$src_db = $manager->get_connection([
+					'dbname'	=> $src_dbname,
+					'user'		=> $src_dbuser,
+					'password'	=> htmlspecialchars_decode($src_dbpasswd),
+					'host'		=> $src_dbhost,
+					'port'		=> $src_dbport,
+					'driver'	=> $src_dbms,
+				]);
+
 				$same_db = false;
 			}
 			else

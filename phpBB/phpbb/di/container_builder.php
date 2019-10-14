@@ -553,7 +553,7 @@ class container_builder
 			if ($this->dbal_connection === null)
 			{
 				$dbal_manager = new \phpbb\db\manager();
-				$dbal_connection = $dbal_manager->connect($this->config_php_file);
+				$dbal_connection = $dbal_manager->get_connection_from_config($this->config_php_file);
 
 				$this->dbal_connection = $dbal_connection;
 			}

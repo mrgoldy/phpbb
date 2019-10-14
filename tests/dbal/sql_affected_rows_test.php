@@ -13,7 +13,7 @@
 
 class phpbb_dbal_sql_affected_rows_test extends phpbb_database_test_case
 {
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	public function setUp(): void

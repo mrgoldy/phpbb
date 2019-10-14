@@ -30,14 +30,14 @@ class schema_generator
 	/** @var \phpbb\db\tools */
 	protected $db_tools;
 
-	/** @var string Table prefix */
-	protected $table_prefix;
-
 	/** @var string phpBB root path */
 	protected $root_path;
 
 	/** @var string php File extension */
 	protected $php_ext;
+
+	/** @var string Table prefix */
+	protected $table_prefix;
 
 	/** @var array */
 	protected $tables;
@@ -52,9 +52,9 @@ class schema_generator
 	 * @param \phpbb\config\config	$config			Config object
 	 * @param \phpbb\db\connection	$db				Database object
 	 * @param \phpbb\db\tools		$db_tools		Database tools object
-	 * @param string				$table_prefix	Table prefix
 	 * @param string				$root_path		phpBB root path
 	 * @param string				$php_ext		php File extension
+	 * @param string				$table_prefix	Table prefix
 	 * @return void
 	 */
 	public function __construct(
@@ -62,9 +62,9 @@ class schema_generator
 		\phpbb\config\config $config,
 		\phpbb\db\connection $db,
 		\phpbb\db\tools $db_tools,
-		$table_prefix,
 		$root_path,
-		$php_ext
+		$php_ext,
+		$table_prefix
 	)
 	{
 		$this->class_names	= $class_names;
@@ -72,9 +72,9 @@ class schema_generator
 		$this->db			= $db;
 		$this->db_tools		= $db_tools;
 
-		$this->table_prefix	= $table_prefix;
 		$this->root_path	= $root_path;
 		$this->php_ext		= $php_ext;
+		$this->table_prefix	= $table_prefix;
 	}
 
 	/**
@@ -112,7 +112,7 @@ class schema_generator
 					$tree[] = $migration_class;
 
 					/** @var \phpbb\db\migration\migration_interface $migration */
-					$migration = new $migration_class($this->config, $this->db, $this->db_tools, $this->table_prefix, $this->root_path, $this->php_ext);
+					$migration = new $migration_class($this->config, $this->db, $this->db_tools, $this->root_path, $this->php_ext, $this->table_prefix);
 					$migration_key = array_search($migration_class, $migrations);
 
 					foreach ($migration->update_schema() as $change_type => $data)

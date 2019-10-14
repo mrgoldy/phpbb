@@ -75,14 +75,14 @@ abstract class phpbb_database_test_case extends TestCase
 
 		if (!file_exists(self::$schema_file))
 		{
-
 			global $table_prefix;
 
-			$db = new \phpbb\db\driver\sqlite3();
-			$factory = new \phpbb\db\tools\factory();
-			$db_tools = $factory->get($db, true);
+			$manager = new \phpbb\db\manager();
+			$db = $manager->get_connection(['driver' => 'sqlite3']);
+			$db_tools = new \phpbb\db\tools($db);
+			$db_tools->set_return_statements(true);
 
-			$schema_generator = new \phpbb\db\migration\schema_generator($classes, new \phpbb\config\config(array()), $db, $db_tools, $phpbb_root_path, $phpEx, $table_prefix);
+			$schema_generator = new \phpbb\db\migration\helper\schema_generator($classes, new \phpbb\config\config(array()), $db, $db_tools, $phpbb_root_path, $phpEx, $table_prefix);
 			file_put_contents(self::$schema_file, json_encode($schema_generator->get_schema()));
 		}
 
@@ -275,8 +275,15 @@ abstract class phpbb_database_test_case extends TestCase
 	{
 		$config = $this->get_database_config();
 
-		$db = new $config['dbms']();
-		$db->sql_connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname'], $config['dbport']);
+		$manager = new \phpbb\db\manager();
+		$db = $manager->get_connection([
+			'dbname'		=> $config['dbname'],
+			'user'			=> $config['dbuser'],
+			'password'		=> $config['dbpasswd'],
+			'host'			=> $config['dbhost'],
+			'port'			=> $config['dbport'],
+			'driver'		=> $config['dbms'],
+		]);
 
 		$this->db_connections[] = $db;
 

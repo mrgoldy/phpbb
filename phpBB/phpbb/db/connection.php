@@ -187,6 +187,42 @@ class connection extends \Doctrine\DBAL\Connection
 	}
 
 	/**
+	 * Get the SQL multi INSERT indicator.
+	 *
+	 * Doctrine DBAL does not support multi insert.
+	 *
+	 * @return false
+	 * @access public
+	 */
+	public function get_multi_insert()
+	{
+		return false;
+	}
+
+	/**
+	 * Returns the version number of the database server connected to.
+	 *
+	 * @todo prefix get_
+	 *
+	 * @param bool		$raw		Only return the fetched sql_server_version
+	 * @param bool		$use_cache	Whether or not to retrieve the version from cache
+	 * @return string				SQL server version
+	 */
+	public function sql_server_info($raw = false, $use_cache = false)
+	{
+		try
+		{
+			$name = $this->getDatabasePlatform()->getReservedKeywordsList()->getName();
+		}
+		catch (DBALException $e)
+		{
+			$name = self::getDriver()->getName();
+		}
+
+		return $name . ' ' . $this->_conn->getServerVersion();
+	}
+
+	/**
 	 * Gets the name of the driver.
 	 *
 	 * @return string				The name of the driver.
@@ -214,27 +250,6 @@ class connection extends \Doctrine\DBAL\Connection
 	public function get_db_connect_id()
 	{
 		return self::getWrappedConnection();
-	}
-
-	/**
-	 * Returns the version number of the database server connected to.
-	 *
-	 * @param bool		$raw		Only return the fetched sql_server_version
-	 * @param bool		$use_cache	Whether or not to retrieve the version from cache
-	 * @return string				SQL server version
-	 */
-	public function sql_server_info($raw = false, $use_cache = false)
-	{
-		try
-		{
-			$name = $this->getDatabasePlatform()->getReservedKeywordsList()->getName();
-		}
-		catch (DBALException $e)
-		{
-			$name = self::getDriver()->getName();
-		}
-
-		return $name . ' ' . $this->_conn->getServerVersion();
 	}
 
 	/**

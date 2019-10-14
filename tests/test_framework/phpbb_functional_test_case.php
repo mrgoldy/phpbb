@@ -118,7 +118,7 @@ class phpbb_functional_test_case extends phpbb_test_case
 	{
 		parent::tearDown();
 
-		if ($this->db instanceof \phpbb\db\driver\driver_interface)
+		if ($this->db instanceof \phpbb\db\connection)
 		{
 			// Close the database connections again this test
 			$this->db->sql_close();
@@ -195,13 +195,22 @@ class phpbb_functional_test_case extends phpbb_test_case
 	protected function get_db()
 	{
 		global $phpbb_root_path, $phpEx;
+
 		// so we don't reopen an open connection
-		if (!($this->db instanceof \phpbb\db\driver\driver_interface))
+		if (!($this->db instanceof \phpbb\db\connection))
 		{
-			$dbms = self::$config['dbms'];
-			$this->db = new $dbms();
-			$this->db->sql_connect(self::$config['dbhost'], self::$config['dbuser'], self::$config['dbpasswd'], self::$config['dbname'], self::$config['dbport']);
+			$manager = new \phpbb\db\manager();
+
+			$this->db = $manager->get_connection([
+				'dbname'		=> self::$config['dbname'],
+				'user'			=> self::$config['dbuser'],
+				'password'		=> self::$config['dbpasswd'],
+				'host'			=> self::$config['dbhost'],
+				'port'			=> self::$config['dbport'],
+				'driver'		=> self::$config['dbms'],
+			]);
 		}
+
 		return $this->db;
 	}
 
@@ -236,8 +245,7 @@ class phpbb_functional_test_case extends phpbb_test_case
 
 		$config = new \phpbb\config\config(array('version' => PHPBB_VERSION));
 		$db = $this->get_db();
-		$factory = new \phpbb\db\tools\factory();
-		$db_tools = $factory->get($db);
+		$db_tools = new \phpbb\db\tools($db);
 
 		$container = new phpbb_mock_container_builder();
 		$migrator = new \phpbb\db\migrator(
@@ -250,7 +258,7 @@ class phpbb_functional_test_case extends phpbb_test_case
 			$phpEx,
 			self::$config['table_prefix'],
 			array(),
-			new \phpbb\db\migration\helper()
+			new \phpbb\db\migration\helper\helper()
 		);
 		$container->set('migrator', $migrator);
 		$container->set('dispatcher', new phpbb_mock_event_dispatcher());

@@ -20,7 +20,7 @@ class phpbb_functions_privmsgs_get_max_setting_from_group_test extends phpbb_dat
 		return $this->createXMLDataSet(dirname(__FILE__).'/fixtures/get_max_setting_from_group.xml');
 	}
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	protected function setUp(): void

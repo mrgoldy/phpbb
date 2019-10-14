@@ -15,7 +15,7 @@ require_once dirname(__FILE__) . '/../../phpBB/includes/mcp/mcp_post.php';
 
 class phpbb_mcp_post_ip_test extends phpbb_database_test_case
 {
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	public function getDataSet()

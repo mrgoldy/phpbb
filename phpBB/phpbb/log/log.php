@@ -52,7 +52,7 @@ class log implements \phpbb\log\log_interface
 
 	/**
 	* Database object
-	* @var \phpbb\db\driver\driver
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
@@ -95,14 +95,14 @@ class log implements \phpbb\log\log_interface
 	/**
 	* Constructor
 	*
-	* @param	\phpbb\db\connection	$db		Database object
-	* @param	\phpbb\user		$user	User object
-	* @param	\phpbb\auth\auth		$auth	Auth object
-	* @param	\phpbb\event\dispatcher_interface	$phpbb_dispatcher	Event dispatcher
-	* @param	string		$phpbb_root_path		Root path
-	* @param	string		$relative_admin_path	Relative admin root path
-	* @param	string		$php_ext			PHP Extension
-	* @param	string		$log_table		Name of the table we use to store our logs
+	* @param \phpbb\db\connection				$db						Database object
+	* @param \phpbb\user						$user					User object
+	* @param \phpbb\auth\auth					$auth					Auth object
+	* @param \phpbb\event\dispatcher_interface	$phpbb_dispatcher		Event dispatcher
+	* @param string								$phpbb_root_path		phpBB root path
+	* @param string								$relative_admin_path	Relative admin root path
+	* @param string								$php_ext				php file Extension
+	* @param string								$log_table				Name of the table we use to store our logs
 	*/
 	public function __construct($db, $user, $auth, $phpbb_dispatcher, $phpbb_root_path, $relative_admin_path, $php_ext, $log_table)
 	{

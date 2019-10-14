@@ -387,7 +387,7 @@ class phpbb_test_case_helpers
 		}
 
 		// Mock the DAL, make it return data from the fixture
-		$db_driver = $this->test_case->getMockBuilder('phpbb\\db\\driver\\driver')
+		$db_driver = $this->test_case->getMockBuilder('phpbb\\db\\connection')
 			->disableOriginalConstructor()
 			->disableOriginalClone()
 			->disableArgumentCloning()

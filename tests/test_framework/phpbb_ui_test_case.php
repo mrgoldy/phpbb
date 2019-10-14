@@ -139,7 +139,7 @@ class phpbb_ui_test_case extends phpbb_test_case
 	{
 		parent::tearDown();
 
-		if ($this->db instanceof \phpbb\db\driver\driver_interface)
+		if ($this->db instanceof \phpbb\db\connection)
 		{
 			// Close the database connections again this test
 			$this->db->sql_close();
@@ -467,7 +467,7 @@ class phpbb_ui_test_case extends phpbb_test_case
 			$phpEx,
 			self::$config['table_prefix'],
 			array(),
-			new \phpbb\db\migration\helper()
+			new \phpbb\db\migration\helper\helper()
 		);
 		$container->set('migrator', $migrator);
 		$container->set('dispatcher', new phpbb_mock_event_dispatcher());
@@ -490,13 +490,18 @@ class phpbb_ui_test_case extends phpbb_test_case
 	protected function get_db()
 	{
 		// so we don't reopen an open connection
-		if (!($this->db instanceof \phpbb\db\driver\driver_interface))
+		if (!($this->db instanceof \phpbb\db\connection))
 		{
-			$dbms = self::$config['dbms'];
-			/** @var \phpbb\db\driver\driver_interface $db */
-			$db = new $dbms();
-			$db->sql_connect(self::$config['dbhost'], self::$config['dbuser'], self::$config['dbpasswd'], self::$config['dbname'], self::$config['dbport']);
-			$this->db = $db;
+			$manager = new \phpbb\db\manager();
+
+			$this->db = $manager->get_connection([
+				'dbname'		=> self::$config['dbname'],
+				'user'			=> self::$config['dbuser'],
+				'password'		=> self::$config['dbpasswd'],
+				'host'			=> self::$config['dbhost'],
+				'port'			=> self::$config['dbport'],
+				'driver'		=> self::$config['dbms'],
+			]);
 		}
 		return $this->db;
 	}

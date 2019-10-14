@@ -21,23 +21,24 @@ require_once __DIR__ . '/../dbal/migration/dummy_order_5.php';
 
 class schema_generator_test extends phpbb_test_case
 {
-	/** @var \phpbb\db\migration\schema_generator */
+	/** @var \phpbb\db\migration\helper\schema_generator */
 	protected $generator;
 
 	public function setUp(): void
 	{
 		parent::setUp();
 
+		$db_manager = new \phpbb\db\manager();
+
+		$this->db = $db_manager->get_connection(['driver' => 'sqlite3']);
+		$this->db_tools = $db_tools = new \phpbb\db\tools($this->db);
 		$this->config = new \phpbb\config\config(array());
-		$this->db = new \phpbb\db\driver\sqlite3();
-		$factory = new \phpbb\db\tools\factory();
-		$this->db_tools = $factory->get($this->db);
 		$this->table_prefix = 'phpbb_';
 	}
 
 	protected function get_schema_generator(array $class_names)
 	{
-		$this->generator = new \phpbb\db\migration\schema_generator($class_names, $this->config, $this->db, $this->db_tools, $this->phpbb_root_path, $this->php_ext, $this->table_prefix);
+		$this->generator = new \phpbb\db\migration\helper\schema_generator($class_names, $this->config, $this->db, $this->db_tools, $this->phpbb_root_path, $this->php_ext, $this->table_prefix);
 
 		return $this->generator;
 	}

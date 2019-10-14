@@ -83,7 +83,7 @@ class create_schema extends \phpbb\install\task_base
 
 		$manager = new \phpbb\db\manager();
 
-		$this->db				= $manager->connect($config);
+		$this->db				= $manager->get_connection_from_config($config);
 		$this->config			= $config;
 		$this->db_tools			= new \phpbb\db\tools($this->db);
 		$this->database_helper	= $db_helper;

@@ -325,7 +325,7 @@ class phpbb_database_test_connection_manager
 	* Compile the correct schema filename (as per create_schema_files) and
 	* load it into the database.
 	*/
-	protected function load_schema_from_file($directory, \phpbb\db\driver\driver_interface $db)
+	protected function load_schema_from_file($directory, \phpbb\db\connection $db)
 	{
 		$schema = $this->dbms['SCHEMA'];
 
@@ -369,16 +369,17 @@ class phpbb_database_test_connection_manager
 			$classes = $finder->core_path('phpbb/db/migration/data/')
 				->get_classes();
 
-			$db = new \phpbb\db\driver\sqlite3();
-			$factory = new \phpbb\db\tools\factory();
-			$db_tools = $factory->get($db, true);
+			$db_manager = new \phpbb\db\manager();
+			$db = $db_manager->get_connection(['driver' => 'sqlite3']);
+			$db_tools = $db_tools = new \phpbb\db\tools($db);
+			$db_tools->set_return_statements(true);
 
-			$schema_generator = new \phpbb\db\migration\schema_generator($classes, new \phpbb\config\config(array()), $db, $db_tools, $phpbb_root_path, $phpEx, $table_prefix);
+			$schema_generator = new \phpbb\db\migration\helper\schema_generator($classes, new \phpbb\config\config(array()), $db, $db_tools, $phpbb_root_path, $phpEx, $table_prefix);
 			$db_table_schema = $schema_generator->get_schema();
 		}
 
-		$factory = new \phpbb\db\tools\factory();
-		$db_tools = $factory->get($db, true);
+		$db_tools = $db_tools = new \phpbb\db\tools($db);
+		$db_tools->set_return_statements(true);
 		foreach ($db_table_schema as $table_name => $table_data)
 		{
 			$queries = $db_tools->sql_create_table(

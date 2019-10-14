@@ -13,6 +13,7 @@
 
 namespace phpbb\install\helper;
 
+use Doctrine\DBAL\DBALException;
 use phpbb\install\exception\invalid_dbms_exception;
 use phpbb\filesystem\helper as filesystem_helper;
 
@@ -305,11 +306,6 @@ class database
 		$dbms_info = $dbms_info[$dbms];
 		$errors = array();
 
-		// Instantiate it and set return on error true
-		/** @var \phpbb\db\connection $db */
-		$db = new $dbms_info['DRIVER'];
-		$db->sql_return_on_error(true);
-
 		// Check that we actually have a database name before going any further
 		if (!in_array($dbms_info['SCHEMA'], array('sqlite', 'oracle'), true) && $dbname === '')
 		{
@@ -336,17 +332,32 @@ class database
 			);
 		}
 
-		// Try to connect to db
-		if (is_array($db->sql_connect($dbhost, $dbuser, $dbpass, $dbname, $dbport, false, true)))
+		$manager = new \phpbb\db\manager();
+		$db = null;
+
+		try
 		{
-			$db_error = $db->sql_error();
-			$errors[] = array(
-				'title' => 'INST_ERR_DB_CONNECT',
-				'description' => ($db_error['message']) ? utf8_convert_message($db_error['message']) : 'INST_ERR_DB_NO_ERROR',
-			);
+			$db = $manager->get_connection([
+				'dbname'		=> $dbname,
+				'user'			=> $dbuser,
+				'password'		=> $dbpass,
+				'host'			=> $dbhost,
+				'port'			=> $dbport,
+				'driver'		=> $dbms_info['DRIVER'],
+			]);
 		}
-		else
+		catch (DBALException $e)
 		{
+			$errors[] = [
+				'title'			=> 'INST_ERR_DB_CONNECT',
+				'description'	=> $e->getMessage() ? $e->getMessage() : 'INST_ERR_DB_NO_ERROR',
+			];
+		}
+
+		if ($db !== null)
+		{
+			$db->sql_return_on_error(true);
+
 			// Check if there is any table name collisions
 			$temp_prefix = strtolower($table_prefix);
 			$table_ary = array(

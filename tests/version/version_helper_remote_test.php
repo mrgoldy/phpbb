@@ -28,8 +28,8 @@ class version_helper_remote_test extends \phpbb_test_case
 		$config = new \phpbb\config\config(array(
 			'version'	=> '3.1.0',
 		));
-		$container = new \phpbb_mock_container_builder();
-		$db = new \phpbb\db\driver\factory($container);
+		$db_manager = new \phpbb\db\manager();
+		$db = $db_manager->get_connection(['driver' => 'sqlite3']);
 		$this->cache = $this->getMockBuilder('\phpbb\cache\service')
 			->setMethods(array('get'))
 			->setConstructorArgs(array(new \phpbb\cache\driver\dummy(), $config, $db, '../../', 'php'))

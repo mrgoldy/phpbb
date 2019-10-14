@@ -60,20 +60,12 @@ class create_schema_file extends \phpbb\install\task_base
 								$phpbb_root_path,
 								$php_ext)
 	{
+		$manager = new \phpbb\db\manager();
 		$dbms = $db_helper->get_available_dbms($config->get('dbms'));
-		$dbms = $dbms[$config->get('dbms')]['DRIVER'];
 
-		$this->db				= new $dbms();
-		$this->db->sql_connect(
-			$config->get('dbhost'),
-			$config->get('dbuser'),
-			$config->get('dbpasswd'),
-			$config->get('dbname'),
-			$config->get('dbport'),
-			false,
-			false
-		);
+		$config->set('dbms', $dbms[$config->get('dbms')]['DRIVER']);
 
+		$this->db				= $manager->get_connection_from_config($config);
 		$this->config			= $config;
 		$this->filesystem		= $filesystem;
 		$this->phpbb_root_path	= $phpbb_root_path;

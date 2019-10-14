@@ -21,7 +21,6 @@ class get_callable_from_step_test extends phpbb_database_test_case
 
 		$phpbb_log = $this->getMockBuilder('\phpbb\log\log')->disableOriginalConstructor()->getMock();
 		$db = $this->new_dbal();
-		$factory = new \phpbb\db\tools\factory();
 		$cache_service = $this->getMockBuilder('\phpbb\cache\service')->disableOriginalConstructor()->getMock();
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 		$module_manager = new \phpbb\module\module_manager(
@@ -37,13 +36,13 @@ class get_callable_from_step_test extends phpbb_database_test_case
 			new phpbb_mock_container_builder(),
 			new \phpbb\config\config(array()),
 			$db,
-			$factory->get($db),
+			$db_tools = new \phpbb\db\tools($db),
 			'phpbb_migrations',
 			$phpbb_root_path,
 			$php_ext,
 			$table_prefix,
 			array($module_tools),
-			new \phpbb\db\migration\helper()
+			new \phpbb\db\migration\helper\helper()
 		);
 
 		if (!$module_tools->exists('acp', 0, 'new_module_langname'))

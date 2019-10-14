@@ -15,6 +15,7 @@ namespace phpbb\db;
 
 use Doctrine\DBAL\DriverManager;
 use phpbb\config_php_file;
+use phpbb\install\helper\config;
 
 class manager
 {
@@ -30,14 +31,28 @@ class manager
 	];
 
 	/**
-	 * Create a connection object
+	 * Create a connection object.
 	 *
-	 * @param config_php_file	$config_php_file		Config.php file instance
+	 * @param array		$params		The connection parameters
+	 * @param
 	 * @throws \Doctrine\DBAL\DBALException
-	 * @return \Doctrine\DBAL\Connection|connection		Connection object
+	 * @return \Doctrine\DBAL\Connection|connection			Connection object
 	 */
-	public function connect(config_php_file $config_php_file)
+	public function get_connection(array $params)
 	{
+		$params = array_merge([
+			'dbname'		=> '',
+			'user'			=> '',
+			'password'		=> '',
+			'host'			=> '',
+			'port'			=> '',
+			'driver'		=> '',
+		], $params, [
+			'wrapperClass'	=> connection::class,
+		]);
+
+		$params['driver'] = $this->get_doctrine_driver($params['driver']);
+
 		$config	= new \Doctrine\DBAL\Configuration();
 		$cache	= new \Doctrine\Common\Cache\ArrayCache();
 
@@ -48,18 +63,29 @@ class manager
 			$config->setSQLLogger(new \Doctrine\DBAL\Logging\DebugStack());
 		}
 
+		return DriverManager::getConnection($params, $config);
+	}
+
+	/**
+	 * Create a connection object from a config file.
+	 *
+	 * @param config_php_file|config	$config_php_file	Config.php file instance
+	 * @param
+	 * @throws \Doctrine\DBAL\DBALException
+	 * @return \Doctrine\DBAL\Connection|connection			Connection object
+	 */
+	public function get_connection_from_config($config_php_file)
+	{
 		$params = [
 			'dbname'		=> $config_php_file->get('dbname'),
 			'user'			=> $config_php_file->get('dbuser'),
 			'password'		=> $config_php_file->get('dbpasswd'),
 			'host'			=> $config_php_file->get('dbhost'),
 			'port'			=> $config_php_file->get('dbport'),
-			'driver'		=> $this->get_doctrine_driver($config_php_file->get('dbms')),
+			'driver'		=> $config_php_file->get('dbms'),
 		];
 
-		$params['wrapperClass'] = connection::class;
-
-		return DriverManager::getConnection($params, $config);
+		return $this->get_connection($params);
 	}
 
 	/**

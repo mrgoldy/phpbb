@@ -134,33 +134,12 @@ class config_php_file
 			return 'phpbb\db\driver\\' . $dbms;
 		}
 
-		if (class_exists($dbms))
-		{
-			// Additionally we could check that $dbms extends phpbb\db\driver\driver.
-			// http://php.net/manual/en/class.reflectionclass.php
-			// Beware of possible performance issues:
-			// http://stackoverflow.com/questions/294582/php-5-reflection-api-performance
-			// We could check for interface implementation in all paths or
-			// only when we do not prepend phpbb\db\driver\.
-
-			/*
-			$reflection = new \ReflectionClass($dbms);
-
-			if ($reflection->isSubclassOf('phpbb\db\driver\driver'))
-			{
-				return $dbms;
-			}
-			*/
-
-			return $dbms;
-		}
-
 		// Force use of mysqli when specifying mysql
 		if (preg_match('/(phpbb\\\db\\\driver\\\)?mysql$/i', $dbms))
 		{
 			return 'phpbb\db\driver\mysqli';
 		}
 
-		throw new \RuntimeException("You have specified an invalid dbms driver: $dbms");
+		return $dbms;
 	}
 }

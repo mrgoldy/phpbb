@@ -13,7 +13,7 @@
 
 class phpbb_attachment_resync_test extends \phpbb_database_test_case
 {
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/** @var \phpbb\attachment\resync */

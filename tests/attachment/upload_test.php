@@ -48,7 +48,7 @@ class phpbb_attachment_upload_test extends \phpbb_database_test_case
 	/** @var string phpBB root path */
 	protected $phpbb_root_path;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/** @var \phpbb\attachment\upload */

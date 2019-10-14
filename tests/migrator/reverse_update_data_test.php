@@ -13,14 +13,14 @@
 
 class reverse_update_data_test extends phpbb_test_case
 {
-	/** @var \phpbb\db\migration\helper */
+	/** @var \phpbb\db\migration\helper\helper */
 	protected $helper;
 
 	public function setUp(): void
 	{
 		parent::setUp();
 
-		$this->helper = new \phpbb\db\migration\helper();
+		$this->helper = new \phpbb\db\migration\helper\helper();
 	}
 
 	public function update_data_provider()

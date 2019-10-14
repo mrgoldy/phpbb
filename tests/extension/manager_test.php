@@ -150,8 +150,7 @@ class phpbb_extension_manager_test extends phpbb_database_test_case
 
 		$config = new \phpbb\config\config(array('version' => PHPBB_VERSION));
 		$db = $this->new_dbal();
-		$factory = new \phpbb\db\tools\factory();
-		$db_tools = $factory->get($db);
+		$db_tools = new \phpbb\db\tools($db);
 		$phpbb_root_path = __DIR__ . './../../phpBB/';
 		$php_ext = 'php';
 		$table_prefix = 'phpbb_';
@@ -168,7 +167,7 @@ class phpbb_extension_manager_test extends phpbb_database_test_case
 			$php_ext,
 			$table_prefix,
 			array(),
-			new \phpbb\db\migration\helper()
+			new \phpbb\db\migration\helper\helper()
 		);
 		$container->set('migrator', $migrator);
 

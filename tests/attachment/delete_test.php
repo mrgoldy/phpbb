@@ -18,7 +18,7 @@ class phpbb_attachment_delete_test extends \phpbb_database_test_case
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/** @var \phpbb\event\dispatcher_interface */

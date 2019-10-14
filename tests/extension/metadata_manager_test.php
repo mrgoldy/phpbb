@@ -40,8 +40,7 @@ class phpbb_extension_metadata_manager_test extends phpbb_database_test_case
 			'version'		=> '3.1.0',
 		));
 		$this->db = $this->new_dbal();
-		$factory = new \phpbb\db\tools\factory();
-		$this->db_tools = $factory->get($this->db);
+		$this->db_tools = new \phpbb\db\tools($this->db);
 		$this->phpbb_root_path = dirname(__FILE__) . '/';
 		$this->phpEx = 'php';
 
@@ -88,7 +87,7 @@ class phpbb_extension_metadata_manager_test extends phpbb_database_test_case
 			'php',
 			$this->table_prefix,
 			array(),
-			new \phpbb\db\migration\helper()
+			new \phpbb\db\migration\helper\helper()
 		);
 		$container->set('migrator', $this->migrator);
 

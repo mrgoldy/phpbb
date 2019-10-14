@@ -144,7 +144,7 @@ class phpbb_mock_cache implements \phpbb\cache\driver\driver_interface
 	/**
 	* {@inheritDoc}
 	*/
-	public function sql_save(\phpbb\db\driver\driver_interface $db, $query, $query_result, $ttl)
+	public function sql_save(\phpbb\db\connection $db, $query, $query_result, $ttl)
 	{
 		return $query_result;
 	}

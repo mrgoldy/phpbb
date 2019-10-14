@@ -71,11 +71,16 @@ class convertor
 		require_once($phpbb_root_path . 'includes/constants.' . $phpEx);
 		require_once($phpbb_root_path . 'includes/functions_convert.' . $phpEx);
 
-		$dbms = $phpbb_config_php_file->convert_30_dbms_to_31($dbms);
+		$manager = new \phpbb\db\manager();
+		$db = $manager->get_connection([
+			'dbname'		=> $dbname,
+			'user'			=> $dbuser,
+			'password'		=> $dbpasswd,
+			'host'			=> $dbhost,
+			'port'			=> $dbport,
+			'driver'		=> $dbms,
+		]);
 
-		/** @var \phpbb\db\connection $db */
-		$db = new $dbms();
-		$db->sql_connect($dbhost, $dbuser, $dbpasswd, $dbname, $dbport, false, true);
 		unset($dbpasswd);
 
 		// We need to fill the config to let internal functions correctly work
@@ -129,10 +134,17 @@ class convertor
 		$src_db = $same_db = null;
 		if ($convert->src_dbms != $dbms || $convert->src_dbhost != $dbhost || $convert->src_dbport != $dbport || $convert->src_dbname != $dbname || $convert->src_dbuser != $dbuser)
 		{
-			$dbms = $convert->src_dbms;
-			/** @var \phpbb\db\driver\driver $src_db */
-			$src_db = new $dbms();
-			$src_db->sql_connect($convert->src_dbhost, $convert->src_dbuser, htmlspecialchars_decode($convert->src_dbpasswd), $convert->src_dbname, $convert->src_dbport, false, true);
+			$manager = new \phpbb\db\manager();
+
+			$src_db = $manager->get_connection([
+				'dbname'	=> $convert->src_dbname,
+				'user'		=> $convert->src_dbuser,
+				'password'	=> htmlspecialchars_decode($convert->src_dbpasswd),
+				'host'		=> $convert->src_dbhost,
+				'port'		=> $convert->src_dbport,
+				'driver'	=> $convert->src_dbms,
+			]);
+
 			$same_db = false;
 		}
 		else

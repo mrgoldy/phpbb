@@ -22,7 +22,7 @@ abstract class phpbb_session_test_case extends phpbb_database_test_case
 	/** @var phpbb_session_testable_facade */
 	protected $session_facade;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	function setUp(): void

@@ -13,9 +13,9 @@
 
 class phpbb_dbal_db_tools_test extends phpbb_database_test_case
 {
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
-	/** @var \phpbb\db\tools\tools_interface */
+	/** @var \phpbb\db\tools */
 	protected $tools;
 	protected $table_exists;
 	protected $table_data;
@@ -30,8 +30,7 @@ class phpbb_dbal_db_tools_test extends phpbb_database_test_case
 		parent::setUp();
 
 		$this->db = $this->new_dbal();
-		$factory = new \phpbb\db\tools\factory();
-		$this->tools = $factory->get($this->db);
+		$this->tools = new \phpbb\db\tools($this->db);
 
 		$this->table_data = array(
 			'COLUMNS'		=> array(
@@ -346,7 +345,7 @@ class phpbb_dbal_db_tools_test extends phpbb_database_test_case
 
 	public function test_perform_schema_changes_drop_tables()
 	{
-		$db_tools = $this->getMockBuilder('\phpbb\db\tools\tools')
+		$db_tools = $this->getMockBuilder('\phpbb\db\tools')
 			->setMethods(array('sql_table_exists', 'sql_table_drop'))
 			->setConstructorArgs(array(&$this->db))
 			->getMock();
@@ -372,7 +371,7 @@ class phpbb_dbal_db_tools_test extends phpbb_database_test_case
 
 	public function test_perform_schema_changes_drop_columns()
 	{
-		$db_tools = $this->getMockBuilder('\phpbb\db\tools\tools')
+		$db_tools = $this->getMockBuilder('\phpbb\db\tools')
 			->setMethods(array('sql_column_exists', 'sql_column_remove'))
 			->setConstructorArgs(array(&$this->db))
 			->getMock();
@@ -441,6 +440,7 @@ class phpbb_dbal_db_tools_test extends phpbb_database_test_case
 
 		$max_index_length = 30;
 
+		/** @todo mrgoldy can be removed? */
 		if ($this->tools instanceof \phpbb\db\tools\mssql)
 		{
 			$max_length_method = new ReflectionMethod('\phpbb\db\tools\mssql', 'get_max_index_name_length');

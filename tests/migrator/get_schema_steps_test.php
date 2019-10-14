@@ -17,7 +17,7 @@ class get_schema_steps_test extends phpbb_test_case
 	{
 		parent::setUp();
 
-		$this->helper = new \phpbb\db\migration\helper();
+		$this->helper = new \phpbb\db\migration\helper\helper();
 	}
 
 	public function schema_provider()

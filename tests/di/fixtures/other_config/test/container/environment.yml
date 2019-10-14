@@ -6,11 +6,6 @@ services:
         synthetic: true
 
     dbal.conn:
-        class: phpbb\db\driver\factory
-        arguments:
-            - '@service_container'
-
-    dbal.conn.driver:
         synthetic: true
 
     dispatcher:

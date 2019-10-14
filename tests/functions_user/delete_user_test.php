@@ -11,7 +11,7 @@ require_once dirname(__FILE__) . '/../../phpBB/includes/functions_user.php';
 
 class phpbb_functions_user_delete_user_test extends phpbb_database_test_case
 {
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	public function getDataSet()
