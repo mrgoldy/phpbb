@@ -89,7 +89,7 @@ class fulltext_native extends \phpbb\search\base
 
 	/**
 	 * Database connection
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 

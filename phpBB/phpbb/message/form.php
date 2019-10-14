@@ -22,7 +22,7 @@ abstract class form
 	protected $auth;
 	/** @var \phpbb\config\config */
 	protected $config;
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 	/** @var \phpbb\message\message */
 	protected $message;
@@ -46,12 +46,12 @@ abstract class form
 	*
 	* @param \phpbb\auth\auth $auth
 	* @param \phpbb\config\config $config
-	* @param \phpbb\db\driver\driver_interface $db
+	* @param \phpbb\db\connection $db
 	* @param \phpbb\user $user
 	* @param string $phpbb_root_path
 	* @param string $phpEx
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, $phpbb_root_path, $phpEx)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\connection $db, \phpbb\user $user, $phpbb_root_path, $phpEx)
 	{
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->phpEx = $phpEx;

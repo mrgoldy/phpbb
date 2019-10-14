@@ -16,16 +16,16 @@ namespace phpbb\textreparser\plugins;
 class poll_option extends \phpbb\textreparser\base
 {
 	/**
-	* @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
 	/**
 	* Constructor
 	*
-	* @param \phpbb\db\driver\driver_interface $db Database connection
+	* @param \phpbb\db\connection $db Database connection
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db)
+	public function __construct(\phpbb\db\connection $db)
 	{
 		$this->db = $db;
 	}

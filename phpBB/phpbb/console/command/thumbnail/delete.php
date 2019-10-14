@@ -24,7 +24,7 @@ class delete extends \phpbb\console\command\command
 	protected $config;
 
 	/**
-	* @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
@@ -37,12 +37,12 @@ class delete extends \phpbb\console\command\command
 	/**
 	* Constructor
 	*
-	* @param \config\config $config The config
+	* @param \phpbb\config\config $config The config
 	* @param \phpbb\user $user The user object (used to get language information)
-	* @param \phpbb\db\driver\driver_interface $db Database connection
+	* @param \phpbb\db\connection $db Database connection
 	* @param string $phpbb_root_path Root path
 	*/
-	public function __construct(\phpbb\config\config $config, \phpbb\user $user, \phpbb\db\driver\driver_interface $db, $phpbb_root_path)
+	public function __construct(\phpbb\config\config $config, \phpbb\user $user, \phpbb\db\connection $db, $phpbb_root_path)
 	{
 		$this->config = $config;
 		$this->db = $db;

@@ -13,9 +13,9 @@
 
 namespace phpbb\install\module\update_database\task;
 
-use phpbb\db\migration\exception;
-use phpbb\db\output_handler\installer_migrator_output_handler;
-use phpbb\db\output_handler\log_wrapper_migrator_output_handler;
+use phpbb\db\exception\migration_exception;
+use phpbb\db\migration\output\installer_output;
+use phpbb\db\migration\output\log_wrapper_output;
 use phpbb\install\exception\resource_limit_reached_exception;
 use phpbb\install\exception\user_interaction_required_exception;
 use phpbb\install\task_base;
@@ -123,11 +123,11 @@ class update extends task_base
 		$original_version = $this->config['version_update_from'];
 
 		$this->migrator->set_output_handler(
-			new log_wrapper_migrator_output_handler(
-				$this->language,
-				new installer_migrator_output_handler($this->iohandler),
+			new log_wrapper_output(
 				$this->phpbb_root_path . 'store/migrations_' . time() . '.log',
-				$this->filesystem
+				$this->filesystem,
+				$this->language,
+				new installer_output($this->iohandler)
 			)
 		);
 
@@ -177,7 +177,7 @@ class update extends task_base
 				$this->installer_config->set_task_progress_count($migration_step_count);
 				$this->iohandler->set_progress('STAGE_UPDATE_DATABASE', $progress_count);
 			}
-			catch (exception $e)
+			catch (migration_exception $e)
 			{
 				$msg = $e->getParameters();
 				array_unshift($msg, $e->getMessage());

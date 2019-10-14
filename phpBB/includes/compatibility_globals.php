@@ -62,7 +62,7 @@ function register_compatibility_globals()
 	/* @var $auth \phpbb\auth\auth */
 	$auth = $phpbb_container->get('auth');
 
-	/* @var $db \phpbb\db\driver\driver_interface */
+	/* @var $db \phpbb\db\connection */
 	$db = $phpbb_container->get('dbal.conn');
 
 	// Grab global variables, re-cache if necessary

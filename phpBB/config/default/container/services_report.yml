@@ -24,7 +24,7 @@ services:
     phpbb.report.report_reason_list_provider:
         class: phpbb\report\report_reason_list_provider
         arguments:
-            - '@dbal.conn.driver'
+            - '@dbal.conn'
             - '@template'
             - '@user'
 
@@ -34,7 +34,7 @@ services:
         class: phpbb\report\report_handler_pm
         shared: false
         arguments:
-            - '@dbal.conn.driver'
+            - '@dbal.conn'
             - '@dispatcher'
             - '@config'
             - '@auth'
@@ -45,7 +45,7 @@ services:
         class: phpbb\report\report_handler_post
         shared: false
         arguments:
-            - '@dbal.conn.driver'
+            - '@dbal.conn'
             - '@dispatcher'
             - '@config'
             - '@auth'

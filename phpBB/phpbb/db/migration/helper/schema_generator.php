@@ -1,69 +1,87 @@
 <?php
 /**
-*
-* This file is part of the phpBB Forum Software package.
-*
-* @copyright (c) phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-* For full copyright and license information, please see
-* the docs/CREDITS.txt file.
-*
-*/
+ *
+ * This file is part of the phpBB Forum Software package.
+ *
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ * For full copyright and license information, please see
+ * the docs/CREDITS.txt file.
+ *
+ */
 
-namespace phpbb\db\migration;
+namespace phpbb\db\migration\helper;
 
 /**
-* The schema generator generates the schema based on the existing migrations
-*/
+ * The schema generator generates the schema based on the existing migrations.
+ */
 class schema_generator
 {
-	/** @var \phpbb\config\config */
-	protected $config;
-
-	/** @var \phpbb\db\driver\driver_interface */
-	protected $db;
-
-	/** @var \phpbb\db\tools\tools_interface */
-	protected $db_tools;
-
 	/** @var array */
 	protected $class_names;
 
-	/** @var string */
+	/** @var \phpbb\config\config */
+	protected $config;
+
+	/** @var \phpbb\db\connection */
+	protected $db;
+
+	/** @var \phpbb\db\tools */
+	protected $db_tools;
+
+	/** @var string Table prefix */
 	protected $table_prefix;
 
-	/** @var string */
-	protected $phpbb_root_path;
+	/** @var string phpBB root path */
+	protected $root_path;
 
-	/** @var string */
+	/** @var string php File extension */
 	protected $php_ext;
 
 	/** @var array */
 	protected $tables;
 
 	/** @var array */
-	protected $dependencies = array();
+	protected $dependencies = [];
 
 	/**
-	* Constructor
-	*/
-	public function __construct(array $class_names, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\db\tools\tools_interface $db_tools, $phpbb_root_path, $php_ext, $table_prefix)
+	 * Constructor.
+	 *
+	 * @param array					$class_names	Migration class names array
+	 * @param \phpbb\config\config	$config			Config object
+	 * @param \phpbb\db\connection	$db				Database object
+	 * @param \phpbb\db\tools		$db_tools		Database tools object
+	 * @param string				$table_prefix	Table prefix
+	 * @param string				$root_path		phpBB root path
+	 * @param string				$php_ext		php File extension
+	 * @return void
+	 */
+	public function __construct(
+		array $class_names,
+		\phpbb\config\config $config,
+		\phpbb\db\connection $db,
+		\phpbb\db\tools $db_tools,
+		$table_prefix,
+		$root_path,
+		$php_ext
+	)
 	{
-		$this->config = $config;
-		$this->db = $db;
-		$this->db_tools = $db_tools;
-		$this->class_names = $class_names;
-		$this->phpbb_root_path = $phpbb_root_path;
-		$this->php_ext = $php_ext;
-		$this->table_prefix = $table_prefix;
+		$this->class_names	= $class_names;
+		$this->config		= $config;
+		$this->db			= $db;
+		$this->db_tools		= $db_tools;
+
+		$this->table_prefix	= $table_prefix;
+		$this->root_path	= $root_path;
+		$this->php_ext		= $php_ext;
 	}
 
 	/**
-	* Loads all migrations and their application state from the database.
-	*
-	* @return array
-	*/
+	 * Loads all migrations and their application state from the database.
+	 *
+	 * @return array
+	 */
 	public function get_schema()
 	{
 		if (!empty($this->tables))
@@ -71,10 +89,11 @@ class schema_generator
 			return $this->tables;
 		}
 
+		$tree = [];
+		$check_dependencies = true;
+
 		$migrations = $this->class_names;
 
-		$tree = array();
-		$check_dependencies = true;
 		while (!empty($migrations))
 		{
 			foreach ($migrations as $key => $migration_class)
@@ -90,8 +109,10 @@ class schema_generator
 
 				if (empty($open_dependencies))
 				{
-					$migration = new $migration_class($this->config, $this->db, $this->db_tools, $this->phpbb_root_path, $this->php_ext, $this->table_prefix);
 					$tree[] = $migration_class;
+
+					/** @var \phpbb\db\migration\migration_interface $migration */
+					$migration = new $migration_class($this->config, $this->db, $this->db_tools, $this->table_prefix, $this->root_path, $this->php_ext);
 					$migration_key = array_search($migration_class, $migrations);
 
 					foreach ($migration->update_schema() as $change_type => $data)
@@ -128,7 +149,7 @@ class schema_generator
 										}
 										else
 										{
-											$this->tables[$table]['COLUMNS'] = array_merge(array_slice($columns, 0, $offset + 1, true), array($column => array_values($column_data)), array_slice($columns, $offset));
+											$this->tables[$table]['COLUMNS'] = array_merge(array_slice($columns, 0, $offset + 1, true), [$column => array_values($column_data)], array_slice($columns, $offset));
 										}
 									}
 									else
@@ -171,7 +192,7 @@ class schema_generator
 							{
 								foreach ($add_index as $key => $index_data)
 								{
-									$this->tables[$table]['KEYS'][$key] = array('UNIQUE', $index_data);
+									$this->tables[$table]['KEYS'][$key] = ['UNIQUE', $index_data];
 								}
 							}
 						}
@@ -181,7 +202,7 @@ class schema_generator
 							{
 								foreach ($add_index as $key => $index_data)
 								{
-									$this->tables[$table]['KEYS'][$key] = array('INDEX', $index_data);
+									$this->tables[$table]['KEYS'][$key] = ['INDEX', $index_data];
 								}
 							}
 						}
@@ -221,11 +242,12 @@ class schema_generator
 	}
 
 	/**
-	* Check if one of the migrations files' dependencies can't be resolved
-	* by the supplied list of migrations
-	*
-	* @throws \UnexpectedValueException If a dependency can't be resolved
-	*/
+	 * Check if one of the migrations files' dependencies can't be resolved
+	 * by the supplied list of migrations.
+	 *
+	 * @throws \UnexpectedValueException		If a dependency can't be resolved
+	 * @return void
+	 */
 	protected function check_dependencies()
 	{
 		// Strip duplicate values from array

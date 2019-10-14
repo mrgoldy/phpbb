@@ -13,11 +13,11 @@
 
 namespace phpbb\console\command\db;
 
-use phpbb\db\output_handler\migrator_output_handler_interface;
+use phpbb\db\migration\output\output_interface;
 use phpbb\user;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class console_migrator_output_handler implements migrator_output_handler_interface
+class console_migrator_output_handler implements output_interface
 {
 	/**
 	 * User object.
@@ -54,11 +54,11 @@ class console_migrator_output_handler implements migrator_output_handler_interfa
 		{
 			$translated_message = call_user_func_array(array($this->user, 'lang'), $message);
 
-			if ($verbosity === migrator_output_handler_interface::VERBOSITY_NORMAL)
+			if ($verbosity === output_interface::VERBOSITY_NORMAL)
 			{
 				$translated_message = '<info>' . $translated_message . '</info>';
 			}
-			else if ($verbosity === migrator_output_handler_interface::VERBOSITY_VERBOSE)
+			else if ($verbosity === output_interface::VERBOSITY_VERBOSE)
 			{
 				$translated_message = '<comment>' . $translated_message . '</comment>';
 			}

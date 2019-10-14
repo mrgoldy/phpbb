@@ -21,9 +21,9 @@ use OAuth\Common\Consumer\Credentials;
 class oauth extends \phpbb\auth\provider\base
 {
 	/**
-	* Database driver
+	* Database connection
 	*
-	* @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
@@ -128,7 +128,7 @@ class oauth extends \phpbb\auth\provider\base
 	/**
 	* OAuth Authentication Constructor
 	*
-	* @param	\phpbb\db\driver\driver_interface	$db
+	* @param	\phpbb\db\connection	$db
 	* @param	\phpbb\config\config	$config
 	* @param	\phpbb\passwords\manager	$passwords_manager
 	* @param	\phpbb\request\request_interface	$request
@@ -143,7 +143,7 @@ class oauth extends \phpbb\auth\provider\base
 	* @param	string			$phpbb_root_path
 	* @param	string			$php_ext
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\passwords\manager $passwords_manager, \phpbb\request\request_interface $request, \phpbb\user $user, $auth_provider_oauth_token_storage_table, $auth_provider_oauth_state_table, $auth_provider_oauth_token_account_assoc, \phpbb\di\service_collection $service_providers, $users_table, \Symfony\Component\DependencyInjection\ContainerInterface $phpbb_container, \phpbb\event\dispatcher_interface $dispatcher, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\db\connection $db, \phpbb\config\config $config, \phpbb\passwords\manager $passwords_manager, \phpbb\request\request_interface $request, \phpbb\user $user, $auth_provider_oauth_token_storage_table, $auth_provider_oauth_state_table, $auth_provider_oauth_token_account_assoc, \phpbb\di\service_collection $service_providers, $users_table, \Symfony\Component\DependencyInjection\ContainerInterface $phpbb_container, \phpbb\event\dispatcher_interface $dispatcher, $phpbb_root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->config = $config;

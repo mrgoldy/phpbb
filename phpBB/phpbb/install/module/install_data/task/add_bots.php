@@ -105,7 +105,7 @@ class add_bots extends \phpbb\install\task_base
 	);
 
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 

@@ -21,7 +21,7 @@ use phpbb\install\exception\resource_limit_reached_exception;
 class add_config_settings extends \phpbb\install\task_base
 {
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 

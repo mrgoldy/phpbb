@@ -11,14 +11,13 @@
 *
 */
 
-namespace phpbb\db\output_handler;
+namespace phpbb\db\exception;
 
-class null_migrator_output_handler implements migrator_output_handler_interface
+use phpbb\exception\runtime_exception;
+
+/**
+* This exception is thrown when invalid format is given to the extractor
+*/
+class extractor_not_initialized_exception extends runtime_exception
 {
-	/**
-	 * {@inheritdoc}
-	 */
-	public function write($message, $verbosity)
-	{
-	}
 }

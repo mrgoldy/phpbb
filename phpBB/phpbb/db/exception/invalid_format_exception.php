@@ -11,11 +11,11 @@
 *
 */
 
-namespace phpbb\db;
+namespace phpbb\db\exception;
 
 /**
- * @deprecated	3.2.0-dev	(To be removed 3.3.0) use \phpbb\db\tools\tools instead
- */
-class tools extends \phpbb\db\tools\tools
+* This exception is thrown when invalid format is given to the extractor
+*/
+class invalid_format_exception extends \InvalidArgumentException
 {
 }

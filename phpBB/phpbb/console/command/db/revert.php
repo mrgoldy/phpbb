@@ -12,7 +12,7 @@
 */
 namespace phpbb\console\command\db;
 
-use phpbb\db\output_handler\log_wrapper_migrator_output_handler;
+use phpbb\db\migration\output\log_wrapper_output;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,7 +39,7 @@ class revert extends \phpbb\console\command\db\migrate
 
 		$name = str_replace('/', '\\', $input->getArgument('name'));
 
-		$this->migrator->set_output_handler(new log_wrapper_migrator_output_handler($this->language, new console_migrator_output_handler($this->user, $output), $this->phpbb_root_path . 'store/migrations_' . time() . '.log', $this->filesystem));
+		$this->migrator->set_output_handler(new log_wrapper_output($this->language, new console_migrator_output_handler($this->user, $output), $this->phpbb_root_path . 'store/migrations_' . time() . '.log', $this->filesystem));
 
 		$this->cache->purge();
 
@@ -61,7 +61,7 @@ class revert extends \phpbb\console\command\db\migrate
 				$this->migrator->revert($name);
 			}
 		}
-		catch (\phpbb\db\migration\exception $e)
+		catch (\phpbb\db\exception\migration_exception $e)
 		{
 			$io->error($e->getLocalisedMessage($this->user));
 			$this->finalise_update();

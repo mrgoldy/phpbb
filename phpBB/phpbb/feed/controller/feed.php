@@ -15,7 +15,7 @@ namespace phpbb\feed\controller;
 
 use phpbb\auth\auth;
 use phpbb\config\config;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\connection;
 use \phpbb\event\dispatcher_interface;
 use phpbb\exception\http_exception;
 use phpbb\feed\feed_interface;
@@ -52,7 +52,7 @@ class feed
 	protected $config;
 
 	/**
-	 * @var driver_interface
+	 * @var connection
 	 */
 	protected $db;
 
@@ -93,7 +93,7 @@ class feed
 	 * @param symfony_request $request
 	 * @param controller_helper $controller_helper
 	 * @param config $config
-	 * @param driver_interface $db
+	 * @param connection $db
 	 * @param ContainerInterface $container
 	 * @param feed_helper $feed_helper
 	 * @param user $user
@@ -101,7 +101,7 @@ class feed
 	 * @param dispatcher_interface $phpbb_dispatcher
 	 * @param string $php_ext
 	 */
-	public function __construct(\Twig_Environment $twig, symfony_request $request, controller_helper $controller_helper, config $config, driver_interface $db, ContainerInterface $container, feed_helper $feed_helper, user $user, auth $auth, dispatcher_interface $phpbb_dispatcher, $php_ext)
+	public function __construct(\Twig_Environment $twig, symfony_request $request, controller_helper $controller_helper, config $config, connection $db, ContainerInterface $container, feed_helper $feed_helper, user $user, auth $auth, dispatcher_interface $phpbb_dispatcher, $php_ext)
 	{
 		$this->request = $request;
 		$this->controller_helper = $controller_helper;

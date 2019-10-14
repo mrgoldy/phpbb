@@ -22,7 +22,7 @@ class db_text
 {
 	/**
 	* Database connection
-	* @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
@@ -33,10 +33,10 @@ class db_text
 	protected $table;
 
 	/**
-	* @param \phpbb\db\driver\driver_interface $db        Database connection
-	* @param string          $table     Table name
+	* @param \phpbb\db\connection	$db        Database connection
+	* @param string					$table     Table name
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, $table)
+	public function __construct(\phpbb\db\connection $db, $table)
 	{
 		$this->db = $db;
 		$this->table = $this->db->sql_escape($table);

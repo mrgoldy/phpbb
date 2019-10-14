@@ -16,7 +16,7 @@ namespace phpbb\textreparser;
 abstract class row_based_plugin extends base
 {
 	/**
-	* @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
@@ -28,10 +28,10 @@ abstract class row_based_plugin extends base
 	/**
 	* Constructor
 	*
-	* @param \phpbb\db\driver\driver_interface $db Database connection
+	* @param \phpbb\db\connection $db Database connection
 	* @param string $table
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, $table)
+	public function __construct(\phpbb\db\connection $db, $table)
 	{
 		$this->db = $db;
 		$this->table = $table;

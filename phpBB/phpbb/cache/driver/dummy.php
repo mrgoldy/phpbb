@@ -106,7 +106,7 @@ class dummy extends \phpbb\cache\driver\base
 	/**
 	* {@inheritDoc}
 	*/
-	function sql_save(\phpbb\db\driver\driver_interface $db, $query, $query_result, $ttl)
+	function sql_save(\phpbb\db\connection $db, $query, $query_result, $ttl)
 	{
 		return $query_result;
 	}

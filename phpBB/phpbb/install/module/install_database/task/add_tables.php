@@ -26,12 +26,12 @@ class add_tables extends \phpbb\install\task_base
 	protected $config;
 
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 
 	/**
-	 * @var \phpbb\db\tools\tools_interface
+	 * @var \phpbb\db\tools
 	 */
 	protected $db_tools;
 
@@ -59,22 +59,14 @@ class add_tables extends \phpbb\install\task_base
 								$phpbb_root_path)
 	{
 		$dbms = $db_helper->get_available_dbms($config->get('dbms'));
-		$dbms = $dbms[$config->get('dbms')]['DRIVER'];
-		$factory = new \phpbb\db\tools\factory();
+		$driver = $dbms[$config->get('dbms')]['DRIVER'];
+		$config->set('dbms', $driver);
 
-		$this->db				= new $dbms();
-		$this->db->sql_connect(
-			$config->get('dbhost'),
-			$config->get('dbuser'),
-			$config->get('dbpasswd'),
-			$config->get('dbname'),
-			$config->get('dbport'),
-			false,
-			false
-		);
+		$manager = new \phpbb\db\manager();
 
+		$this->db				= $manager->connect($config);
 		$this->config			= $config;
-		$this->db_tools			= $factory->get($this->db);
+		$this->db_tools			= new \phpbb\db\tools($this->db);
 		$this->filesystem		= $filesystem;
 		$this->schema_file_path	= $phpbb_root_path . 'store/schema.json';
 

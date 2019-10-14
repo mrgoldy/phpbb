@@ -16,7 +16,7 @@ namespace phpbb\report;
 class report_reason_list_provider
 {
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 
@@ -33,11 +33,11 @@ class report_reason_list_provider
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\db\driver\driver_interface	$db
+	 * @param \phpbb\db\connection				$db
 	 * @param \phpbb\template\template			$template
 	 * @param \phpbb\user						$user
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user)
+	public function __construct(\phpbb\db\connection $db, \phpbb\template\template $template, \phpbb\user $user)
 	{
 		$this->db		= $db;
 		$this->template	= $template;

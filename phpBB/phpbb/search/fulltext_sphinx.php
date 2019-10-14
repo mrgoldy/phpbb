@@ -79,13 +79,13 @@ class fulltext_sphinx
 
 	/**
 	 * Database connection
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 
 	/**
 	 * Database Tools object
-	 * @var \phpbb\db\tools\tools_interface
+	 * @var \phpbb\db\tools
 	 */
 	protected $db_tools;
 
@@ -129,7 +129,7 @@ class fulltext_sphinx
 	 * @param string $phpEx PHP file extension
 	 * @param \phpbb\auth\auth $auth Auth object
 	 * @param \phpbb\config\config $config Config object
-	 * @param \phpbb\db\driver\driver_interface Database object
+	 * @param \phpbb\db\connection Database object
 	 * @param \phpbb\user $user User object
 	 * @param \phpbb\event\dispatcher_interface	$phpbb_dispatcher	Event dispatcher object
 	 */

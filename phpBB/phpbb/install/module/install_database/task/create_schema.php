@@ -26,12 +26,12 @@ class create_schema extends \phpbb\install\task_base
 	protected $config;
 
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 
 	/**
-	 * @var \phpbb\db\tools\tools_interface
+	 * @var \phpbb\db\tools
 	 */
 	protected $db_tools;
 
@@ -78,22 +78,14 @@ class create_schema extends \phpbb\install\task_base
 								$php_ext)
 	{
 		$dbms = $db_helper->get_available_dbms($config->get('dbms'));
-		$dbms = $dbms[$config->get('dbms')]['DRIVER'];
-		$factory = new \phpbb\db\tools\factory();
+		$driver = $dbms[$config->get('dbms')]['DRIVER'];
+		$config->set('dbms', $driver);
 
-		$this->db				= new $dbms();
-		$this->db->sql_connect(
-			$config->get('dbhost'),
-			$config->get('dbuser'),
-			$config->get('dbpasswd'),
-			$config->get('dbname'),
-			$config->get('dbport'),
-			false,
-			false
-		);
+		$manager = new \phpbb\db\manager();
 
+		$this->db				= $manager->connect($config);
 		$this->config			= $config;
-		$this->db_tools			= $factory->get($this->db);
+		$this->db_tools			= new \phpbb\db\tools($this->db);
 		$this->database_helper	= $db_helper;
 		$this->filesystem		= $filesystem;
 		$this->iohandler		= $iohandler;
@@ -178,9 +170,9 @@ class create_schema extends \phpbb\install\task_base
 
 			$finder = new \phpbb\finder($this->phpbb_root_path, null, $this->php_ext);
 			$migrator_classes = $finder->core_path('phpbb/db/migration/data/')->get_classes();
-			$factory = new \phpbb\db\tools\factory();
-			$db_tools = $factory->get($this->db, true);
-			$schema_generator = new \phpbb\db\migration\schema_generator(
+			$db_tools = new \phpbb\db\tools($this->db);
+			$db_tools->set_return_statements(true);
+			$schema_generator = new \phpbb\db\migration\helper\schema_generator(
 				$migrator_classes,
 				new \phpbb\config\config(array()),
 				$this->db,

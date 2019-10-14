@@ -32,7 +32,7 @@ class teampage implements \phpbb\groupposition\groupposition_interface
 
 	/**
 	* Database object
-	* @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
@@ -51,11 +51,11 @@ class teampage implements \phpbb\groupposition\groupposition_interface
 	/**
 	* Constructor
 	*
-	* @param \phpbb\db\driver\driver_interface				$db		Database object
-	* @param \phpbb\user						$user	User object
+	* @param \phpbb\db\connection					$db		Database object
+	* @param \phpbb\user							$user	User object
 	* @param \phpbb\cache\driver\driver_interface	$cache	Cache object
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\cache\driver\driver_interface $cache)
+	public function __construct(\phpbb\db\connection $db, \phpbb\user $user, \phpbb\cache\driver\driver_interface $cache)
 	{
 		$this->db = $db;
 		$this->user = $user;

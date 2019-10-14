@@ -15,7 +15,7 @@ namespace phpbb\console\command\user;
 
 use phpbb\config\config;
 use phpbb\console\command\command;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\connection;
 use phpbb\exception\runtime_exception;
 use phpbb\language\language;
 use phpbb\passwords\manager;
@@ -31,7 +31,7 @@ class add extends command
 	/** @var array Array of interactively acquired options */
 	protected $data;
 
-	/** @var driver_interface */
+	/** @var connection */
 	protected $db;
 
 	/** @var config */
@@ -60,15 +60,15 @@ class add extends command
 	/**
 	 * Construct method
 	 *
-	 * @param user             $user
-	 * @param driver_interface $db
-	 * @param config           $config
-	 * @param language         $language
-	 * @param manager          $password_manager
-	 * @param string           $phpbb_root_path
-	 * @param string           $php_ext
+	 * @param user			$user
+	 * @param connection	$db
+	 * @param config		$config
+	 * @param language		$language
+	 * @param manager		$password_manager
+	 * @param string		$phpbb_root_path
+	 * @param string		$php_ext
 	 */
-	public function __construct(user $user, driver_interface $db, config $config, language $language, manager $password_manager, $phpbb_root_path, $php_ext)
+	public function __construct(user $user, connection $db, config $config, language $language, manager $password_manager, $phpbb_root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->config = $config;

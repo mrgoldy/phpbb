@@ -15,7 +15,7 @@ namespace phpbb\console\command\user;
 
 use phpbb\config\config;
 use phpbb\console\command\command;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\connection;
 use phpbb\language\language;
 use phpbb\log\log_interface;
 use phpbb\notification\manager;
@@ -29,7 +29,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class activate extends command
 {
-	/** @var driver_interface */
+	/** @var connection */
 	protected $db;
 
 	/** @var config */
@@ -64,17 +64,17 @@ class activate extends command
 	/**
 	 * Construct method
 	 *
-	 * @param user             $user
-	 * @param driver_interface $db
-	 * @param config           $config
-	 * @param language         $language
-	 * @param log_interface    $log
-	 * @param manager          $notifications
-	 * @param user_loader      $user_loader
-	 * @param string           $phpbb_root_path
-	 * @param string           $php_ext
+	 * @param user				$user
+	 * @param connection		$db
+	 * @param config			$config
+	 * @param language			$language
+	 * @param log_interface		$log
+	 * @param manager			$notifications
+	 * @param user_loader		$user_loader
+	 * @param string			$phpbb_root_path
+	 * @param string			$php_ext
 	 */
-	public function __construct(user $user, driver_interface $db, config $config, language $language, log_interface $log, manager $notifications, user_loader $user_loader, $phpbb_root_path, $php_ext)
+	public function __construct(user $user, connection $db, config $config, language $language, log_interface $log, manager $notifications, user_loader $user_loader, $phpbb_root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->config = $config;

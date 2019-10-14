@@ -26,7 +26,7 @@ class lang_helper
 
 	/**
 	* Database object
-	* @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
@@ -39,7 +39,7 @@ class lang_helper
 	/**
 	* Construct
 	*
-	* @param	\phpbb\db\driver\driver_interface	$db		Database object
+	* @param	\phpbb\db\connection	$db		Database object
 	* @param	string		$language_table		Table where the language strings are stored
 	*/
 	public function __construct($db, $language_table)

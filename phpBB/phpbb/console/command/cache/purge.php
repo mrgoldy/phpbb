@@ -21,7 +21,7 @@ class purge extends \phpbb\console\command\command
 	/** @var \phpbb\cache\driver\driver_interface */
 	protected $cache;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/** @var \phpbb\auth\auth */
@@ -38,12 +38,12 @@ class purge extends \phpbb\console\command\command
 	*
 	* @param \phpbb\user							$user	User instance
 	* @param \phpbb\cache\driver\driver_interface	$cache	Cache instance
-	* @param \phpbb\db\driver\driver_interface		$db		Database connection
+	* @param \phpbb\db\connection					$db		Database connection
 	* @param \phpbb\auth\auth						$auth	Auth instance
 	* @param \phpbb\log\log_interface				$log	Logger instance
 	* @param \phpbb\config\config					$config	Config instance
 	*/
-	public function __construct(\phpbb\user $user, \phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, \phpbb\log\log_interface $log, \phpbb\config\config $config)
+	public function __construct(\phpbb\user $user, \phpbb\cache\driver\driver_interface $cache, \phpbb\db\connection $db, \phpbb\auth\auth $auth, \phpbb\log\log_interface $log, \phpbb\config\config $config)
 	{
 		$this->cache = $cache;
 		$this->db = $db;

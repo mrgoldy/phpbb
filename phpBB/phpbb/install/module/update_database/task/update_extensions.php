@@ -68,7 +68,7 @@ class update_extensions extends task_base
 	/** @var string Extension table */
 	protected $extension_table;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/**

@@ -261,7 +261,7 @@ class user extends \phpbb\session
 			$style_id = ($style_id) ? $style_id : ((!$config['override_user_style']) ? $this->data['user_style'] : $config['default_style']);
 		}
 
-		$sql = 'SELECT *
+		$sql = 'SELECT s.*
 			FROM ' . STYLES_TABLE . " s
 			WHERE s.style_id = $style_id";
 		$result = $db->sql_query($sql, 3600);
@@ -273,7 +273,7 @@ class user extends \phpbb\session
 		{
 			$style_id = $this->data['user_style'];
 
-			$sql = 'SELECT *
+			$sql = 'SELECT s.*
 				FROM ' . STYLES_TABLE . " s
 				WHERE s.style_id = $style_id";
 			$result = $db->sql_query($sql, 3600);

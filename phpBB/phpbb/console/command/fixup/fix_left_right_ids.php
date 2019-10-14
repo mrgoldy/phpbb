@@ -22,7 +22,7 @@ class fix_left_right_ids extends \phpbb\console\command\command
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/** @var \phpbb\cache\driver\driver_interface */
@@ -32,10 +32,10 @@ class fix_left_right_ids extends \phpbb\console\command\command
 	* Constructor
 	*
 	* @param \phpbb\user							$user	User instance
-	* @param \phpbb\db\driver\driver_interface		$db		Database connection
+	* @param \phpbb\db\connection					$db		Database connection
 	* @param \phpbb\cache\driver\driver_interface	$cache	Cache instance
 	*/
-	public function __construct(\phpbb\user $user, \phpbb\db\driver\driver_interface $db, \phpbb\cache\driver\driver_interface $cache)
+	public function __construct(\phpbb\user $user, \phpbb\db\connection $db, \phpbb\cache\driver\driver_interface $cache)
 	{
 		$this->user = $user;
 		$this->db = $db;

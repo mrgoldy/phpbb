@@ -29,12 +29,12 @@ class ldap extends \phpbb\auth\provider\base
 	/**
 	 * LDAP Authentication Constructor
 	 *
-	 * @param	\phpbb\db\driver\driver_interface		$db		Database object
+	 * @param	\phpbb\db\connection		$db		Database object
 	 * @param	\phpbb\config\config		$config		Config object
 	 * @param	\phpbb\passwords\manager	$passwords_manager		Passwords manager object
 	 * @param	\phpbb\user			$user		User object
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\passwords\manager $passwords_manager, \phpbb\user $user)
+	public function __construct(\phpbb\db\connection $db, \phpbb\config\config $config, \phpbb\passwords\manager $passwords_manager, \phpbb\user $user)
 	{
 		$this->db = $db;
 		$this->config = $config;

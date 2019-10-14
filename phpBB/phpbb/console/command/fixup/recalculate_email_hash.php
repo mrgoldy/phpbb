@@ -18,10 +18,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class recalculate_email_hash extends \phpbb\console\command\command
 {
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
-	public function __construct(\phpbb\user $user, \phpbb\db\driver\driver_interface $db)
+	public function __construct(\phpbb\user $user, \phpbb\db\connection $db)
 	{
 		$this->db = $db;
 

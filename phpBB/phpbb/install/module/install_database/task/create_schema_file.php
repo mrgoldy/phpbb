@@ -26,7 +26,7 @@ class create_schema_file extends \phpbb\install\task_base
 	protected $config;
 
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 
@@ -119,9 +119,9 @@ class create_schema_file extends \phpbb\install\task_base
 
 			$finder = new \phpbb\finder($this->phpbb_root_path, null, $this->php_ext);
 			$migrator_classes = $finder->core_path('phpbb/db/migration/data/')->get_classes();
-			$factory = new \phpbb\db\tools\factory();
-			$db_tools = $factory->get($this->db, true);
-			$schema_generator = new \phpbb\db\migration\schema_generator(
+			$db_tools = new \phpbb\db\tools($this->db);
+			$db_tools->set_return_statements(true);
+			$schema_generator = new \phpbb\db\migration\helper\schema_generator(
 				$migrator_classes,
 				new \phpbb\config\config(array()),
 				$this->db,

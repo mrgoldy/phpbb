@@ -24,7 +24,7 @@ class module_manager
 	protected $cache;
 
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 
@@ -52,13 +52,13 @@ class module_manager
 	 * Constructor
 	 *
 	 * @param \phpbb\cache\driver\driver_interface	$cache				Cache driver
-	 * @param \phpbb\db\driver\driver_interface		$db					Database driver
+	 * @param \phpbb\db\connection					$db					Database connection
 	 * @param \phpbb\extension\manager				$ext_manager		Extension manager
 	 * @param string								$modules_table		Module database table's name
 	 * @param string								$phpbb_root_path	Path to phpBB's root
 	 * @param string								$php_ext			Extension of PHP files
 	 */
-	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, \phpbb\extension\manager $ext_manager, $modules_table, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\db\connection $db, \phpbb\extension\manager $ext_manager, $modules_table, $phpbb_root_path, $php_ext)
 	{
 		$this->cache				= $cache;
 		$this->db					= $db;

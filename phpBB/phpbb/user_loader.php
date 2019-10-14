@@ -23,7 +23,7 @@ namespace phpbb;
 */
 class user_loader
 {
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db = null;
 
 	/** @var string */
@@ -45,12 +45,12 @@ class user_loader
 	/**
 	* User loader constructor
 	*
-	* @param \phpbb\db\driver\driver_interface $db A database connection
-	* @param string $phpbb_root_path Path to the phpbb includes directory.
-	* @param string $php_ext php file extension
-	* @param string $users_table The name of the database table (phpbb_users)
+	* @param \phpbb\db\connection	$db					A database connection
+	* @param string					$phpbb_root_path	Path to the phpbb root directory.
+	* @param string					$php_ext			php file extension
+	* @param string					$users_table		The name of the database table (phpbb_users)
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, $phpbb_root_path, $php_ext, $users_table)
+	public function __construct(db\connection $db, $phpbb_root_path, $php_ext, $users_table)
 	{
 		$this->db = $db;
 

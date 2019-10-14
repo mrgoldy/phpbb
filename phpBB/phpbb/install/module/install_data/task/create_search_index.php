@@ -14,7 +14,7 @@
 namespace phpbb\install\module\install_data\task;
 
 use phpbb\auth\auth;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\connection;
 use phpbb\event\dispatcher;
 use phpbb\config\config;
 use phpbb\install\helper\container_factory;
@@ -35,7 +35,7 @@ class create_search_index extends \phpbb\install\task_base
 	protected $config;
 
 	/**
-	 * @var driver_interface
+	 * @var connection
 	 */
 	protected $db;
 

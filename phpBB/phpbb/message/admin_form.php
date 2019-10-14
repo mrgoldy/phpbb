@@ -38,13 +38,13 @@ class admin_form extends form
 	* @param \phpbb\auth\auth $auth
 	* @param \phpbb\config\config $config
 	* @param \phpbb\config\db_text $config_text
-	* @param \phpbb\db\driver\driver_interface $db
+	* @param \phpbb\db\connection $db
 	* @param \phpbb\user $user
 	* @param \phpbb\event\dispatcher_interface $dispatcher
 	* @param string $phpbb_root_path
 	* @param string $phpEx
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\config\db_text $config_text, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\event\dispatcher_interface $dispatcher, $phpbb_root_path, $phpEx)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\config\db_text $config_text, \phpbb\db\connection $db, \phpbb\user $user, \phpbb\event\dispatcher_interface $dispatcher, $phpbb_root_path, $phpEx)
 	{
 		parent::__construct($auth, $config, $db, $user, $phpbb_root_path, $phpEx);
 		$this->config_text = $config_text;

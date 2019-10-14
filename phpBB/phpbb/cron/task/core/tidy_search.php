@@ -46,7 +46,7 @@ class tidy_search extends \phpbb\cron\task\base
 
 	/**
 	* Database object
-	* @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
@@ -69,11 +69,11 @@ class tidy_search extends \phpbb\cron\task\base
 	* @param string $php_ext The PHP file extension
 	* @param \phpbb\auth\auth $auth The auth object
 	* @param \phpbb\config\config $config The config object
-	* @param \phpbb\db\driver\driver_interface $db The database object
+	* @param \phpbb\db\connection $db The database object
 	* @param \phpbb\user $user The user object
 	* @param \phpbb\event\dispatcher_interface $phpbb_dispatcher The event dispatcher object
 	*/
-	public function __construct($phpbb_root_path, $php_ext, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\event\dispatcher_interface $phpbb_dispatcher)
+	public function __construct($phpbb_root_path, $php_ext, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\connection $db, \phpbb\user $user, \phpbb\event\dispatcher_interface $phpbb_dispatcher)
 	{
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;

@@ -11,15 +11,13 @@
  *
  */
 
-namespace phpbb\db\output_handler;
+namespace phpbb\db\migration\output;
 
 use phpbb\install\helper\iohandler\iohandler_interface;
 
-class installer_migrator_output_handler implements migrator_output_handler_interface
+class installer_output implements output_interface
 {
-	/**
-	 * @var iohandler_interface
-	 */
+	/** @var iohandler_interface */
 	protected $iohandler;
 
 	/**
@@ -37,7 +35,7 @@ class installer_migrator_output_handler implements migrator_output_handler_inter
 	 */
 	public function write($message, $verbosity)
 	{
-		if ($verbosity <= migrator_output_handler_interface::VERBOSITY_VERBOSE)
+		if ($verbosity <= output_interface::VERBOSITY_VERBOSE)
 		{
 			$this->iohandler->add_log_message($message);
 			$this->iohandler->send_response();

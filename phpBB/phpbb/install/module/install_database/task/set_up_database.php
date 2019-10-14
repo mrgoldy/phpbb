@@ -24,7 +24,7 @@ class set_up_database extends \phpbb\install\task_base
 	protected $config;
 
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 

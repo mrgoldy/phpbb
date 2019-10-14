@@ -30,12 +30,12 @@ class prune_all_forums extends \phpbb\cron\task\base
 	/**
 	* Constructor.
 	*
-	* @param string $phpbb_root_path The root path
-	* @param string $php_ext The PHP file extension
-	* @param \phpbb\config\config $config The config
-	* @param \phpbb\db\driver\driver_interface $db The db connection
+	* @param string					$phpbb_root_path	phpBB root path
+	* @param string					$php_ext			php file extension
+	* @param \phpbb\config\config	$config				Config object
+	* @param \phpbb\db\connection	$db					Database connection
 	*/
-	public function __construct($phpbb_root_path, $php_ext, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db)
+	public function __construct($phpbb_root_path, $php_ext, \phpbb\config\config $config, \phpbb\db\connection $db)
 	{
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;

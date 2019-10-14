@@ -72,7 +72,7 @@ class convertor
 	protected $db_helper;
 
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 
@@ -168,7 +168,7 @@ class convertor
 		$this->cache	= $container->get('cache.driver');
 		$this->config	= $container->get('config');
 		$this->config_php_file	= new \phpbb\config_php_file($this->phpbb_root_path, $this->php_ext);
-		$this->db		= $container->get('dbal.conn.driver');
+		$this->db		= $container->get('dbal.conn');
 
 		$this->config_table			= $container->get_parameter('tables.config');
 		$this->session_keys_table	= $container->get_parameter('tables.sessions_keys');
@@ -504,7 +504,7 @@ class convertor
 
 			if ($src_dbms != $dbms || $src_dbhost != $dbhost || $src_dbport != $dbport || $src_dbname != $dbname || $src_dbuser != $dbuser)
 			{
-				/** @var \phpbb\db\driver\driver_interface $src_db */
+				/** @var \phpbb\db\connection $src_db */
 				$src_db = new $src_dbms();
 				$src_db->sql_connect($src_dbhost, $src_dbuser, htmlspecialchars_decode($src_dbpasswd), $src_dbname, $src_dbport, false, true);
 				$same_db = false;
@@ -525,8 +525,7 @@ class convertor
 			{
 				$prefixes = array();
 
-				$db_tools_factory = new \phpbb\db\tools\factory();
-				$db_tools = $db_tools_factory->get($src_db);
+				$db_tools = new \phpbb\db\tools($src_db);
 				$tables_existing = $db_tools->sql_list_tables();
 				$tables_existing = array_map('strtolower', $tables_existing);
 				foreach ($tables_existing as $table_name)

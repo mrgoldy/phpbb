@@ -581,7 +581,7 @@ function phpbb_parse_range_request($request_array, $filesize)
 /**
 * Increments the download count of all provided attachments
 *
-* @param \phpbb\db\driver\driver_interface $db The database object
+* @param \phpbb\db\connection $db The database object
 * @param array|int $ids The attach_id of each attachment
 *
 * @return null
@@ -602,7 +602,7 @@ function phpbb_increment_downloads($db, $ids)
 /**
 * Handles authentication when downloading attachments from a post or topic
 *
-* @param \phpbb\db\driver\driver_interface $db The database object
+* @param \phpbb\db\connection $db The database object
 * @param \phpbb\auth\auth $auth The authentication object
 * @param int $topic_id The id of the topic that we are downloading from
 *
@@ -652,7 +652,7 @@ function phpbb_download_handle_forum_auth($db, $auth, $topic_id)
 /**
 * Handles authentication when downloading attachments from PMs
 *
-* @param \phpbb\db\driver\driver_interface $db The database object
+* @param \phpbb\db\connection $db The database object
 * @param \phpbb\auth\auth $auth The authentication object
 * @param int $user_id The user id
 * @param int $msg_id The id of the PM that we are downloading from
@@ -693,7 +693,7 @@ function phpbb_download_handle_pm_auth($db, $auth, $user_id, $msg_id)
 /**
 * Checks whether a user can download from a particular PM
 *
-* @param \phpbb\db\driver\driver_interface $db The database object
+* @param \phpbb\db\connection $db The database object
 * @param int $user_id The user id
 * @param int $msg_id The id of the PM that we are downloading from
 *

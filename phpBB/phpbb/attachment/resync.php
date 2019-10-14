@@ -13,14 +13,14 @@
 
 namespace phpbb\attachment;
 
-use \phpbb\db\driver\driver_interface;
+use \phpbb\db\connection;
 
 /**
  * Attachment resync class
  */
 class resync
 {
-	/** @var driver_interface */
+	/** @var connection */
 	protected $db;
 
 	/** @var string Attachment table SQL ID */
@@ -38,9 +38,9 @@ class resync
 	/**
 	 * Constructor for attachment resync class
 	 *
-	 * @param driver_interface $db Database driver
+	 * @param connection $db Database connection
 	 */
-	public function __construct(driver_interface $db)
+	public function __construct(connection $db)
 	{
 		$this->db = $db;
 	}

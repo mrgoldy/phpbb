@@ -15,7 +15,7 @@ namespace phpbb\tree;
 
 abstract class nestedset implements \phpbb\tree\tree_interface
 {
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/** @var \phpbb\lock\db */
@@ -56,15 +56,15 @@ abstract class nestedset implements \phpbb\tree\tree_interface
 	/**
 	* Construct
 	*
-	* @param \phpbb\db\driver\driver_interface	$db		Database connection
-	* @param \phpbb\lock\db		$lock	Lock class used to lock the table when moving forums around
-	* @param string			$table_name			Table name
-	* @param string			$message_prefix		Prefix for the messages thrown by exceptions
-	* @param string			$sql_where			Additional SQL restrictions for the queries
-	* @param array			$item_basic_data	Array with basic item data that is stored in item_parents
-	* @param array			$columns			Array with column names to overwrite
+	* @param \phpbb\db\connection	$db					Database connection
+	* @param \phpbb\lock\db			$lock				Lock class used to lock the table when moving forums around
+	* @param string					$table_name			Table name
+	* @param string					$message_prefix		Prefix for the messages thrown by exceptions
+	* @param string					$sql_where			Additional SQL restrictions for the queries
+	* @param array					$item_basic_data	Array with basic item data that is stored in item_parents
+	* @param array					$columns			Array with column names to overwrite
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\lock\db $lock, $table_name, $message_prefix = '', $sql_where = '', $item_basic_data = array(), $columns = array())
+	public function __construct(\phpbb\db\connection $db, \phpbb\lock\db $lock, $table_name, $message_prefix = '', $sql_where = '', $item_basic_data = array(), $columns = array())
 	{
 		$this->db = $db;
 		$this->lock = $lock;

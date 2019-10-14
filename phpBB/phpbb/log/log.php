@@ -95,7 +95,7 @@ class log implements \phpbb\log\log_interface
 	/**
 	* Constructor
 	*
-	* @param	\phpbb\db\driver\driver_interface	$db		Database object
+	* @param	\phpbb\db\connection	$db		Database object
 	* @param	\phpbb\user		$user	User object
 	* @param	\phpbb\auth\auth		$auth	Auth object
 	* @param	\phpbb\event\dispatcher_interface	$phpbb_dispatcher	Event dispatcher

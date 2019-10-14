@@ -307,15 +307,14 @@ class manager
 	/**
 	* Handle deleting avatars
 	*
-	* @param \phpbb\db\driver\driver_interface $db phpBB dbal
-	* @param \phpbb\user    $user phpBB user object
-	* @param array          $avatar_data Cleaned user data containing the user's
-	*                               avatar data
-	* @param string         $table Database table from which the avatar should be deleted
-	* @param string         $prefix Prefix of user data columns in database
+	* @param \phpbb\db\connection	$db				Database connection
+	* @param \phpbb\user			$user			User object
+	* @param array					$avatar_data	Cleaned user data containing the user's avatar data
+	* @param string					$table			Database table from which the avatar should be deleted
+	* @param string					$prefix			Prefix of user data columns in database
 	* @return null
 	*/
-	public function handle_avatar_delete(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, $avatar_data, $table, $prefix)
+	public function handle_avatar_delete(\phpbb\db\connection $db, \phpbb\user $user, $avatar_data, $table, $prefix)
 	{
 		if ($driver = $this->get_driver($avatar_data['avatar_type']))
 		{

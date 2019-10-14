@@ -51,7 +51,7 @@ class fulltext_postgres extends \phpbb\search\base
 
 	/**
 	 * Database connection
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 
@@ -96,7 +96,7 @@ class fulltext_postgres extends \phpbb\search\base
 	 * @param string $phpEx PHP file extension
 	 * @param \phpbb\auth\auth $auth Auth object
 	 * @param \phpbb\config\config $config Config object
-	 * @param \phpbb\db\driver\driver_interface Database object
+	 * @param \phpbb\db\connection Database object
 	 * @param \phpbb\user $user User object
 	 * @param \phpbb\event\dispatcher_interface	$phpbb_dispatcher	Event dispatcher object
 	 */

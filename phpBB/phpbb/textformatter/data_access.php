@@ -27,7 +27,7 @@ class data_access
 	protected $bbcodes_table;
 
 	/**
-	* @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
@@ -54,14 +54,14 @@ class data_access
 	/**
 	* Constructor
 	*
-	* @param \phpbb\db\driver\driver_interface $db Database connection
+	* @param \phpbb\db\connection $db Database connection
 	* @param string $bbcodes_table Name of the BBCodes table
 	* @param string $smilies_table Name of the smilies table
 	* @param string $styles_table  Name of the styles table
 	* @param string $words_table   Name of the words table
 	* @param string $styles_path   Path to the styles dir
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, $bbcodes_table, $smilies_table, $styles_table, $words_table, $styles_path)
+	public function __construct(\phpbb\db\connection $db, $bbcodes_table, $smilies_table, $styles_table, $words_table, $styles_path)
 	{
 		$this->db = $db;
 

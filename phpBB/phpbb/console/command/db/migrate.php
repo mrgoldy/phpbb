@@ -12,7 +12,7 @@
 */
 namespace phpbb\console\command\db;
 
-use phpbb\db\output_handler\log_wrapper_migrator_output_handler;
+use phpbb\db\migration\output\log_wrapper_output;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -53,7 +53,7 @@ class migrate extends \phpbb\console\command\db\migration_command
 	{
 		$io = new SymfonyStyle($input, $output);
 
-		$this->migrator->set_output_handler(new log_wrapper_migrator_output_handler($this->language, new console_migrator_output_handler($this->user, $output), $this->phpbb_root_path . 'store/migrations_' . time() . '.log', $this->filesystem));
+		$this->migrator->set_output_handler(new log_wrapper_output($this->phpbb_root_path . 'store/migrations_' . time() . '.log', $this->filesystem, $this->language, new console_migrator_output_handler($this->user, $output)));
 
 		$this->migrator->create_migrations_table();
 
@@ -67,7 +67,7 @@ class migrate extends \phpbb\console\command\db\migration_command
 			{
 				$this->migrator->update();
 			}
-			catch (\phpbb\db\migration\exception $e)
+			catch (\phpbb\db\exception\migration_exception $e)
 			{
 				$io->error($e->getLocalisedMessage($this->user));
 				$this->finalise_update();

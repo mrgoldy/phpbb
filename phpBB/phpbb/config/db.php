@@ -26,7 +26,7 @@ class db extends \phpbb\config\config
 
 	/**
 	* Database connection
-	* @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
@@ -39,11 +39,11 @@ class db extends \phpbb\config\config
 	/**
 	* Creates a configuration container with a default set of values
 	*
-	* @param \phpbb\db\driver\driver_interface    $db    Database connection
-	* @param \phpbb\cache\driver\driver_interface $cache Cache instance
-	* @param string                       $table Configuration table name
+	* @param \phpbb\db\connection    				$db		Database connection
+	* @param \phpbb\cache\driver\driver_interface	$cache	Cache instance
+	* @param string                       			$table	Configuration table name
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\cache\driver\driver_interface $cache, $table)
+	public function __construct(\phpbb\db\connection $db, \phpbb\cache\driver\driver_interface $cache, $table)
 	{
 		$this->db = $db;
 		$this->cache = $cache;

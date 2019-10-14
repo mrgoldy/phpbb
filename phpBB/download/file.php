@@ -78,7 +78,7 @@ if (isset($_GET['avatar']))
 	/* @var $request \phpbb\request\request_interface */
 	$request	= $phpbb_container->get('request');
 
-	/* @var $db \phpbb\db\driver\driver_interface */
+	/* @var $db \phpbb\db\connection */
 	$db			= $phpbb_container->get('dbal.conn');
 
 	/* @var $phpbb_log \phpbb\log\log_interface */

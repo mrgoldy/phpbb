@@ -27,7 +27,7 @@ abstract class base implements feed_interface
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/** @var \phpbb\cache\driver\driver_interface */
@@ -79,20 +79,20 @@ abstract class base implements feed_interface
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\feed\helper					$helper		Feed helper
-	 * @param \phpbb\config\config				$config		Config object
-	 * @param \phpbb\db\driver\driver_interface	$db			Database connection
-	 * @param \phpbb\cache\driver\driver_interface	$cache	Cache object
-	 * @param \phpbb\user						$user		User object
-	 * @param \phpbb\auth\auth					$auth		Auth object
-	 * @param \phpbb\content_visibility			$content_visibility		Auth object
-	 * @param \phpbb\event\dispatcher_interface	$phpbb_dispatcher		Event dispatcher object
-	 * @param string								$phpEx		php file extension
+	 * @param \phpbb\feed\helper					$helper					Feed helper
+	 * @param \phpbb\config\config					$config					Config object
+	 * @param \phpbb\db\connection					$db						Database connection
+	 * @param \phpbb\cache\driver\driver_interface	$cache					Cache object
+	 * @param \phpbb\user							$user					User object
+	 * @param \phpbb\auth\auth						$auth					Auth object
+	 * @param \phpbb\content_visibility				$content_visibility		Auth object
+	 * @param \phpbb\event\dispatcher_interface		$phpbb_dispatcher		Event dispatcher object
+	 * @param string								$phpEx					php file extension
 	 */
 	public function __construct(
 		\phpbb\feed\helper $helper,
 		\phpbb\config\config $config,
-		\phpbb\db\driver\driver_interface $db,
+		\phpbb\db\connection $db,
 		\phpbb\cache\driver\driver_interface $cache,
 		\phpbb\user $user,
 		\phpbb\auth\auth $auth,

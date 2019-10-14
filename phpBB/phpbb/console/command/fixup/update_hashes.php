@@ -21,7 +21,7 @@ class update_hashes extends \phpbb\console\command\command
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/** @var \phpbb\passwords\manager */
@@ -35,14 +35,14 @@ class update_hashes extends \phpbb\console\command\command
 	 *
 	 * @param \phpbb\config\config $config
 	 * @param \phpbb\user $user
-	 * @param \phpbb\db\driver\driver_interface $db
+	 * @param \phpbb\db\connection $db
 	 * @param \phpbb\passwords\manager $passwords_manager
 	 * @param array $hashing_algorithms Hashing driver
 	 *			service collection
 	 * @param array $defaults Default password types
 	 */
 	public function __construct(\phpbb\config\config $config, \phpbb\user $user,
-								\phpbb\db\driver\driver_interface $db, \phpbb\passwords\manager $passwords_manager,
+								\phpbb\db\connection $db, \phpbb\passwords\manager $passwords_manager,
 								$hashing_algorithms, $defaults)
 	{
 		$this->config = $config;

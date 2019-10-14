@@ -518,11 +518,11 @@ function mcp_post_details($id, $mode, $action)
 /**
  * Get the number of posters for a given ip
  *
- * @param \phpbb\db\driver\driver_interface $db DBAL interface
+ * @param \phpbb\db\connection $db Databse connection
  * @param string $poster_ip IP
  * @return int Number of posters
  */
-function phpbb_get_num_posters_for_ip(\phpbb\db\driver\driver_interface $db, $poster_ip)
+function phpbb_get_num_posters_for_ip(\phpbb\db\connection $db, $poster_ip)
 {
 	$sql = 'SELECT COUNT(DISTINCT poster_id) as num_users
 		FROM ' . POSTS_TABLE . "
@@ -537,11 +537,11 @@ function phpbb_get_num_posters_for_ip(\phpbb\db\driver\driver_interface $db, $po
 /**
  * Get the number of ips for a given poster
  *
- * @param \phpbb\db\driver\driver_interface $db
+ * @param \phpbb\db\connection $db
  * @param int $poster_id Poster user ID
  * @return int Number of IPs for given poster
  */
-function phpbb_get_num_ips_for_poster(\phpbb\db\driver\driver_interface $db, $poster_id)
+function phpbb_get_num_ips_for_poster(\phpbb\db\connection $db, $poster_id)
 {
 	$sql = 'SELECT COUNT(DISTINCT poster_ip) as num_ips
 		FROM ' . POSTS_TABLE . '

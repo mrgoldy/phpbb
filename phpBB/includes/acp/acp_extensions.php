@@ -275,7 +275,7 @@ class acp_extensions
 
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_EXT_ENABLE', time(), array($ext_name));
 				}
-				catch (\phpbb\db\migration\exception $e)
+				catch (\phpbb\db\exception\migration_exception $e)
 				{
 					trigger_error($this->user->lang('MIGRATION_EXCEPTION_ERROR', $e->getLocalisedMessage($this->user)), E_USER_WARNING);
 				}
@@ -393,7 +393,7 @@ class acp_extensions
 					}
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_EXT_PURGE', time(), array($ext_name));
 				}
-				catch (\phpbb\db\migration\exception $e)
+				catch (\phpbb\db\exception\migration_exception $e)
 				{
 					trigger_error($this->user->lang('MIGRATION_EXCEPTION_ERROR', $e->getLocalisedMessage($this->user)), E_USER_WARNING);
 				}

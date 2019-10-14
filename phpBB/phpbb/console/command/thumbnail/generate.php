@@ -25,7 +25,7 @@ class generate extends \phpbb\console\command\command
 	protected $config;
 
 	/**
-	* @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
@@ -50,14 +50,14 @@ class generate extends \phpbb\console\command\command
 	/**
 	* Constructor
 	*
-	* @param \config\config $config The config
+	* @param \phpbb\config\config $config The config
 	* @param \phpbb\user $user The user object (used to get language information)
-	* @param \phpbb\db\driver\driver_interface $db Database connection
+	* @param \phpbb\db\connection $db Database connection
 	* @param \phpbb\cache\service $cache The cache service
 	* @param string $phpbb_root_path Root path
 	* @param string $php_ext PHP extension
 	*/
-	public function __construct(\phpbb\config\config $config, \phpbb\user $user, \phpbb\db\driver\driver_interface $db, \phpbb\cache\service $cache, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\config\config $config, \phpbb\user $user, \phpbb\db\connection $db, \phpbb\cache\service $cache, $phpbb_root_path, $php_ext)
 	{
 		$this->config = $config;
 		$this->db = $db;

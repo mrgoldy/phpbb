@@ -73,7 +73,7 @@ class convertor
 
 		$dbms = $phpbb_config_php_file->convert_30_dbms_to_31($dbms);
 
-		/** @var \phpbb\db\driver\driver_interface $db */
+		/** @var \phpbb\db\connection $db */
 		$db = new $dbms();
 		$db->sql_connect($dbhost, $dbuser, $dbpasswd, $dbname, $dbport, false, true);
 		unset($dbpasswd);
@@ -1090,7 +1090,7 @@ class convertor
 	 */
 	function jump($converter, $jump, $last_statement)
 	{
-		/** @var \phpbb\db\driver\driver_interface $src_db */
+		/** @var \phpbb\db\connection $src_db */
 		/** @var \phpbb\cache\driver\driver_interface $cache */
 		global $user, $src_db, $same_db, $db, $phpbb_root_path, $phpEx, $config, $cache;
 		global $convert;

@@ -16,7 +16,7 @@ namespace phpbb\ucp\controller;
 use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\controller\helper;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\connection;
 use phpbb\event\dispatcher;
 use phpbb\exception\http_exception;
 use phpbb\language\language;
@@ -35,7 +35,7 @@ class reset_password
 	/** @var config */
 	protected $config;
 
-	/** @var driver_interface */
+	/** @var connection */
 	protected $db;
 
 	/** @var dispatcher */
@@ -75,7 +75,7 @@ class reset_password
 	 * Reset password controller constructor.
 	 *
 	 * @param config $config
-	 * @param driver_interface $db
+	 * @param connection $db
 	 * @param dispatcher $dispatcher
 	 * @param helper $helper
 	 * @param language $language
@@ -88,7 +88,7 @@ class reset_password
 	 * @param string $root_path
 	 * @param string $php_ext
 	 */
-	public function __construct(config $config, driver_interface $db, dispatcher $dispatcher, helper $helper,
+	public function __construct(config $config, connection $db, dispatcher $dispatcher, helper $helper,
 								language $language, log_interface $log, manager $passwords_manager,
 								request_interface $request, template $template, user $user, string $users_table,
 								string $root_path, string $php_ext)

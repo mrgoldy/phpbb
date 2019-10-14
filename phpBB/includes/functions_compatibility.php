@@ -364,8 +364,7 @@ function request_var($var_name, $default, $multibyte = false, $cookie = false, $
  */
 function get_tables($db)
 {
-	$db_tools_factory = new \phpbb\db\tools\factory();
-	$db_tools = $db_tools_factory->get($db);
+	$db_tools = new \phpbb\db\tools($db);
 
 	return $db_tools->sql_list_tables();
 }

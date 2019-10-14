@@ -14,7 +14,7 @@
 namespace phpbb\console\command\user;
 
 use phpbb\console\command\command;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\connection;
 use phpbb\language\language;
 use phpbb\user;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -24,7 +24,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class reclean extends command
 {
-	/** @var driver_interface */
+	/** @var connection */
 	protected $db;
 
 	/** @var language */
@@ -39,11 +39,11 @@ class reclean extends command
 	/**
 	 * Construct method
 	 *
-	 * @param user             $user
-	 * @param driver_interface $db
-	 * @param language         $language
+	 * @param user			$user
+	 * @param connection	$db
+	 * @param language		$language
 	 */
-	public function __construct(user $user, driver_interface $db, language $language)
+	public function __construct(user $user, connection $db, language $language)
 	{
 		$this->db = $db;
 		$this->language = $language;

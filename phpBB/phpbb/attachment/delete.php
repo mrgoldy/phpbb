@@ -14,7 +14,7 @@
 namespace phpbb\attachment;
 
 use \phpbb\config\config;
-use \phpbb\db\driver\driver_interface;
+use \phpbb\db\connection;
 use \phpbb\event\dispatcher;
 use \phpbb\storage\storage;
 
@@ -26,7 +26,7 @@ class delete
 	/** @var config */
 	protected $config;
 
-	/** @var driver_interface */
+	/** @var connection */
 	protected $db;
 
 	/** @var dispatcher */
@@ -66,12 +66,12 @@ class delete
 	 * Attachment delete class constructor
 	 *
 	 * @param config $config
-	 * @param driver_interface $db
+	 * @param connection $db
 	 * @param dispatcher $dispatcher
 	 * @param resync $resync
 	 * @param storage $storage
 	 */
-	public function __construct(config $config, driver_interface $db, dispatcher $dispatcher, resync $resync, storage $storage)
+	public function __construct(config $config, connection $db, dispatcher $dispatcher, resync $resync, storage $storage)
 	{
 		$this->config = $config;
 		$this->db = $db;

@@ -306,7 +306,7 @@ class database
 		$errors = array();
 
 		// Instantiate it and set return on error true
-		/** @var \phpbb\db\driver\driver_interface $db */
+		/** @var \phpbb\db\connection $db */
 		$db = new $dbms_info['DRIVER'];
 		$db->sql_return_on_error(true);
 
@@ -357,8 +357,7 @@ class database
 				$temp_prefix . 'users',
 			);
 
-			$db_tools_factory = new \phpbb\db\tools\factory();
-			$db_tools = $db_tools_factory->get($db);
+			$db_tools = new \phpbb\db\tools($db);
 			$tables = $db_tools->sql_list_tables();
 			$tables = array_map('strtolower', $tables);
 			$table_intersect = array_intersect($tables, $table_ary);

@@ -48,11 +48,11 @@ $classes = $finder->core_path('phpbb/')
 	->directory('/db/migration/data')
 	->get_classes();
 
-$db = new \phpbb\db\driver\sqlite3();
-$factory = new \phpbb\db\tools\factory();
-$db_tools = $factory->get($db, true);
+$db = new \phpbb\db\connection();
+$db_tools = new \phpbb\db\tools($db);
+$db_tools->set_return_statements(true);
 
-$schema_generator = new \phpbb\db\migration\schema_generator($classes, new \phpbb\config\config(array()), $db, $db_tools, $phpbb_root_path, $phpEx, $table_prefix);
+$schema_generator = new \phpbb\db\migration\helper\schema_generator($classes, new \phpbb\config\config(array()), $db, $db_tools, $phpbb_root_path, $phpEx, $table_prefix);
 $schema_data = $schema_generator->get_schema();
 
 $fp = fopen($schema_path . 'schema.json', 'wb');

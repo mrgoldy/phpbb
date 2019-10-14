@@ -21,7 +21,7 @@ if (!defined('IN_PHPBB'))
 
 class acp_attachments
 {
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/** @var \phpbb\config\config */

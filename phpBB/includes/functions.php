@@ -4620,9 +4620,9 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 *
 * @param \phpbb\request\request_interface		$request	Request object
 * @param \phpbb\auth\auth						$auth		Auth object
-* @param \phpbb\db\driver\driver_interface		$db			Database connection
+* @param \phpbb\db\connection					$db			Database connection
 */
-function phpbb_check_and_display_sql_report(\phpbb\request\request_interface $request, \phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db)
+function phpbb_check_and_display_sql_report(\phpbb\request\request_interface $request, \phpbb\auth\auth $auth, \phpbb\db\connection $db)
 {
 	global $phpbb_container;
 
@@ -4635,14 +4635,14 @@ function phpbb_check_and_display_sql_report(\phpbb\request\request_interface $re
 /**
 * Generate the debug output string
 *
-* @param \phpbb\db\driver\driver_interface	$db			Database connection
+* @param \phpbb\db\connection				$db			Database connection
 * @param \phpbb\config\config				$config		Config object
 * @param \phpbb\auth\auth					$auth		Auth object
 * @param \phpbb\user						$user		User object
 * @param \phpbb\event\dispatcher_interface	$phpbb_dispatcher	Event dispatcher
 * @return string
 */
-function phpbb_generate_debug_output(\phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\auth\auth $auth, \phpbb\user $user, \phpbb\event\dispatcher_interface $phpbb_dispatcher)
+function phpbb_generate_debug_output(\phpbb\db\connection $db, \phpbb\config\config $config, \phpbb\auth\auth $auth, \phpbb\user $user, \phpbb\event\dispatcher_interface $phpbb_dispatcher)
 {
 	global $phpbb_container;
 

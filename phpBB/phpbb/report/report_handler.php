@@ -16,7 +16,7 @@ namespace phpbb\report;
 abstract class report_handler implements report_handler_interface
 {
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 
@@ -53,14 +53,14 @@ abstract class report_handler implements report_handler_interface
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\db\driver\driver_interface	$db
+	 * @param \phpbb\db\connection				$db
 	 * @param \phpbb\event\dispatcher_interface	$dispatcher
-	 * @param \phpbb\config\db					$config
+	 * @param \phpbb\config\config				$config
 	 * @param \phpbb\auth\auth					$auth
 	 * @param \phpbb\user						$user
 	 * @param \phpbb\notification\manager		$notification
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher_interface $dispatcher, \phpbb\config\config $config, \phpbb\auth\auth $auth, \phpbb\user $user, \phpbb\notification\manager $notification)
+	public function __construct(\phpbb\db\connection $db, \phpbb\event\dispatcher_interface $dispatcher, \phpbb\config\config $config, \phpbb\auth\auth $auth, \phpbb\user $user, \phpbb\notification\manager $notification)
 	{
 		$this->db				= $db;
 		$this->dispatcher		= $dispatcher;

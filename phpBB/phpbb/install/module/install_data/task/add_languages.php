@@ -16,7 +16,7 @@ namespace phpbb\install\module\install_data\task;
 class add_languages extends \phpbb\install\task_base
 {
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 

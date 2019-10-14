@@ -456,7 +456,7 @@ class acp_database
 	/**
 	 * Get backup file from file hash
 	 *
-	 * @param \phpbb\db\driver\driver_interface $db Database driver
+	 * @param \phpbb\db\connection $db Database connection
 	 * @param string $file_hash Hash of selected file
 	 *
 	 * @return array Backup file data or empty array if unable to find file
@@ -487,7 +487,7 @@ class acp_database
 	/**
 	 * Get backup file list for directory
 	 *
-	 * @param \phpbb\db\driver\driver_interface $db Database driver
+	 * @param \phpbb\db\connection $db Database connection
 	 *
 	 * @return array List of backup files in specified directory
 	 */

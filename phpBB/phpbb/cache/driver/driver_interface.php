@@ -108,18 +108,18 @@ interface driver_interface
 	* result to persistent storage. In other words, there is no need
 	* to call save() afterwards.
 	*
-	* @param \phpbb\db\driver\driver_interface $db	Database connection
-	* @param string $query			SQL query, should be used for generating storage key
-	* @param mixed $query_result	The result from \dbal::sql_query, to be passed to
-	* 								\dbal::sql_fetchrow to get all rows and store them
-	* 								in cache.
-	* @param int $ttl				Time to live, after this timeout the query should
-	*								expire from the cache.
-	* @return int|mixed				If storing in cache succeeded, an integer $query_id
-	* 								representing the query should be returned. Otherwise
-	* 								the original $query_result should be returned.
+	* @param \phpbb\db\connection $db	Database connection
+	* @param string $query				SQL query, should be used for generating storage key
+	* @param mixed $query_result		The result from \dbal::sql_query, to be passed to
+	* 									\dbal::sql_fetchrow to get all rows and store them
+	* 									in cache.
+	* @param int $ttl					Time to live, after this timeout the query should
+	*									expire from the cache.
+	* @return int|mixed					If storing in cache succeeded, an integer $query_id
+	* 									representing the query should be returned. Otherwise
+	* 									the original $query_result should be returned.
 	*/
-	public function sql_save(\phpbb\db\driver\driver_interface $db, $query, $query_result, $ttl);
+	public function sql_save(\phpbb\db\connection $db, $query, $query_result, $ttl);
 
 	/**
 	* Check if result for a given SQL query exists in cache.

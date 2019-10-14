@@ -2185,13 +2185,13 @@ function set_user_message_limit()
 /**
  * Get the maximum PM setting for the groups of the user
  *
- * @param \phpbb\db\driver\driver_interface $db
+ * @param \phpbb\db\connection $db
  * @param int $user_id
  * @param string $setting Only 'max_recipients' and 'message_limit' are supported
  * @return int The maximum setting for all groups of the user, unless one group has '0'
  * @throws \InvalidArgumentException If selected group setting is not supported
  */
-function phpbb_get_max_setting_from_group(\phpbb\db\driver\driver_interface $db, $user_id, $setting)
+function phpbb_get_max_setting_from_group(\phpbb\db\connection $db, $user_id, $setting)
 {
 	if ($setting !== 'max_recipients' && $setting !== 'message_limit')
 	{

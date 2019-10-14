@@ -24,7 +24,7 @@ class update_hashes extends \phpbb\cron\task\base
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/** @var \phpbb\lock\db */
@@ -39,15 +39,14 @@ class update_hashes extends \phpbb\cron\task\base
 	/**
 	 * Constructor.
 	 *
-	 * @param \phpbb\config\config $config
-	 * @param \phpbb\db\driver\driver_interface $db
-	 * @param \phpbb\lock\db $update_lock
-	 * @param \phpbb\passwords\manager $passwords_manager
-	 * @param array $hashing_algorithms Hashing driver
-	 *			service collection
-	 * @param array $defaults Default password types
+	 * @param \phpbb\config\config		$config					Config object
+	 * @param \phpbb\db\connection		$db						Database connection
+	 * @param \phpbb\lock\db			$update_lock			Database update lock object
+	 * @param \phpbb\passwords\manager	$passwords_manager		Passwords manager object
+	 * @param array						$hashing_algorithms		Hashing driver service collection
+	 * @param array						$defaults				Default password types
 	 */
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\lock\db $update_lock, \phpbb\passwords\manager $passwords_manager, $hashing_algorithms, $defaults)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\connection $db, \phpbb\lock\db $update_lock, \phpbb\passwords\manager $passwords_manager, $hashing_algorithms, $defaults)
 	{
 		$this->config = $config;
 		$this->db = $db;

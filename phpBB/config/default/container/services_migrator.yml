@@ -3,19 +3,20 @@ services:
     migrator:
         class: phpbb\db\migrator
         arguments:
-            - '@service_container'
             - '@config'
+            - '@service_container'
             - '@dbal.conn'
             - '@dbal.tools'
+            - '@dispatcher'
+            - '@migrator.helper'
             - '%tables.migrations%'
+            - '%core.table_prefix%'
             - '%core.root_path%'
             - '%core.php_ext%'
-            - '%core.table_prefix%'
             - '@migrator.tool_collection'
-            - '@migrator.helper'
 
     migrator.helper:
-        class: phpbb\db\migration\helper
+        class: phpbb\db\migration\helper\helper
 
 # ----- Migrator's tools -----
     migrator.tool_collection:
@@ -43,11 +44,10 @@ services:
         class: phpbb\db\migration\tool\module
         arguments:
             - '@dbal.conn'
-            - '@cache'
-            - '@user'
+            - '@language'
+            - '@log'
             - '@module.manager'
-            - '%core.root_path%'
-            - '%core.php_ext%'
+            - '@user'
             - '%tables.modules%'
         tags:
             - { name: migrator.tool }
@@ -55,9 +55,14 @@ services:
     migrator.tool.permission:
         class: phpbb\db\migration\tool\permission
         arguments:
-            - '@dbal.conn'
-            - '@cache'
             - '@auth'
+            - '@cache.driver'
+            - '@dbal.conn'
+            - '%tables.acl_groups%'
+            - '%tables.acl_options%'
+            - '%tables.acl_roles%'
+            - '%tables.acl_roles_data%'
+            - '%tables.acl_users%'
             - '%core.root_path%'
             - '%core.php_ext%'
         tags:

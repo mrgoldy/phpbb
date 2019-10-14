@@ -35,7 +35,7 @@ class service
 	/**
 	* Database connection.
 	*
-	* @var \phpbb\db\driver\driver_interface
+	* @var \phpbb\db\connection
 	*/
 	protected $db;
 
@@ -58,11 +58,11 @@ class service
 	*
 	* @param \phpbb\cache\driver\driver_interface $driver The cache driver
 	* @param \phpbb\config\config $config The config
-	* @param \phpbb\db\driver\driver_interface $db Database connection
+	* @param \phpbb\db\connection $db Database connection
 	* @param string $phpbb_root_path Root path
 	* @param string $php_ext PHP file extension
 	*/
-	public function __construct(\phpbb\cache\driver\driver_interface $driver, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\cache\driver\driver_interface $driver, \phpbb\config\config $config, \phpbb\db\connection $db, $phpbb_root_path, $php_ext)
 	{
 		$this->set_driver($driver);
 		$this->config = $config;

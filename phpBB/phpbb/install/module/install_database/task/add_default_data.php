@@ -21,7 +21,7 @@ use phpbb\install\exception\resource_limit_reached_exception;
 class add_default_data extends \phpbb\install\task_base
 {
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 
@@ -67,7 +67,7 @@ class add_default_data extends \phpbb\install\task_base
 								\phpbb\language\language $language,
 								$root_path)
 	{
-		$this->db				= $container->get('dbal.conn.driver');
+		$this->db				= $container->get('dbal.conn');
 		$this->database_helper	= $db_helper;
 		$this->config			= $config;
 		$this->iohandler		= $iohandler;

@@ -38,7 +38,7 @@ class manager
 	/** @var \phpbb\event\dispatcher_interface */
 	protected $phpbb_dispatcher;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/** @var \phpbb\cache\service */
@@ -64,7 +64,7 @@ class manager
 	* @param ContainerInterface $phpbb_container
 	* @param \phpbb\user_loader $user_loader
 	* @param \phpbb\event\dispatcher_interface $phpbb_dispatcher
-	* @param \phpbb\db\driver\driver_interface $db
+	* @param \phpbb\db\connection $db
 	* @param \phpbb\cache\service $cache
 	* @param \phpbb\language\language $language
 	* @param \phpbb\user $user
@@ -73,7 +73,7 @@ class manager
 	*
 	* @return \phpbb\notification\manager
 	*/
-	public function __construct($notification_types, $notification_methods, ContainerInterface $phpbb_container, \phpbb\user_loader $user_loader, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\db\driver\driver_interface $db, \phpbb\cache\service $cache, \phpbb\language\language $language, \phpbb\user $user, $notification_types_table, $user_notifications_table)
+	public function __construct($notification_types, $notification_methods, ContainerInterface $phpbb_container, \phpbb\user_loader $user_loader, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\db\connection $db, \phpbb\cache\service $cache, \phpbb\language\language $language, \phpbb\user $user, $notification_types_table, $user_notifications_table)
 	{
 		$this->notification_types = $notification_types;
 		$this->notification_methods = $notification_methods;

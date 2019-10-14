@@ -14,7 +14,7 @@
 namespace phpbb\storage;
 
 use phpbb\cache\driver\driver_interface as cache;
-use phpbb\db\driver\driver_interface as db;
+use phpbb\db\connection as db;
 use phpbb\storage\exception\exception;
 
 /**
@@ -28,7 +28,7 @@ class storage
 	protected $adapter;
 
 	/**
-	 * @var \phpbb\db\driver\driver_interface
+	 * @var \phpbb\db\connection
 	 */
 	protected $db;
 
@@ -56,11 +56,11 @@ class storage
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\db\driver\driver_interface	$db
+	 * @param \phpbb\db\connection					$db
 	 * @param \phpbb\cache\driver\driver_interface	$cache
-	 * @param \phpbb\storage\adapter_factory	$factory
-	 * @param string							$storage_name
-	 * @param string							$storage_table
+	 * @param \phpbb\storage\adapter_factory		$factory
+	 * @param string								$storage_name
+	 * @param string								$storage_table
 	 */
 	public function __construct(db $db, cache $cache, adapter_factory $factory, $storage_name, $storage_table)
 	{

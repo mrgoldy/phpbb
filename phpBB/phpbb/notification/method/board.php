@@ -24,7 +24,7 @@ class board extends \phpbb\notification\method\base
 	/** @var \phpbb\user_loader */
 	protected $user_loader;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\connection */
 	protected $db;
 
 	/** @var \phpbb\cache\driver\driver_interface */
@@ -46,14 +46,14 @@ class board extends \phpbb\notification\method\base
 	* Notification Method Board Constructor
 	*
 	* @param \phpbb\user_loader $user_loader
-	* @param \phpbb\db\driver\driver_interface $db
+	* @param \phpbb\db\connection $db
 	* @param \phpbb\cache\driver\driver_interface $cache
 	* @param \phpbb\user $user
 	* @param \phpbb\config\config $config
 	* @param string $notification_types_table
 	* @param string $notifications_table
 	*/
-	public function __construct(\phpbb\user_loader $user_loader, \phpbb\db\driver\driver_interface $db, \phpbb\cache\driver\driver_interface $cache, \phpbb\user $user, \phpbb\config\config $config, $notification_types_table, $notifications_table)
+	public function __construct(\phpbb\user_loader $user_loader, \phpbb\db\connection $db, \phpbb\cache\driver\driver_interface $cache, \phpbb\user $user, \phpbb\config\config $config, $notification_types_table, $notifications_table)
 	{
 		$this->user_loader = $user_loader;
 		$this->db = $db;
