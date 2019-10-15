@@ -60,16 +60,17 @@ class phpbb_dbal_migrator_test extends phpbb_database_test_case
 		$container = new phpbb_mock_container_builder();
 
 		$this->migrator = new \phpbb\db\migrator(
-			$container,
 			$this->config,
+			$container,
 			$this->db,
 			$this->db_tools,
+			new phpbb_mock_event_dispatcher(),
+			new \phpbb\db\migration\helper\helper(),
 			'phpbb_migrations',
+			'phpbb_',
 			dirname(__FILE__) . '/../../phpBB/',
 			'php',
-			'phpbb_',
-			$tools,
-			new \phpbb\db\migration\helper\helper()
+			$tools
 		);
 		$container->set('migrator', $this->migrator);
 		$container->set('dispatcher', new phpbb_mock_event_dispatcher());

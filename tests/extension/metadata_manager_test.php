@@ -78,16 +78,17 @@ class phpbb_extension_metadata_manager_test extends phpbb_database_test_case
 		);
 
 		$this->migrator = new \phpbb\db\migrator(
-			$container,
 			$this->config,
+			$container,
 			$this->db,
 			$this->db_tools,
+			new phpbb_mock_event_dispatcher(),
+			new \phpbb\db\migration\helper\helper(),
 			'phpbb_migrations',
+			$this->table_prefix,
 			$this->phpbb_root_path,
 			'php',
-			$this->table_prefix,
-			array(),
-			new \phpbb\db\migration\helper\helper()
+			array()
 		);
 		$container->set('migrator', $this->migrator);
 

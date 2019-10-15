@@ -30,14 +30,14 @@ abstract class migration implements migration_interface
 	/** @var \phpbb\db\tools */
 	protected $db_tools;
 
-	/** @var string php File extension */
+	/** @var string phpBB root path */
 	protected $root_path;
 
-	/** @var string phpBB root path */
-	protected $table_prefix;
-
-	/** @var string */
+	/** @var string php File extension */
 	protected $php_ext;
+
+	/** @var string Table prefix */
+	protected $table_prefix;
 
 	/** @var array Errors, if any occurred */
 	protected $errors;

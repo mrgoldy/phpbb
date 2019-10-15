@@ -249,16 +249,17 @@ class phpbb_functional_test_case extends phpbb_test_case
 
 		$container = new phpbb_mock_container_builder();
 		$migrator = new \phpbb\db\migrator(
-			$container,
 			$config,
+			$container,
 			$db,
 			$db_tools,
+			new phpbb_mock_event_dispatcher(),
+			new \phpbb\db\migration\helper\helper(),
 			self::$config['table_prefix'] . 'migrations',
+			self::$config['table_prefix'],
 			$phpbb_root_path,
 			$phpEx,
-			self::$config['table_prefix'],
-			array(),
-			new \phpbb\db\migration\helper\helper()
+			array()
 		);
 		$container->set('migrator', $migrator);
 		$container->set('dispatcher', new phpbb_mock_event_dispatcher());

@@ -48,8 +48,9 @@ $classes = $finder->core_path('phpbb/')
 	->directory('/db/migration/data')
 	->get_classes();
 
-$db = new \phpbb\db\connection();
-$db_tools = new \phpbb\db\tools($db);
+$db_manager	= new \phpbb\db\manager();
+$db			= $db_manager->get_connection(['driver' => 'sqlite3']);
+$db_tools	= new \phpbb\db\tools($db);
 $db_tools->set_return_statements(true);
 
 $schema_generator = new \phpbb\db\migration\helper\schema_generator($classes, new \phpbb\config\config(array()), $db, $db_tools, $phpbb_root_path, $phpEx, $table_prefix);

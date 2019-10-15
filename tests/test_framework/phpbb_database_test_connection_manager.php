@@ -378,7 +378,7 @@ class phpbb_database_test_connection_manager
 			$db_table_schema = $schema_generator->get_schema();
 		}
 
-		$db_tools = $db_tools = new \phpbb\db\tools($db);
+		$db_tools = new \phpbb\db\tools($db);
 		$db_tools->set_return_statements(true);
 		foreach ($db_table_schema as $table_name => $table_data)
 		{

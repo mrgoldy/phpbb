@@ -37,6 +37,8 @@ class phpbb_dbal_migrator_tool_module_test extends phpbb_database_test_case
 		$lang = new \phpbb\language\language($lang_loader);
 		$user = $this->user = new \phpbb\user($lang, '\phpbb\datetime');
 
+		$phpbb_log = $this->getMockBuilder('\phpbb\log\log')->disableOriginalConstructor()->getMock();
+
 		$cache = new phpbb_mock_cache;
 		$phpbb_dispatcher = new phpbb_mock_event_dispatcher();
 		$auth = $this->createMock('\phpbb\auth\auth');
@@ -46,9 +48,9 @@ class phpbb_dbal_migrator_tool_module_test extends phpbb_database_test_case
 		$phpbb_root_path = dirname(__FILE__) . '/';
 
 		$phpbb_extension_manager = new phpbb_mock_extension_manager($phpbb_root_path);
-		$module_manager = new \phpbb\module\module_manager($cache, $this->db, $phpbb_extension_manager, MODULES_TABLE, $phpbb_root_path, $phpEx);
+		$module_manager = new \phpbb\module\module_manager($cache, $db, $phpbb_extension_manager, MODULES_TABLE, $phpbb_root_path, $phpEx);
 
-		$this->tool = new \phpbb\db\migration\tool\module($this->db, $this->cache, $this->user, $module_manager, $phpbb_root_path, $phpEx, 'phpbb_modules');
+		$this->tool = new \phpbb\db\migration\tool\module($db, $lang, $phpbb_log, $module_manager, $user, 'phpbb_modules');
 	}
 
 	public function exists_data_acp()

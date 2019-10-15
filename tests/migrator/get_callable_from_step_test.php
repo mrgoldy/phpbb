@@ -21,7 +21,8 @@ class get_callable_from_step_test extends phpbb_database_test_case
 
 		$phpbb_log = $this->getMockBuilder('\phpbb\log\log')->disableOriginalConstructor()->getMock();
 		$db = $this->new_dbal();
-		$cache_service = $this->getMockBuilder('\phpbb\cache\service')->disableOriginalConstructor()->getMock();
+		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $php_ext);
+		$lang = new \phpbb\language\language($lang_loader);
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 		$module_manager = new \phpbb\module\module_manager(
 			$this->getMockBuilder('\phpbb\cache\driver\dummy')->disableOriginalConstructor()->getMock(),
@@ -31,23 +32,25 @@ class get_callable_from_step_test extends phpbb_database_test_case
 			$phpbb_root_path,
 			$php_ext
 		);
-		$module_tools = new \phpbb\db\migration\tool\module($db, $cache_service, $user, $module_manager, $phpbb_root_path, $php_ext, 'phpbb_modules');
+
+		$module_tool = new \phpbb\db\migration\tool\module($db, $lang, $phpbb_log, $module_manager, $user, 'phpbb_modules');
 		$this->migrator = new \phpbb\db\migrator(
-			new phpbb_mock_container_builder(),
 			new \phpbb\config\config(array()),
+			new phpbb_mock_container_builder(),
 			$db,
-			$db_tools = new \phpbb\db\tools($db),
+			new \phpbb\db\tools($db),
+			new phpbb_mock_event_dispatcher(),
+			new \phpbb\db\migration\helper\helper(),
 			'phpbb_migrations',
+			$table_prefix,
 			$phpbb_root_path,
 			$php_ext,
-			$table_prefix,
-			array($module_tools),
-			new \phpbb\db\migration\helper\helper()
+			array($module_tool)
 		);
 
-		if (!$module_tools->exists('acp', 0, 'new_module_langname'))
+		if (!$module_tool->exists('acp', 0, 'new_module_langname'))
 		{
-			$module_tools->add('acp', 0, array(
+			$module_tool->add('acp', 0, array(
 				'module_basename'	=> 'new_module_basename',
 				'module_langname'	=> 'new_module_langname',
 				'module_mode'		=> 'settings',

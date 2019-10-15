@@ -59,7 +59,7 @@ class phpbb_migrator_convert_timezones_test extends phpbb_database_test_case
 		$this->migration = new \phpbb\db\migration\data\v310\timezone(
 			new \phpbb\config\config(array()),
 			$this->db,
-			$db_tools = new \phpbb\db\tools($this->db),
+			new \phpbb\db\tools($this->db),
 			$phpbb_root_path,
 			$phpEx,
 			'phpbb_'

@@ -158,16 +158,17 @@ class phpbb_extension_manager_test extends phpbb_database_test_case
 		$container = new phpbb_mock_container_builder();
 
 		$migrator = new \phpbb\db\migrator(
-			$container,
 			$config,
+			$container,
 			$db,
 			$db_tools,
+			new phpbb_mock_event_dispatcher(),
+			new \phpbb\db\migration\helper\helper(),
 			'phpbb_migrations',
+			$table_prefix,
 			$phpbb_root_path,
 			$php_ext,
-			$table_prefix,
-			array(),
-			new \phpbb\db\migration\helper\helper()
+			array()
 		);
 		$container->set('migrator', $migrator);
 

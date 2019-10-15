@@ -31,11 +31,22 @@ class phpbb_dbal_migrator_tool_permission_test extends phpbb_database_test_case
 
 		parent::setup();
 
+		$auth = $this->auth = new \phpbb\auth\auth();
 		$db = $this->db = $this->new_dbal();
 		$cache = $this->cache = new \phpbb\cache\service(new \phpbb\cache\driver\dummy(), new \phpbb\config\config(array()), $this->db, $phpbb_root_path, $phpEx);
-		$this->auth = new \phpbb\auth\auth();
 
-		$this->tool = new \phpbb\db\migration\tool\permission($this->db, $this->cache, $this->auth, $phpbb_root_path, $phpEx);
+		$this->tool = new \phpbb\db\migration\tool\permission(
+			$auth,
+			$cache->get_driver(),
+			$db,
+			'phpbb_acl_groups',
+			'phpbb_acl_options',
+			'phpbb_acl_roles',
+			'phpbb_acl_roles_data',
+			'phpbb_acl_users',
+			$phpbb_root_path,
+			$phpEx
+		);
 	}
 
 	public function exists_data()

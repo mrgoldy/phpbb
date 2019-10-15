@@ -96,7 +96,7 @@ class acp_database
 
 						try
 						{
-							/** @var phpbb\db\extractor\extractor_interface $extractor Database extractor */
+							/** @var phpbb\db\extractor $extractor Database extractor */
 							$extractor = $phpbb_container->get('dbal.extractor');
 							$extractor->init_extractor($format, $filename, $time, false, $store);
 
