@@ -4,7 +4,7 @@ services:
         class: phpbb\mcp\helper\constructor
         arguments:
             - '@auth'
-            - '@cp.identifiers'
+            # @todo goldy            - '@cp.identifiers'
             - '@dbal.conn'
             - '@controller.helper'
             - '@language'
