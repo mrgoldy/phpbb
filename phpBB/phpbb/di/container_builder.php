@@ -169,6 +169,7 @@ class container_builder
 
 				// Add tables extension after all extensions
 				$this->container_extensions[] = new extension\tables();
+				$this->container_extensions[] = new extension\control_panels();
 
 				// Inject the config
 				if ($this->config_php_file)
