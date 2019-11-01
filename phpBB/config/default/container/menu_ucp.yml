@@ -88,7 +88,7 @@ parameters:
 
     # --- UCP > Profile --- #
     ucp.ucp_cat_profile:
-        route: ucp.ucp_profile_account
+        route: 'ucp_profile_account'
 
     ucp.ucp_profile_account:
         parent: 'ucp_cat_profile'
@@ -127,7 +127,7 @@ parameters:
 
     # --- UCP > Settings --- #
     ucp.ucp_cat_settings:
-        route: ucp.ucp_settings_global
+        route: 'ucp_settings_global'
 
     ucp.ucp_settings_global:
         parent: 'ucp_cat_settings'
@@ -163,7 +163,7 @@ parameters:
 
     # --- UCP > Groups --- #
     ucp.ucp_cat_groups:
-        route: ucp.ucp_groups_edit
+        route: 'ucp_groups_edit'
 
     ucp.ucp_groups_edit:
         parent: 'ucp_cat_groups'
@@ -186,7 +186,7 @@ parameters:
 
     # --- UCP > Zebra --- #
     ucp.ucp_cat_zebra:
-        route: ucp.ucp_zebra_friends
+        route: 'ucp_zebra_friends'
 
     ucp.ucp_zebra_friends:
         parent: 'ucp_cat_zebra'
