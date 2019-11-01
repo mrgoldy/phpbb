@@ -2125,12 +2125,15 @@ function check_form_key($form_name, $timespan = false)
 function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_body.html', $u_action = '')
 {
 	global $user, $template, $db, $request;
-	global $config, $language, $phpbb_path_helper, $phpbb_dispatcher;
+	global $config, $language, $phpbb_path_helper, $phpbb_dispatcher, $phpbb_container;
 
 	if (isset($_POST['cancel']))
 	{
 		return false;
 	}
+
+	/** @var \phpbb\acp\functions\controller $acp_functions */
+	$acp_functions = $phpbb_container->get('acp.functions.controller');
 
 	$confirm = ($language->lang('YES') === $request->variable('confirm', '', true, \phpbb\request\request_interface::POST));
 
@@ -2182,7 +2185,7 @@ function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_bo
 
 	if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
 	{
-		adm_page_header($confirm_title);
+		$acp_functions->adm_page_header($confirm_title);
 	}
 	else
 	{
@@ -2256,7 +2259,7 @@ function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_bo
 
 	if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
 	{
-		adm_page_footer();
+		$acp_functions->adm_page_footer();
 	}
 	else
 	{
@@ -2523,7 +2526,7 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 		'LOGIN_ERROR'		=> $err,
 		'LOGIN_EXPLAIN'		=> $l_explain,
 
-		'U_SEND_PASSWORD' 		=> ($config['email_enable']) ? $controller_helper->route('phpbb_ucp_forgot_password_controller') : '',
+		'U_SEND_PASSWORD' 		=> ($config['email_enable']) ? $controller_helper->route('ucp_account', ['mode' => 'forgot_password']) : '',
 		'U_RESEND_ACTIVATION'	=> ($config['require_activation'] == USER_ACTIVATION_SELF && $config['email_enable']) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=resend_act') : '',
 		'U_TERMS_USE'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=terms'),
 		'U_PRIVACY'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=privacy'),
@@ -3497,11 +3500,16 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 			$msg_text = (!empty($user->lang[$msg_text])) ? $user->lang[$msg_text] : $msg_text;
 			$msg_title = (!isset($msg_title)) ? $user->lang['INFORMATION'] : ((!empty($user->lang[$msg_title])) ? $user->lang[$msg_title] : $msg_title);
 
+			global $phpbb_container;
+
+			/** @var \phpbb\acp\functions\controller $acp_functions */
+			$acp_functions = $phpbb_container->get('acp.functions.controller');
+
 			if (!defined('HEADER_INC'))
 			{
 				if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
 				{
-					adm_page_header($msg_title);
+					$acp_functions->adm_page_header($msg_title);
 				}
 				else
 				{
@@ -3539,7 +3547,7 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 
 			if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
 			{
-				adm_page_footer();
+				$acp_functions->adm_page_footer();
 			}
 			else
 			{
@@ -4242,6 +4250,16 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 		return;
 	}
 
+	/** @var \phpbb\controller\helper $controller_helper */
+	$controller_helper = $phpbb_container->get('controller.helper');
+
+	/** @var \\phpbb\cp\menu $cp_menu */
+	$cp_menu = $phpbb_container->get('cp.menu');
+
+	// Make sure to call MCP first, to save a query in \phpbb\cp\helper\identifiers
+	$cp_menu->build('mcp');
+	$cp_menu->build('ucp');
+
 	// gzip_compression
 	if ($config['gzip_compress'])
 	{
@@ -4413,8 +4431,6 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 		}
 	}
 
-	/** @var \phpbb\controller\helper $controller_helper */
-	$controller_helper = $phpbb_container->get('controller.helper');
 	$notification_mark_hash = generate_link_hash('mark_all_notifications_read');
 
 	$phpbb_version_parts = explode('.', PHPBB_VERSION, 3);
@@ -4527,7 +4543,7 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 		'S_FORUM_ID'			=> $forum_id,
 		'S_TOPIC_ID'			=> $topic_id,
 
-		'S_LOGIN_ACTION'		=> ((!defined('ADMIN_START')) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') : append_sid("{$phpbb_admin_path}index.$phpEx", false, true, $user->session_id)),
+		'S_LOGIN_ACTION'		=> !defined('ADMIN_START') ? $controller_helper->route('ucp_account', ['mode' => 'login']) : $controller_helper->route('acp_index', [], false, $user->session_id),
 		'S_LOGIN_REDIRECT'		=> $s_login_redirect,
 
 		'S_ENABLE_FEEDS'			=> ($config['feed_enable']) ? true : false,

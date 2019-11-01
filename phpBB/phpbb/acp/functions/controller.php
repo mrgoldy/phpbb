@@ -26,8 +26,8 @@ class controller
 	/** @var ContainerInterface */
 	protected $container;
 
-	/** @var \phpbb\cp\menu\menu */
-# @todo goldy	protected $cp_menu;
+	/** @var \\phpbb\cp\menu */
+	protected $cp_menu;
 
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
@@ -68,7 +68,7 @@ class controller
 	 * @param \phpbb\auth\auth					$auth			Auth object
 	 * @param \phpbb\config\config				$config			Config object
 	 * @param ContainerInterface				$container		Container object
-	 * @param \phpbb\cp\menu\menu				$cp_menu		CP Menu object
+	 * @param \\phpbb\cp\menu				$cp_menu		CP Menu object
 	 * @param \phpbb\db\driver\driver_interface	$db				Database object
 	 * @param \phpbb\event\dispatcher			$dispatcher		Event dispatcher object
 	 * @param \phpbb\controller\helper			$helper			Controller helper object
@@ -85,7 +85,7 @@ class controller
 		\phpbb\auth\auth $auth,
 		\phpbb\config\config $config,
 		ContainerInterface $container,
-# @todo goldy		\phpbb\cp\menu\menu $cp_menu,
+		\\phpbb\cp\menu $cp_menu,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher $dispatcher,
 		\phpbb\controller\helper $helper,
@@ -102,7 +102,7 @@ class controller
 		$this->auth			= $auth;
 		$this->config		= $config;
 		$this->container	= $container;
-# @todo goldy		$this->cp_menu		= $cp_menu;
+		$this->cp_menu		= $cp_menu;
 		$this->db			= $db;
 		$this->dispatcher	= $dispatcher;
 		$this->helper		= $helper;
@@ -153,7 +153,7 @@ class controller
 
 		$this->user->update_session_infos();
 
-		# @todo goldy $this->cp_menu->build('acp');
+		$this->cp_menu->build('acp');
 
 		// gzip_compression
 		if ($this->config['gzip_compress'])
