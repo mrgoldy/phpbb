@@ -27,7 +27,7 @@ class controller
 	protected $container;
 
 	/** @var \phpbb\cp\menu\menu */
-	protected $cp_menu;
+# @todo goldy	protected $cp_menu;
 
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
@@ -85,7 +85,7 @@ class controller
 		\phpbb\auth\auth $auth,
 		\phpbb\config\config $config,
 		ContainerInterface $container,
-		\phpbb\cp\menu\menu $cp_menu,
+# @todo goldy		\phpbb\cp\menu\menu $cp_menu,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher $dispatcher,
 		\phpbb\controller\helper $helper,
@@ -102,7 +102,7 @@ class controller
 		$this->auth			= $auth;
 		$this->config		= $config;
 		$this->container	= $container;
-		$this->cp_menu		= $cp_menu;
+# @todo goldy		$this->cp_menu		= $cp_menu;
 		$this->db			= $db;
 		$this->dispatcher	= $dispatcher;
 		$this->helper		= $helper;

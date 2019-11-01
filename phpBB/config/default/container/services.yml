@@ -36,6 +36,9 @@ imports:
 
     - { resource: tables.yml }
     - { resource: parameters.yml }
+    - { resource: menu_acp.yml }
+    - { resource: menu_mcp.yml }
+    - { resource: menu_ucp.yml }
 
 services:
     cache:

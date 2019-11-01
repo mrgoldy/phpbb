@@ -21,7 +21,7 @@ class constructor implements \phpbb\cp\constructor_interface
 	protected $auth;
 
 	/** @var \phpbb\cp\helper\identifiers */
-	protected $cp_ids;
+# @todo goldy	protected $cp_ids;
 
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
@@ -67,7 +67,7 @@ class constructor implements \phpbb\cp\constructor_interface
 	 */
 	public function __construct(
 		\phpbb\auth\auth $auth,
-		\phpbb\cp\helper\identifiers $cp_ids,
+# @todo goldy		\phpbb\cp\helper\identifiers $cp_ids,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\controller\helper $helper,
 		\phpbb\language\language $lang,
@@ -80,7 +80,7 @@ class constructor implements \phpbb\cp\constructor_interface
 	)
 	{
 		$this->auth			= $auth;
-		$this->cp_ids		= $cp_ids;
+# @todo goldy		$this->cp_ids		= $cp_ids;
 		$this->db			= $db;
 		$this->helper		= $helper;
 		$this->lang			= $lang;
@@ -118,10 +118,15 @@ class constructor implements \phpbb\cp\constructor_interface
 		}
 
 		// Get all identifiers
+		/** @todo goldy
 		$this->cp_ids->get_identifiers('mcp');
 		$forum_id	= $this->cp_ids->get_forum_id();
 		$topic_id	= $this->cp_ids->get_topic_id();
 		$post_id	= $this->cp_ids->get_post_id();
+		 */
+		$forum_id = 0;
+		$topic_id = 0;
+		$post_id = 0;
 
 		// If the user doesn't have any moderator powers (globally or locally) he can't access the mcp
 		if (!$this->auth->acl_getf_global('m_'))
