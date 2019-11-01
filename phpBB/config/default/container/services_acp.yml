@@ -44,7 +44,7 @@ services:
             - '@auth'
             - '@config'
             - '@service_container'
-            - '@cp.menu'
+            # @todo goldy            - '@cp.menu'
             - '@dbal.conn'
             - '@dispatcher'
             - '@controller.helper'
