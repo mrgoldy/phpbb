@@ -18,7 +18,7 @@ services:
             - '@cp.manager'
 
     cp.menu:
-        class: \phpbb\cp\menu
+        class: phpbb\cp\menu
         arguments:
             - '@cp.auth'
             - '@cp.identifiers'
