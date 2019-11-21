@@ -57,11 +57,9 @@ parameters:
         route:
             path: /manage/drafts
             defaults:
-                _controller: ucp.draft:main
-                mode: 'drafts'
-                page: 1
-# need to add pm, mode should be 'post' and 'pm', drop page
-
+                _controller: ucp.drafts:main
+                mode: 'post'
+                
     ucp.ucp_manage_attachments:
         auth: 'acl_u_attach'
         parent: 'ucp_cat_manage'
@@ -161,6 +159,40 @@ parameters:
             defaults:
                 _controller: ucp.notifications:main
                 mode: 'settings'
+
+    # --- UCP > Private Messages --- #
+    ucp.ucp_cat_pm:
+        route: 'ucp_pm_inbox'
+  
+    ucp.ucp_pm_compose:
+        parent: 'ucp_cat_pm'
+        route:
+            path: /pm/compose/{action}
+            defaults:
+                _controller: ucp.pm_compose:main
+                action: 'post'
+        
+    ucp.ucp_pm_drafts:
+        parent: 'ucp_cat_pm'
+        route:
+            path: /pm/drafts
+            defaults:
+                _controller: ucp.drafts:main
+                mode: 'pm'
+    
+    ucp.ucp_pm_inbox:
+        parent: 'ucp_cat_pm'
+        route:
+            path: /pm/folder/{folder}
+            defaults:
+                _controller: ucp.pm_view_folder:main
+    
+    ucp.ucp_pm_options:
+        parent: 'ucp_cat_pm'
+        route:
+            path: /pm/settings
+            defaults:
+                _controller: ucp.pm_settings:main
 
     # --- UCP > Groups --- #
     ucp.ucp_cat_groups:
