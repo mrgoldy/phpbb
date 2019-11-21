@@ -57,9 +57,10 @@ parameters:
         route:
             path: /manage/drafts
             defaults:
-                _controller: ucp.manage:main
+                _controller: ucp.draft:main
                 mode: 'drafts'
                 page: 1
+# need to add pm, mode should be 'post' and 'pm', drop page
 
     ucp.ucp_manage_attachments:
         auth: 'acl_u_attach'
