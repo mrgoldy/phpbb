@@ -180,7 +180,7 @@ parameters:
                 _controller: ucp.drafts:main
                 mode: 'pm'
     
-    ucp.ucp_pm_inbox:
+    ucp.ucp_pm_view:
         parent: 'ucp_cat_pm'
         route:
             path: /pm/folder/{folder}
