@@ -120,9 +120,6 @@ class pm_settings
 		$this->language->add_lang('posting');
 		$this->template->assign_var('S_PRIVMSGS', true);
 
-		// Global variables defined in functions_privmsgs.php
-		global $global_privmsgs_rules, $global_rule_conditions;
-
 		set_user_message_limit();
 		get_folder($this->user->data['user_id']);
 
@@ -603,6 +600,9 @@ class pm_settings
 			'S_MAX_FOLDER_ZERO'		=> ($this->config['pm_max_boxes'] == 0) ? true : false,
 
 			'DEFAULT_ACTION'		=> ($this->config['full_folder_action'] == 1) ? $this->language->lang('DELETE_OLDEST_MESSAGES') : $this->language->lang('HOLD_NEW_MESSAGES'),
+
+			'L_TITLE'				=> $this->language->lang('UCP_PM_OPTIONS'),
+			'S_UCP_ACTION'			=> $this->helper->route('ucp_pm_settings', ['action' => $action]),
 
 			'U_FIND_USERNAME'		=> append_sid("{$this->root_path}memberlist.$this->php_ext", 'mode=searchuser&amp;form=ucp&amp;field=rule_string&amp;select_single=true'),
 		]);

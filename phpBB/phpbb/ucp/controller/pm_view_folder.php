@@ -119,9 +119,9 @@ class pm_view_folder
 
 	public function main($folder)
 	{
-		if ($this->request->is_set('p', \phpbb\request\request_interface::GET))
+		if (!$this->user->data['is_registered'] && $this->request->is_set('p', \phpbb\request\request_interface::GET))
 		{
-			$redirect_url = $this->helper->route('ucp_pm_folder', ['folder' => 'inbox', 'p' => $this->request->variable('p', 0)]);
+			$redirect_url = $this->helper->route('ucp_pm_view', ['folder' => 'inbox', 'p' => $this->request->variable('p', 0)]);
 			login_box($redirect_url, $this->language->lang('LOGIN_EXPLAIN_UCP'));
 		}
 
@@ -397,13 +397,13 @@ class pm_view_folder
 				trigger_error('NO_MESSAGE', E_USER_WARNING);
 			}
 
-			$tpl_file = ($view == 'print') ? 'ucp_pm_viewmessage_print' : 'ucp_pm_viewmessage';
+			$tpl_file = ($view == 'print') ? 'ucp_pm_viewmessage_print.html' : 'ucp_pm_viewmessage.html';
 
 			$this->ucp_pm_message->view_message($folder_id, $msg_id, $folder, $message_row);
 		}
 		else
 		{
-			$tpl_file = 'ucp_pm_viewfolder';
+			$tpl_file = 'ucp_pm_viewfolder.html';
 
 			$this->view_folder($folder_id, $folder);
 		}
