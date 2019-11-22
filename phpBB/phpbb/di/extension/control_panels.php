@@ -41,6 +41,14 @@ class control_panels extends Extension
 		{
 			if (preg_match('/(' . $pattern . ')\.(.+)/', $parameter_name, $matches))
 			{
+				$parameter_value = array_merge([
+					'auth'		=> '',
+					'before'	=> '',
+					'display'	=> true,
+					'parent'	=> '',
+					'route'		=> '',
+				], $parameter_value);
+
 				$panels[$matches[1]][$matches[2]] = $parameter_value;
 			}
 		}

@@ -15,13 +15,13 @@ namespace phpbb\cp;
 
 class manager
 {
-	/** @var \phpbb\di\service_collection */
+	/** @var array */
 	protected $acp_collection;
 
-	/** @var \phpbb\di\service_collection */
+	/** @var array */
 	protected $mcp_collection;
 
-	/** @var \phpbb\di\service_collection */
+	/** @var array */
 	protected $ucp_collection;
 
 	/** @var array Control panel route prefixes */
