@@ -188,7 +188,7 @@ parameters:
                 _controller: ucp.pm_view_folder:main
                 folder: 'inbox'
 
-    ucp.ucp_pm_options:
+    ucp.ucp_pm_settings:
         parent: 'ucp_cat_pm'
         route:
             path: /pm/settings
