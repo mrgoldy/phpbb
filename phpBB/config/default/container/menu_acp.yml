@@ -730,7 +730,7 @@ parameters:
 
     acp.acp_language_manage:
         auth: 'acl_a_language'
-        parent: 'acp_cat_customise'
+        parent: 'acp_language_management'
         route:
             path: /language
             defaults:
