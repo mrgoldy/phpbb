@@ -28,7 +28,7 @@ class zebra
 	protected $helper;
 
 	/** @var \phpbb\language\language */
-	protected $lang;
+	protected $language;
 
 	/** @var \phpbb\request\request */
 	protected $request;
@@ -55,7 +55,7 @@ class zebra
 	 * @param \phpbb\db\driver\driver_interface	$db				Database object
 	 * @param \phpbb\event\dispatcher			$dispatcher		Event dispatcher object
 	 * @param \phpbb\controller\helper			$helper			Controller helper object
-	 * @param \phpbb\language\language			$lang			Language object
+	 * @param \phpbb\language\language			$language		Language object
 	 * @param \phpbb\request\request			$request		Request object
 	 * @param \phpbb\template\template			$template		Template object
 	 * @param \phpbb\user						$user			User object
@@ -68,7 +68,7 @@ class zebra
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher $dispatcher,
 		\phpbb\controller\helper $helper,
-		\phpbb\language\language $lang,
+		\phpbb\language\language $language,
 		\phpbb\request\request $request,
 		\phpbb\template\template $template,
 		\phpbb\user $user,
@@ -81,7 +81,7 @@ class zebra
 		$this->db			= $db;
 		$this->dispatcher	= $dispatcher;
 		$this->helper		= $helper;
-		$this->lang			= $lang;
+		$this->language		= $language;
 		$this->request		= $request;
 		$this->template		= $template;
 		$this->user			= $user;
@@ -97,14 +97,15 @@ class zebra
 	 * @param string	$mode		The mode (friends|foes)
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	function main($mode)
+	public function main($mode)
 	{
-		$submit	= $this->request->is_set_post('submit')
-				|| $this->request->is_set('add', \phpbb\request\request_interface::GET)
-				|| $this->request->is_set('remove', \phpbb\request\request_interface::GET);
+		$add = $this->request->is_set('add', \phpbb\request\request_interface::GET);
+		$remove = $this->request->is_set('remove', \phpbb\request\request_interface::GET);
+		$submit = $this->request->is_set_post('submit');
+		$submit = $submit || $add || $remove;
 
 		$l_mode = utf8_strtoupper($mode);
-		$u_mode = 'ucp_zebra_' . $mode;
+		$u_mode = $this->helper->route('ucp_zebra_' . $mode);
 
 		if ($submit)
 		{
@@ -132,7 +133,7 @@ class zebra
 						$user_ids = $data['usernames'];
 
 						/**
-						 * Remove users from friends/foes.
+						 * Remove users from friends/foes
 						 *
 						 * @event core.ucp_remove_zebra
 						 * @var string	mode		Zebra type: friends|foes
@@ -143,7 +144,7 @@ class zebra
 						extract($this->dispatcher->trigger_event('core.ucp_remove_zebra', compact($vars)));
 
 						$sql = 'DELETE FROM ' . $this->tables['zebra'] . '
-							WHERE user_id = ' . (int) $this->user->data['user_id'] . '
+							WHERE user_id = ' . $this->user->data['user_id'] . '
 								AND ' . $this->db->sql_in_set('zebra_id', $user_ids);
 						$this->db->sql_query($sql);
 
@@ -157,13 +158,14 @@ class zebra
 
 						$friends = $foes = [];
 
-						// Do these name/s exist on a list already? If so, ignore ... we could be
-						// 'nice' and automatically handle names added to one list present on
-						// the other (by removing the existing one) ... but I have a feeling this
-						// may lead to complaints
+						/**
+						 * Do these name(s) exist on a list already?
+						 * If so, ignore... we could be 'nice' and automatically handle names added to one list
+						 * present on the other (by removing the existing one)...
+						 * But I have a feeling this may lead to complaints.
+						 */
 						$sql = 'SELECT z.*, u.username, u.username_clean
-							FROM ' . $this->tables['zebra'] . ' z, 
-								' . $this->tables['users'] . ' u
+							FROM ' . $this->tables['zebra'] . ' z, ' . $this->tables['users'] . ' u
 							WHERE z.user_id = ' . (int) $this->user->data['user_id'] . '
 								AND u.user_id = z.zebra_id';
 						$result = $this->db->sql_query($sql);
@@ -186,7 +188,7 @@ class zebra
 
 						if (count($data['add']) < $n && $mode === 'foes')
 						{
-							$errors[] = $this->lang->lang('NOT_ADDED_FOES_FRIENDS');
+							$errors[] = $this->language->lang('NOT_ADDED_FOES_FRIENDS');
 						}
 
 						// remove foes from the username array
@@ -195,7 +197,7 @@ class zebra
 
 						if (count($data['add']) < $n && $mode === 'friends')
 						{
-							$errors[] = $this->lang->lang('NOT_ADDED_FRIENDS_FOES');
+							$errors[] = $this->language->lang('NOT_ADDED_FRIENDS_FOES');
 						}
 
 						// remove the user himself from the username array
@@ -204,7 +206,7 @@ class zebra
 
 						if (count($data['add']) < $n)
 						{
-							$errors[] = $this->lang->lang('NOT_ADDED_' . $l_mode . '_SELF');
+							$errors[] = $this->language->lang('NOT_ADDED_' . $l_mode . '_SELF');
 						}
 
 						unset($friends, $foes, $n);
@@ -226,11 +228,11 @@ class zebra
 								}
 								else if ($row['user_id'] != ANONYMOUS)
 								{
-									$errors[] = $this->lang->lang('NOT_ADDED_' . $l_mode . '_BOTS');
+									$errors[] = $this->language->lang('NOT_ADDED_' . $l_mode . '_BOTS');
 								}
 								else
 								{
-									$errors[] = $this->lang->lang('NOT_ADDED_' . $l_mode . '_ANONYMOUS');
+									$errors[] = $this->language->lang('NOT_ADDED_' . $l_mode . '_ANONYMOUS');
 								}
 							}
 							$this->db->sql_freeresult($result);
@@ -241,7 +243,6 @@ class zebra
 								if ($mode === 'foes')
 								{
 									$perms = [];
-
 									foreach ($this->auth->acl_get_list($user_id_ary, ['a_', 'm_']) as $forum_id => $forum_ary)
 									{
 										foreach ($forum_ary as $auth_option => $user_ary)
@@ -254,7 +255,7 @@ class zebra
 
 									if (!empty($perms))
 									{
-										$errors[] = $this->lang->lang('NOT_ADDED_FOES_MOD_ADMIN');
+										$errors[] = $this->language->lang('NOT_ADDED_FOES_MOD_ADMIN');
 									}
 
 									// This may not be right ... it may yield true when perms equate to deny
@@ -264,9 +265,9 @@ class zebra
 
 								if (!empty($user_id_ary))
 								{
-									$sql_ary = [];
-									$sql_mode = ($mode === 'friends') ? 'friend' : 'foe';
+									$sql_mode = $mode === 'friends' ? 'friend' : 'foe';
 
+									$sql_ary = [];
 									foreach ($user_id_ary as $zebra_id)
 									{
 										$sql_ary[] = [
@@ -277,13 +278,13 @@ class zebra
 									}
 
 									/**
-									* Add users to friends/foes.
-									*
-									* @event core.ucp_add_zebra
-									* @var string	mode		Zebra type: friends|foes
-									* @var array	sql_ary		Array of entries we add
-									* @since 3.1.0-a1
-									*/
+									 * Add users to friends/foes
+									 *
+									 * @event core.ucp_add_zebra
+									 * @var string	mode		Zebra type: friends|foes
+									 * @var array	sql_ary		Array of entries we add
+									 * @since 3.1.0-a1
+									 */
 									$vars = ['mode', 'sql_ary'];
 									extract($this->dispatcher->trigger_event('core.ucp_add_zebra', compact($vars)));
 
@@ -295,32 +296,34 @@ class zebra
 							}
 							else if (empty($errors))
 							{
-								$errors[] = $this->lang->lang('USER_NOT_FOUND_OR_INACTIVE');
+								$errors[] = $this->language->lang('USER_NOT_FOUND_OR_INACTIVE');
 							}
 						}
 					}
 
 					if ($this->request->is_ajax())
 					{
-						$message = $updated ? $this->lang->lang($l_mode . '_UPDATED') : implode('<br />', $errors);
+						$message = $updated ? $this->language->lang($l_mode . '_UPDATED') : implode('<br />', $errors);
 
 						$json_response = new \phpbb\json_response;
 						$json_response->send([
 							'success'		=> $updated,
 
-							'MESSAGE_TITLE'	=> $this->lang->lang('INFORMATION'),
+							'MESSAGE_TITLE'	=> $this->language->lang('INFORMATION'),
 							'MESSAGE_TEXT'	=> $message,
 							'REFRESH_DATA'	=> [
 								'time'	=> 3,
-								'url'	=> $this->helper->route($u_mode),
-							],
+								'url'	=> $u_mode,
+							]
 						]);
 					}
 					else if ($updated)
 					{
-						$message = $this->lang->lang($l_mode . '_UPDATED') . '<br />' . implode('<br />', $errors) . (!empty($errors) ? '<br />' : '') . '<br />' . $this->lang->lang('RETURN_UCP', '<a href="' . $this->helper->route($u_mode) . '">', '</a>');
+						$this->helper->assign_meta_refresh_var(3, $u_mode);
 
-						$this->helper->assign_meta_refresh_var(3, $this->helper->route($u_mode));
+						$message = $this->language->lang($l_mode . '_UPDATED');
+						$message .= '<br />' . implode('<br />', $errors) . (!empty($errors) ? '<br />' : '');
+						$message .= '<br />' . $this->language->lang('RETURN_UCP', '<a href="' . $u_mode . '">', '</a>');
 
 						return $this->helper->message($message);
 					}
@@ -331,13 +334,14 @@ class zebra
 				}
 				else
 				{
-					confirm_box(false, $this->lang->lang('CONFIRM_OPERATION'), build_hidden_fields([
+					confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields([
+						'mode'		=> $mode,
 						'submit'	=> true,
 						'usernames'	=> $data['usernames'],
 						'add'		=> $data['add'],
 					]));
 
-					return redirect($this->helper->route($u_mode));
+					return redirect($u_mode);
 				}
 			}
 		}
@@ -345,7 +349,7 @@ class zebra
 		$s_username_options = '';
 
 		$sql = 'SELECT z.*, u.username, u.username_clean
-			FROM ' . $this->tables['zebra'] . ' z, 
+			FROM ' . $this->tables['zebra'] . ' z,
 				' . $this->tables['users'] . ' u
 			WHERE z.user_id = ' . (int) $this->user->data['user_id'] . '
 				AND ' . ($mode === 'friends' ? 'z.friend = 1' : 'z.foe = 1') . '
@@ -359,14 +363,14 @@ class zebra
 		$this->db->sql_freeresult($result);
 
 		$this->template->assign_vars([
-			'L_TITLE'				=> $this->lang->lang('UCP_ZEBRA_' . $l_mode),
-
-			'U_FIND_USERNAME'		=> append_sid("{$this->root_path}memberlist.$this->php_ext", 'mode=searchuser&amp;form=ucp&amp;field=add'),
+			'L_TITLE'				=> $this->language->lang('UCP_ZEBRA_' . $l_mode),
 
 			'S_USERNAME_OPTIONS'	=> $s_username_options,
-			'S_UCP_ACTION'			=> $this->helper->route($u_mode),
+			'S_UCP_ACTION'			=> $u_mode,
+
+			'U_FIND_USERNAME'		=> append_sid("{$this->root_path}memberlist.$this->php_ext", 'mode=searchuser&amp;form=ucp&amp;field=add'),
 		]);
 
-		return $this->helper->render("ucp_zebra_{$mode}.html", $this->lang->lang('UCP_ZEBRA_' . $l_mode));
+		return $this->helper->render("ucp_zebra_{$mode}.html", $this->language->lang('UCP_ZEBRA_' . $l_mode));
 	}
 }

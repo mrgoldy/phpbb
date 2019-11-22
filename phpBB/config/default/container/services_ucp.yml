@@ -1,21 +1,4 @@
 services:
-    phpbb.ucp.controller.reset_password:
-        class: phpbb\ucp\controller\reset_password
-        arguments:
-            - '@config'
-            - '@dbal.conn'
-            - '@dispatcher'
-            - '@controller.helper'
-            - '@language'
-            - '@log'
-            - '@passwords.manager'
-            - '@request'
-            - '@template'
-            - '@user'
-            - '%tables.users%'
-            - '%core.root_path%'
-            - '%core.php_ext%'
-
     # --- Helpers --- #
     ucp.constructor:
         class: phpbb\ucp\helper\constructor
@@ -48,7 +31,7 @@ services:
             - '@ucp.login_link'
             - '@ucp.permissions'
             - '@ucp.register'
-            - '@phpbb.ucp.controller.reset_password'
+            - '@ucp.reset_password'
             - '@ucp.resend'
             - '%core.root_path%'
             - '%core.php_ext%'
@@ -75,6 +58,7 @@ services:
         class: phpbb\ucp\controller\attachments
         arguments:
             - '@attachment.manager'
+            - '@auth'
             - '@config'
             - '@dbal.conn'
             - '@controller.helper'
@@ -103,6 +87,21 @@ services:
             - '@captcha.factory'
             - '@config'
             - '@request'
+
+    ucp.drafts:
+        class: phpbb\ucp\controller\drafts
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables%'
 
     ucp.front:
         class: phpbb\ucp\controller\front
@@ -204,6 +203,79 @@ services:
             - '%core.php_ext%'
             - '%tables%'
 
+    ucp.pm_compose:
+        class: phpbb\ucp\controller\pm_compose
+        arguments:
+            - '@auth'
+            - '@cache'
+            - '@config'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@group_helper'
+            - '@controller.helper'
+            - '@language'
+            - '@plupload'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@text_formatter.utils'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables%'
+
+    ucp.pm_settings:
+        class: phpbb\ucp\controller\pm_settings
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@group_helper'
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables%'
+
+    ucp.pm_view_folder:
+        class: phpbb\ucp\controller\pm_view_folder
+        arguments:
+            - '@auth'
+            - '@cache'
+            - '@config'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@controller.helper'
+            - '@language'
+            - '@pagination'
+            - '@request'
+            - '@template'
+            - '@ucp.pm_view_message'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables%'
+
+    ucp.pm_view_message:
+        class: phpbb\ucp\controller\pm_view_message
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@group_helper'
+            - '@controller.helper'
+            - '@language'
+            - '@profilefields.manager'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables%'
+
     ucp.profile:
         class: phpbb\ucp\controller\profile
         arguments:
@@ -259,6 +331,23 @@ services:
             - '%core.root_path%'
             - '%core.php_ext%'
             - '%tables%'
+
+    ucp.reset_password:
+        class: phpbb\ucp\controller\reset_password
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@controller.helper'
+            - '@language'
+            - '@log'
+            - '@passwords.manager'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%tables.users%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
 
     ucp.settings:
         class: phpbb\ucp\controller\settings

@@ -13,8 +13,6 @@
 
 namespace phpbb\ucp\controller;
 
-use phpbb\exception\form_invalid_exception;
-
 class notifications
 {
 	/** @var \phpbb\config\config */
@@ -24,7 +22,7 @@ class notifications
 	protected $helper;
 
 	/** @var \phpbb\language\language */
-	protected $lang;
+	protected $language;
 
 	/** @var \phpbb\notification\manager */
 	protected $notification_manager;
@@ -52,7 +50,7 @@ class notifications
 	 *
 	 * @param \phpbb\config\config				$config					Config object
 	 * @param \phpbb\controller\helper			$helper					Controller helper object
-	 * @param \phpbb\language\language			$lang					Language object
+	 * @param \phpbb\language\language			$language				Language object
 	 * @param \phpbb\notification\manager		$notification_manager	Notification manager object
 	 * @param \phpbb\pagination					$pagination				Pagination object
 	 * @param \phpbb\request\request			$request				Request object
@@ -64,7 +62,7 @@ class notifications
 	public function __construct(
 		\phpbb\config\config $config,
 		\phpbb\controller\helper $helper,
-		\phpbb\language\language $lang,
+		\phpbb\language\language $language,
 		\phpbb\notification\manager $notification_manager,
 		\phpbb\pagination $pagination,
 		\phpbb\request\request $request,
@@ -76,7 +74,7 @@ class notifications
 	{
 		$this->config				= $config;
 		$this->helper				= $helper;
-		$this->lang					= $lang;
+		$this->language				= $language;
 		$this->notification_manager	= $notification_manager;
 		$this->pagination			= $pagination;
 		$this->request				= $request;
@@ -102,8 +100,11 @@ class notifications
 		$limit		= (int) $this->config['topics_per_page'];
 		$start		= ($page - 1) * $limit;
 
-		$form_time	= $this->request->variable('form_time', 0);
-		$form_time	= ($form_time <= 0 || $form_time > time()) ? time() : $form_time;
+		$form_time = $this->request->variable('form_time', 0);
+		$form_time = $form_time <= 0 || $form_time > time() ? time() : $form_time;
+
+		$route	= $mode === 'settings' ? 'ucp_settings_notifications' : 'ucp_manage_notifications';
+		$return	= '<br /><br />' . $this->language->lang('RETURN_UCP', '<a href="' . $this->helper->route($route) . '">', '</a>');
 
 		switch ($mode)
 		{
@@ -115,7 +116,7 @@ class notifications
 				{
 					if (!check_form_key($form_key))
 					{
-						throw new form_invalid_exception('ucp_settings_notifications');
+						return trigger_error($this->language->lang('FORM_INVALID') . $return, E_USER_WARNING);
 					}
 
 					$notification_methods = $this->notification_manager->get_subscription_methods();
@@ -138,12 +139,9 @@ class notifications
 						}
 					}
 
-					$route = $this->helper->route('ucp_settings_notifications');
-					$return = $this->lang->lang('RETURN_UCP', '<a href="' . $route . '">', '</a>');
+					$this->helper->assign_meta_refresh_var(3, $this->helper->route($route));
 
-					$this->helper->assign_meta_refresh_var(3, $route);
-
-					return $this->helper->message($this->lang->lang('PREFERENCES_UPDATED') . '<br /><br />' . $return);
+					return $this->helper->message($this->language->lang('PREFERENCES_UPDATED') . $return);
 				}
 
 				$this->output_notification_methods('notification_methods');
@@ -151,29 +149,26 @@ class notifications
 				$this->output_notification_types($subscriptions, 'notification_types');
 			break;
 
-			case 'manage':
 			default:
+			case 'manage':
 				// Mark all items read
 				if ($this->request->variable('mark', '') === 'all' && check_link_hash($this->request->variable('token', ''), 'mark_all_notifications_read'))
 				{
 					$this->notification_manager->mark_notifications(false, false, $this->user->data['user_id'], $form_time);
 
-					$route = $this->helper->route('ucp_manage_notifications');
-					$message = $this->lang->lang('NOTIFICATIONS_MARK_ALL_READ_SUCCESS');
-
-					$this->helper->assign_meta_refresh_var(3, $route);
+					$message = $this->language->lang('NOTIFICATIONS_MARK_ALL_READ_SUCCESS');
 
 					if ($this->request->is_ajax())
 					{
 						$json_response = new \phpbb\json_response();
 						$json_response->send([
-							'MESSAGE_TITLE'	=> $this->lang->lang('INFORMATION'),
+							'MESSAGE_TITLE'	=> $this->language->lang('INFORMATION'),
 							'MESSAGE_TEXT'	=> $message,
 							'success'		=> true,
 						]);
 					}
 
-					$return = '<br /><br />' . $this->lang->lang('RETURN_UCP', '<a href="' . $route . '">', '</a>');
+					$this->helper->assign_meta_refresh_var(3, $this->helper->route($route));
 
 					return $this->helper->message($message . $return);
 				}
@@ -183,7 +178,7 @@ class notifications
 				{
 					if (!check_form_key($form_key))
 					{
-						throw new form_invalid_exception('ucp_manage_notifications');
+						return trigger_error($this->language->lang('FORM_INVALID') . $return, E_USER_WARNING);
 					}
 
 					$mark_read = $this->request->variable('mark', [0]);
@@ -218,12 +213,12 @@ class notifications
 			break;
 		}
 
-		$l_mode = $this->lang->lang('UCP_' . utf8_strtoupper($mode) . '_NOTIFICATIONS');
+		$l_mode = $this->language->lang('UCP_' . utf8_strtoupper($mode) . '_NOTIFICATIONS');
 		$s_mode = $mode === 'settings' ? 'notification_options' : 'notification_list';
 
 		$this->template->assign_vars([
 			'TITLE'				=> $l_mode,
-			'TITLE_EXPLAIN'		=> $this->lang->lang('UCP_' . utf8_strtoupper($s_mode) . '_EXPLAIN'),
+			'TITLE_EXPLAIN'		=> $this->language->lang('UCP_' . utf8_strtoupper($s_mode) . '_EXPLAIN'),
 
 			'MODE'				=> $s_mode,
 			'FORM_TIME'			=> time(),
@@ -233,10 +228,10 @@ class notifications
 	}
 
 	/**
-	 * Output all the notification types to the template.
+	 * Output all the notification types to the template
 	 *
-	 * @param array		$subscriptions		Array containing global subscriptions
-	 * @param string	$block
+	 * @param array		$subscriptions	Array containing global subscriptions
+	 * @param string	$block			The template block name
 	 * @return void
 	 */
 	public function output_notification_types(array $subscriptions, $block = 'notification_types')
@@ -245,16 +240,14 @@ class notifications
 
 		foreach ($this->notification_manager->get_subscription_types() as $group => $subscription_types)
 		{
-			$this->template->assign_block_vars($block, [
-				'GROUP_NAME'	=> $this->lang->lang($group),
-			]);
+			$this->template->assign_block_vars($block, ['GROUP_NAME' => $this->language->lang($group)]);
 
 			foreach ($subscription_types as $type => $type_data)
 			{
 				$this->template->assign_block_vars($block, [
-					'TYPE'		=> $type,
-					'NAME'		=> $this->lang->lang($type_data['lang']),
-					'EXPLAIN'	=> $this->lang->is_set($type_data['lang'] . '_EXPLAIN') ? $this->lang->lang($type_data['lang'] . '_EXPLAIN') : '',
+					'TYPE'				=> $type,
+					'NAME'				=> $this->language->lang($type_data['lang']),
+					'EXPLAIN'			=> $this->language->is_set($type_data['lang'] . '_EXPLAIN') ? $this->language->lang($type_data['lang'] . '_EXPLAIN') : '',
 				]);
 
 				foreach ($notification_methods as $method => $method_data)
@@ -263,22 +256,22 @@ class notifications
 					$method_type = $method_data['method'];
 
 					$this->template->assign_block_vars($block . '.notification_methods', [
-						'METHOD'		=> $method_data['id'],
-						'NAME'			=> $this->lang->lang($method_data['lang']),
-						'AVAILABLE'		=> $method_type->is_available($type_data['type']),
-						'SUBSCRIBED'	=> (isset($subscriptions[$type]) && in_array($method_data['id'], $subscriptions[$type])) ? true : false,
+						'METHOD'			=> $method_data['id'],
+						'NAME'				=> $this->language->lang($method_data['lang']),
+						'AVAILABLE'			=> $method_type->is_available($type_data['type']),
+						'SUBSCRIBED'		=> isset($subscriptions[$type]) && in_array($method_data['id'], $subscriptions[$type]),
 					]);
 				}
 			}
 		}
 
-		$this->template->assign_var(utf8_strtoupper($block) . '_COLS', count($notification_methods) + 1);
+		$this->template->assign_var(strtoupper($block) . '_COLS', count($notification_methods) + 1);
 	}
 
 	/**
 	 * Output all the notification methods to the template
 	 *
-	 * @param string	$block		The template block name
+	 * @param string	$block			The template block name
 	 * @return void
 	 */
 	public function output_notification_methods($block = 'notification_methods')
@@ -289,7 +282,7 @@ class notifications
 		{
 			$this->template->assign_block_vars($block, [
 				'METHOD'	=> $method_data['id'],
-				'NAME'		=> $this->lang->lang($method_data['lang']),
+				'NAME'		=> $this->language->lang($method_data['lang']),
 			]);
 		}
 	}

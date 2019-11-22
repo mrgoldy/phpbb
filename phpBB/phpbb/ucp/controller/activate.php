@@ -15,6 +15,9 @@ namespace phpbb\ucp\controller;
 
 use phpbb\exception\http_exception;
 
+/**
+ * User activation
+ */
 class activate
 {
 	/** @var \phpbb\auth\auth */
@@ -33,7 +36,7 @@ class activate
 	protected $helper;
 
 	/** @var \phpbb\language\language */
-	protected $lang;
+	protected $language;
 
 	/** @var \phpbb\log\log */
 	protected $log;
@@ -67,7 +70,7 @@ class activate
 	 * @param \phpbb\db\driver\driver_interface	$db						Database object
 	 * @param \phpbb\event\dispatcher			$dispatcher				Event dispatcher object
 	 * @param \phpbb\controller\helper			$helper					Controller helper object
-	 * @param \phpbb\language\language			$lang					Language object
+	 * @param \phpbb\language\language			$language				Language object
 	 * @param \phpbb\log\log					$log					Log object
 	 * @param \phpbb\notification\manager		$notification_manager	Notification manager object
 	 * @param \phpbb\request\request			$request				Request object
@@ -83,7 +86,7 @@ class activate
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher $dispatcher,
 		\phpbb\controller\helper $helper,
-		\phpbb\language\language $lang,
+		\phpbb\language\language $language,
 		\phpbb\log\log $log,
 		\phpbb\notification\manager $notification_manager,
 		\phpbb\request\request $request,
@@ -99,7 +102,7 @@ class activate
 		$this->db					= $db;
 		$this->dispatcher			= $dispatcher;
 		$this->helper				= $helper;
-		$this->lang					= $lang;
+		$this->language				= $language;
 		$this->log					= $log;
 		$this->notification_manager	= $notification_manager;
 		$this->request				= $request;
@@ -111,17 +114,13 @@ class activate
 		$this->tables				= $tables;
 	}
 
-	/**
-	 * Activate an account.
-	 *
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	function main()
+	public function main()
 	{
 		$user_id = $this->request->variable('u', 0);
 		$key = $this->request->variable('k', '');
 
-		$sql = 'SELECT user_id, username, user_type, user_email, user_newpasswd, user_lang, user_notify_type, user_actkey, user_inactive_reason
+		$sql = 'SELECT user_id, username, user_type, user_email, user_newpasswd, 
+						user_lang, user_notify_type, user_actkey, user_inactive_reason
 			FROM ' . $this->tables['users'] . '
 			WHERE user_id = ' . (int) $user_id;
 		$result = $this->db->sql_query($sql);
@@ -150,7 +149,7 @@ class activate
 		{
 			if (!$this->user->data['is_registered'])
 			{
-				return login_box('', $this->lang->lang('NO_AUTH_OPERATION'));
+				return login_box('', $this->language->lang('NO_AUTH_OPERATION'));
 			}
 
 			throw new http_exception(403, 'NO_AUTH_OPERATION');
@@ -161,9 +160,9 @@ class activate
 		if ($update_password)
 		{
 			$sql_ary = [
-				'user_actkey'		=> '',
-				'user_password'		=> $user_row['user_newpasswd'],
-				'user_newpasswd'	=> '',
+				'user_actkey'			=> '',
+				'user_password'			=> $user_row['user_newpasswd'],
+				'user_newpasswd'		=> '',
 				'user_login_attempts'	=> 0,
 			];
 
@@ -172,16 +171,18 @@ class activate
 				WHERE user_id = ' . (int) $user_row['user_id'];
 			$this->db->sql_query($sql);
 
-			$this->user->reset_login_keys($user_row['user_id']);
+			$this->user->reset_login_keys((int) $user_row['user_id']);
 
 			$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_NEW_PASSWORD', false, [
-				'reportee_id' => (int) $user_row['user_id'],
+				'reportee_id' => $user_row['user_id'],
 				$user_row['username'],
 			]);
 		}
 
 		if (!$update_password)
 		{
+			include_once($this->root_path . 'includes/functions_user.' . $this->php_ext);
+
 			user_active_flip('activate', $user_row['user_id']);
 
 			$sql = 'UPDATE ' . $this->tables['users'] . "
@@ -191,7 +192,7 @@ class activate
 
 			// Create the correct logs
 			$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_USER_ACTIVE_USER', false, [
-				'reportee_id' => (int) $user_row['user_id'],
+				'reportee_id' => $user_row['user_id'],
 			]);
 
 			if ($this->auth->acl_get('a_user'))
@@ -204,18 +205,17 @@ class activate
 		{
 			$this->notification_manager->delete_notifications('notification.type.admin_activate_user', $user_row['user_id']);
 
-			include_once($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
+			if (!class_exists('messenger'))
+			{
+				include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
+			}
 
 			$messenger = new \messenger(false);
 
 			$messenger->template('admin_welcome_activated', $user_row['user_lang']);
-
 			$messenger->set_addresses($user_row);
-
 			$messenger->anti_abuse_headers($this->config, $this->user);
-
 			$messenger->assign_vars(['USERNAME' => htmlspecialchars_decode($user_row['username'])]);
-
 			$messenger->send($user_row['user_notify_type']);
 
 			$message = 'ACCOUNT_ACTIVE_ADMIN';
@@ -233,18 +233,18 @@ class activate
 		}
 
 		/**
-		* This event can be used to modify data after user account's activation
-		*
-		* @event core.ucp_activate_after
-		* @var array	user_row	Array with some user data
-		* @var string	message		Language string of the message that will be displayed to the user
-		* @since 3.1.6-RC1
-		*/
+		 * This event can be used to modify data after user account's activation
+		 *
+		 * @event core.ucp_activate_after
+		 * @var array	user_row	Array with some user data
+		 * @var string	message		Language string of the message that will be displayed to the user
+		 * @since 3.1.6-RC1
+		 */
 		$vars = ['user_row', 'message'];
 		extract($this->dispatcher->trigger_event('core.ucp_activate_after', compact($vars)));
 
 		$this->helper->assign_meta_refresh_var(3, append_sid("{$this->root_path}index.$this->php_ext"));
 
-		return $this->helper->message($this->lang->lang($message));
+		return $this->helper->message($this->language->lang($message));
 	}
 }

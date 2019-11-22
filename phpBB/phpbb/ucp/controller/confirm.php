@@ -14,7 +14,6 @@
 namespace phpbb\ucp\controller;
 
 /**
- * ucp_confirm
  * Visual confirmation
  *
  * Note to potential users of this code ...
@@ -53,7 +52,7 @@ class confirm
 		$this->request			= $request;
 	}
 
-	function main()
+	public function main()
 	{
 		$captcha = $this->captcha_factory->get_instance($this->config['captcha_plugin']);
 		$captcha->init($this->request->variable('type', 0));

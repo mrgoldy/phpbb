@@ -19,7 +19,7 @@ class auth_link
 	protected $helper;
 
 	/** @var \phpbb\language\language */
-	protected $lang;
+	protected $language;
 
 	/** @var \phpbb\auth\provider_collection */
 	protected $provider_collection;
@@ -37,7 +37,7 @@ class auth_link
 	 * Constructor.
 	 *
 	 * @param \phpbb\controller\helper			$helper					Controller helper object
-	 * @param \phpbb\language\language			$lang					Language object
+	 * @param \phpbb\language\language			$language				Language object
 	 * @param \phpbb\auth\provider_collection	$provider_collection	Auth provider collection
 	 * @param \phpbb\request\request			$request				Request object
 	 * @param \phpbb\template\template			$template				Template object
@@ -45,7 +45,7 @@ class auth_link
 	 */
 	public function __construct(
 		\phpbb\controller\helper $helper,
-		\phpbb\language\language $lang,
+		\phpbb\language\language $language,
 		\phpbb\auth\provider_collection $provider_collection,
 		\phpbb\request\request $request,
 		\phpbb\template\template $template,
@@ -53,7 +53,7 @@ class auth_link
 	)
 	{
 		$this->helper				= $helper;
-		$this->lang					= $lang;
+		$this->language				= $language;
 		$this->provider_collection	= $provider_collection;
 		$this->request				= $request;
 		$this->template				= $template;
@@ -61,22 +61,20 @@ class auth_link
 	}
 
 	/**
-	 * Generates and handle the OAuth link process.
-	 *
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * Generates the ucp_auth_link page and handles the auth link process
 	 */
 	public function main()
 	{
 		$errors = [];
-
-		$auth_provider = $this->provider_collection->get_provider();
-		$provider_data = $auth_provider->get_auth_link_data();
 		$s_hidden_fields = [];
 
 		// confirm that the auth provider supports this page
+		$auth_provider = $this->provider_collection->get_provider();
+		$provider_data = $auth_provider->get_auth_link_data();
+
 		if ($provider_data === null)
 		{
-			$errors[] = $this->lang->lang('UCP_AUTH_LINK_NOT_SUPPORTED');
+			$errors[] = $this->language->lang('UCP_AUTH_LINK_NOT_SUPPORTED');
 		}
 
 		$form_key = 'ucp_auth_link';
@@ -85,11 +83,11 @@ class auth_link
 		$submit	= $this->request->is_set_post('submit');
 
 		// This path is only for primary actions
-		if (empty($errors) && $submit)
+		if ($submit && empty($errors))
 		{
 			if (!check_form_key($form_key))
 			{
-				$errors[] = $this->lang->lang('FORM_INVALID');
+				$errors[] = $this->language->lang('FORM_INVALID');
 			}
 
 			if (empty($errors))
@@ -98,18 +96,18 @@ class auth_link
 				$link_data = $this->request->get_super_global(\phpbb\request\request_interface::POST);
 
 				// The current user_id is also necessary
-				$link_data['user_id'] = $this->user->data['user_id'];
+				$link_data['user_id'] = (int) $this->user->data['user_id'];
 
 				// Tell the provider that the method is auth_link not login_link
 				$link_data['link_method'] = 'auth_link';
 
-				if ($this->request->is_set_post('link'))
+				if ($this->request->variable('link', 0, false, \phpbb\request\request_interface::POST))
 				{
 					$error = $auth_provider->link_account($link_data);
 
 					if ($error)
 					{
-						$errors[] = $this->lang->lang($error);
+						$errors[] = $this->language->lang($error);
 					}
 				}
 				else
@@ -118,7 +116,7 @@ class auth_link
 
 					if ($error)
 					{
-						$errors[] = $this->lang->lang($error);
+						$errors[] = $this->language->lang($error);
 					}
 				}
 
@@ -139,7 +137,7 @@ class auth_link
 
 			if ($error)
 			{
-				$errors[] = $this->lang->lang($error);
+				$errors[] = $this->language->lang($error);
 			}
 
 			// Template data may have changed, get new data
@@ -172,17 +170,14 @@ class auth_link
 			}
 		}
 
-		$s_hidden_fields = build_hidden_fields($s_hidden_fields);
-
 		$this->template->assign_vars([
 			'ERROR'						=> implode('<br />', $errors),
-
 			'PROVIDER_TEMPLATE_FILE'	=> $provider_data['TEMPLATE_FILE'],
 
-			'S_HIDDEN_FIELDS'			=> $s_hidden_fields,
+			'S_HIDDEN_FIELDS'			=> build_hidden_fields($s_hidden_fields),
 			'S_UCP_ACTION'				=> $this->helper->route('ucp_manage_oauth'),
 		]);
 
-		return $this->helper->render('ucp_auth_link.html', $this->lang->lang('UCP_MANAGE_OAUTH'));
+		return $this->helper->render('ucp_auth_link.html', $this->language->lang('UCP_MANAGE_OAUTH'));
 	}
 }

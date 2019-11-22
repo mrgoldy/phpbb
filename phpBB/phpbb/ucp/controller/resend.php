@@ -13,10 +13,9 @@
 
 namespace phpbb\ucp\controller;
 
-use phpbb\exception\back_exception;
-use phpbb\exception\form_invalid_exception;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
+/**
+ * Resending activation emails
+ */
 class resend
 {
 	/** @var \phpbb\auth\auth */
@@ -32,7 +31,7 @@ class resend
 	protected $helper;
 
 	/** @var \phpbb\language\language */
-	protected $lang;
+	protected $language;
 
 	/** @var \phpbb\request\request */
 	protected $request;
@@ -59,7 +58,7 @@ class resend
 	 * @param \phpbb\config\config				$config			Config object
 	 * @param \phpbb\db\driver\driver_interface	$db				Database object
 	 * @param \phpbb\controller\helper			$helper			Controller helper object
-	 * @param \phpbb\language\language			$lang			Language object
+	 * @param \phpbb\language\language			$language		Language object
 	 * @param \phpbb\request\request			$request		Request object
 	 * @param \phpbb\template\template			$template		Template object
 	 * @param \phpbb\user						$user			User object
@@ -72,7 +71,7 @@ class resend
 		\phpbb\config\config $config,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\controller\helper $helper,
-		\phpbb\language\language $lang,
+		\phpbb\language\language $language,
 		\phpbb\request\request $request,
 		\phpbb\template\template $template,
 		\phpbb\user $user,
@@ -85,11 +84,10 @@ class resend
 		$this->config		= $config;
 		$this->db			= $db;
 		$this->helper		= $helper;
-		$this->lang			= $lang;
+		$this->language		= $language;
 		$this->request		= $request;
 		$this->template		= $template;
 		$this->user			= $user;
-
 		$this->root_path	= $root_path;
 		$this->php_ext		= $php_ext;
 		$this->tables		= $tables;
@@ -100,22 +98,22 @@ class resend
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	function main()
+	public function main()
 	{
 		$username	= $this->request->variable('username', '', true);
-		$email		= utf8_strtolower($this->request->variable('email', ''));
+		$email		= strtolower($this->request->variable('email', ''));
 		$submit		= $this->request->is_set_post('submit');
-
-		$u_mode		= ['ucp_account', 'mode' => 'send_password'];
 
 		$form_key = 'ucp_resend';
 		add_form_key($form_key);
+
+		$return = '<br /><br />' . $this->language->lang('RETURN_UCP', '<a href="' . $this->helper->route('ucp_account', ['mode' => 'resend_activation']) . '">', '</a>');
 
 		if ($submit)
 		{
 			if (!check_form_key($form_key))
 			{
-				throw new form_invalid_exception($u_mode);
+				return trigger_error($this->language->lang('FORM_INVALID') . $return, E_USER_WARNING);
 			}
 
 			$sql = 'SELECT user_id, group_id, username, user_email, user_type, user_lang, user_actkey, user_inactive_reason
@@ -128,22 +126,22 @@ class resend
 
 			if ($user_row === false)
 			{
-				throw new back_exception(404, 'NO_EMAIL_USER', $u_mode);
+				return trigger_error($this->language->lang('NO_EMAIL_USER') . $return, E_USER_WARNING);
 			}
 
 			if ($user_row['user_type'] == USER_IGNORE)
 			{
-				throw new back_exception(400, 'NO_USER', $u_mode);
+				return trigger_error($this->language->lang('NO_USER') . $return, E_USER_WARNING);
 			}
 
 			if (!$user_row['user_actkey'] && $user_row['user_type'] != USER_INACTIVE)
 			{
-				throw new back_exception(400, 'ACCOUNT_ALREADY_ACTIVATED', $u_mode);
+				return trigger_error($this->language->lang('ACCOUNT_ALREADY_ACTIVATED') . $return, E_USER_WARNING);
 			}
 
 			if (!$user_row['user_actkey'] || ($user_row['user_type'] == USER_INACTIVE && $user_row['user_inactive_reason'] == INACTIVE_MANUAL))
 			{
-				throw new back_exception(400, 'ACCOUNT_DEACTIVATED', $u_mode);
+				return trigger_error($this->language->lang('ACCOUNT_DEACTIVATED') . $return, E_USER_WARNING);
 			}
 
 			// Determine coppa status on group (REGISTERED(_COPPA))
@@ -156,25 +154,32 @@ class resend
 
 			if ($row === false)
 			{
-				throw new back_exception(400, 'NO_GROUP', $u_mode);
+				return trigger_error($this->language->lang('NO_GROUP') . $return, E_USER_WARNING);
 			}
 
 			$coppa = ($row['group_name'] == 'REGISTERED_COPPA' && $row['group_type'] == GROUP_SPECIAL) ? true : false;
 
-			include_once($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
+			if (!class_exists('messenger'))
+			{
+				include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
+			}
+
 			$messenger = new \messenger(false);
 
 			if ($this->config['require_activation'] == USER_ACTIVATION_SELF || $coppa)
 			{
-				$messenger->template(($coppa) ? 'coppa_resend_inactive' : 'user_resend_inactive', $user_row['user_lang']);
+				$messenger->template($coppa ? 'coppa_resend_inactive' : 'user_resend_inactive', $user_row['user_lang']);
 				$messenger->set_addresses($user_row);
-
 				$messenger->anti_abuse_headers($this->config, $this->user);
 
 				$messenger->assign_vars([
 					'USERNAME'		=> htmlspecialchars_decode($user_row['username']),
-					'WELCOME_MSG'	=> htmlspecialchars_decode($this->lang->lang('WELCOME_SUBJECT', $this->config['sitename'])),
-					'U_ACTIVATE'	=> $this->helper->route('ucp_account', ['mode' => 'activate', 'u' => $user_row['user_id'], 'k' => $user_row['user_actkey']], false, false, UrlGeneratorInterface::ABSOLUTE_URL),
+					'WELCOME_MSG'	=> htmlspecialchars_decode($this->language->lang('WELCOME_SUBJECT', $this->config['sitename'])),
+					'U_ACTIVATE'	=> generate_board_url(false) . $this->helper->route('ucp_account', [
+						'mode'	=> 'activate',
+						'u'		=> $user_row['user_id'],
+						'k'		=> $user_row['user_actkey'],
+					]),
 				]);
 
 				if ($coppa)
@@ -202,13 +207,16 @@ class resend
 				{
 					$messenger->template('admin_activate', $row['user_lang']);
 					$messenger->set_addresses($row);
-
 					$messenger->anti_abuse_headers($this->config, $this->user);
 
 					$messenger->assign_vars([
 						'USERNAME'			=> htmlspecialchars_decode($user_row['username']),
 						'U_USER_DETAILS'	=> generate_board_url() . "/memberlist.$this->php_ext?mode=viewprofile&u={$user_row['user_id']}",
-						'U_ACTIVATE'		=> $this->helper->route('ucp_account', ['mode' => 'activate', 'u' => $user_row['user_id'], 'k' => $user_row['user_actkey']], false, false, UrlGeneratorInterface::ABSOLUTE_URL),
+						'U_ACTIVATE'	=> generate_board_url(false) . $this->helper->route('ucp_account', [
+							'mode'	=> 'activate',
+							'u'		=> $user_row['user_id'],
+							'k'		=> $user_row['user_actkey'],
+						]),
 					]);
 
 					$messenger->send($row['user_notify_type']);
@@ -216,13 +224,13 @@ class resend
 				$this->db->sql_freeresult($result);
 			}
 
-			$route = append_sid("{$this->root_path}index.$this->php_ext");
-			$return = '<br /><br />' . $this->lang->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
-			$message = $this->config['require_activation'] == USER_ACTIVATION_ADMIN ? $this->lang->lang('ACTIVATION_EMAIL_SENT_ADMIN') : $this->lang->lang('ACTIVATION_EMAIL_SENT');
+			$this->helper->assign_meta_refresh_var(3, append_sid("{$this->root_path}index.$this->php_ext"));
 
-			$this->helper->assign_meta_refresh_var(3, $route);
+			$message = $this->config['require_activation'] == USER_ACTIVATION_ADMIN ? 'ACTIVATION_EMAIL_SENT_ADMIN' : 'ACTIVATION_EMAIL_SENT';
+			$message = $this->language->lang($message);
+			$message .= '<br /><br />' . $this->language->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
 
-			return $this->helper->message($message . $return);
+			return $this->helper->message($message);
 		}
 
 		$this->template->assign_vars([
@@ -231,6 +239,6 @@ class resend
 			'S_PROFILE_ACTION'	=> $this->helper->route('ucp_account', ['mode' => 'resend_activation']),
 		]);
 
-		return $this->helper->render('ucp_resend.html', $this->lang->lang('UCP_RESEND'));
+		return $this->helper->render('ucp_resend.html', $this->language->lang('UCP_RESEND'));
 	}
 }

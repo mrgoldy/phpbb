@@ -31,7 +31,7 @@ class front
 	protected $helper;
 
 	/** @var \phpbb\language\language */
-	protected $lang;
+	protected $language;
 
 	/** @var \phpbb\template\template */
 	protected $template;
@@ -56,7 +56,7 @@ class front
 	 * @param \phpbb\db\driver\driver_interface	$db				Database object
 	 * @param \phpbb\event\dispatcher			$dispatcher		Event dispatcher object
 	 * @param \phpbb\controller\helper			$helper			Controller helper object
-	 * @param \phpbb\language\language			$lang			Language object
+	 * @param \phpbb\language\language			$language		Language object
 	 * @param \phpbb\template\template			$template		Template object
 	 * @param \phpbb\user						$user			User object
 	 * @param string							$root_path		phpBB root path
@@ -69,7 +69,7 @@ class front
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher $dispatcher,
 		\phpbb\controller\helper $helper,
-		\phpbb\language\language $lang,
+		\phpbb\language\language $language,
 		\phpbb\template\template $template,
 		\phpbb\user $user,
 		$root_path,
@@ -82,7 +82,7 @@ class front
 		$this->db			= $db;
 		$this->dispatcher	= $dispatcher;
 		$this->helper		= $helper;
-		$this->lang			= $lang;
+		$this->language		= $language;
 		$this->template		= $template;
 		$this->user			= $user;
 
@@ -98,7 +98,7 @@ class front
 	 */
 	public function main()
 	{
-		$this->lang->add_lang('memberlist');
+		$this->language->add_lang('memberlist');
 
 		$sql_from = $this->tables['topics'] . ' t ';
 		$sql_select = '';
@@ -121,7 +121,7 @@ class front
 			$sql_select .= ', ft.mark_time AS forum_mark_time';
 		}
 
-		$topic_type = $this->lang->lang('VIEW_TOPIC_GLOBAL');
+		$topic_type = $this->language->lang('VIEW_TOPIC_GLOBAL');
 		$folder = 'global_read';
 		$folder_new = 'global_unread';
 
@@ -150,10 +150,10 @@ class front
 			extract($this->dispatcher->trigger_event('core.ucp_main_front_modify_sql', compact($vars)));
 
 			$sql = "SELECT t.* $sql_select
-						FROM $sql_from
-						WHERE t.topic_type = " . POST_GLOBAL . '
-							AND ' . $this->db->sql_in_set('t.forum_id', $forum_ary) . '
-						ORDER BY t.topic_last_post_time DESC, t.topic_last_post_id DESC';
+				FROM $sql_from
+				WHERE t.topic_type = " . POST_GLOBAL . '
+					AND ' . $this->db->sql_in_set('t.forum_id', $forum_ary) . '
+				ORDER BY t.topic_last_post_time DESC, t.topic_last_post_id DESC';
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
@@ -285,19 +285,19 @@ class front
 		$percentage		= $this->config['num_posts'] ? min(100, ($this->user->data['user_posts'] / $this->config['num_posts']) * 100) : 0;
 
 		$this->template->assign_vars([
-			'L_TITLE'			=> $this->lang->lang('UCP_MAIN_FRONT'),
+			'L_TITLE'			=> $this->language->lang('UCP_MAIN_FRONT'),
 
 			'JOINED'			=> $this->user->format_date($this->user->data['user_regdate']),
 			'LAST_ACTIVE'		=> empty($last_active) ? ' - ' : $this->user->format_date($last_active),
 			'POSTS'				=> $this->user->data['user_posts'] ? $this->user->data['user_posts'] : 0,
-			'POSTS_DAY'			=> $this->lang->lang('POST_DAY', $posts_per_day),
-			'POSTS_PCT'			=> $this->lang->lang('POST_PCT', $percentage),
+			'POSTS_DAY'			=> $this->language->lang('POST_DAY', $posts_per_day),
+			'POSTS_PCT'			=> $this->language->lang('POST_PCT', $percentage),
 			'USER_COLOR'		=> !empty($this->user->data['user_colour']) ? $this->user->data['user_colour'] : '',
 			'WARNINGS'			=> $this->user->data['user_warnings'] ? $this->user->data['user_warnings'] : 0,
 
 			'U_SEARCH_USER'		=> $this->auth->acl_get('u_search') ? append_sid("{$this->root_path}search.$this->php_ext", 'author_id=' . $this->user->data['user_id'] . '&amp;sr=posts') : '',
 		]);
 
-		return $this->helper->render('ucp_main_front.html', $this->lang->lang('UCP_MAIN_FRONT'));
+		return $this->helper->render('ucp_main_front.html', $this->language->lang('UCP_MAIN_FRONT'));
 	}
 }

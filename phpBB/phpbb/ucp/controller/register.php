@@ -13,10 +13,11 @@
 
 namespace phpbb\ucp\controller;
 
-use phpbb\exception\back_exception;
 use phpbb\exception\http_exception;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * Board registration
+ */
 class register
 {
 	/** @var \phpbb\captcha\factory */
@@ -35,7 +36,7 @@ class register
 	protected $helper;
 
 	/** @var \phpbb\language\language */
-	protected $lang;
+	protected $language;
 
 	/** @var \phpbb\notification\manager */
 	protected $notification_manager;
@@ -75,7 +76,7 @@ class register
 	 * @param \phpbb\db\driver\driver_interface	$db						Database object
 	 * @param \phpbb\event\dispatcher			$dispatcher				Event dispatcher object
 	 * @param \phpbb\controller\helper			$helper					Controller helper object
-	 * @param \phpbb\language\language			$lang					Language object
+	 * @param \phpbb\language\language			$language				Language object
 	 * @param \phpbb\notification\manager		$notification_manager	Notification manager object
 	 * @param \phpbb\passwords\manager			$password_manager		Password manager object
 	 * @param \phpbb\profilefields\manager		$pf_manager				Profile fields manager object
@@ -93,7 +94,7 @@ class register
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher $dispatcher,
 		\phpbb\controller\helper $helper,
-		\phpbb\language\language $lang,
+		\phpbb\language\language $language,
 		\phpbb\notification\manager $notification_manager,
 		\phpbb\passwords\manager $password_manager,
 		\phpbb\profilefields\manager $pf_manager,
@@ -111,7 +112,7 @@ class register
 		$this->db					= $db;
 		$this->dispatcher			= $dispatcher;
 		$this->helper				= $helper;
-		$this->lang					= $lang;
+		$this->language				= $language;
 		$this->notification_manager	= $notification_manager;
 		$this->password_manager		= $password_manager;
 		$this->pf_manager			= $pf_manager;
@@ -130,29 +131,27 @@ class register
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	function main()
+	public function main()
 	{
 		if ($this->user->data['is_registered'] || $this->request->is_set('not_agreed'))
 		{
 			return redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
 		}
 
-		if (($this->config['require_activation'] == USER_ACTIVATION_DISABLE) ||
+		if ($this->config['require_activation'] == USER_ACTIVATION_DISABLE ||
 			(in_array($this->config['require_activation'], [USER_ACTIVATION_SELF, USER_ACTIVATION_ADMIN]) && !$this->config['email_enable']))
 		{
 			throw new http_exception(400, 'UCP_REGISTER_DISABLE');
 		}
 
-		$u_mode			= ['ucp_account', 'mode' => 'register'];
-
 		$coppa			= $this->request->is_set('coppa') ? (int) $this->request->variable('coppa', false) : false;
 		$agreed			= $this->request->variable('agreed', false);
 		$submit			= $this->request->is_set_post('submit');
 		$change_lang	= $this->request->variable('change_lang', '');
-		$user_lang		= $this->request->variable('lang', $this->lang->get_used_language());
+		$user_lang		= $this->request->variable('lang', $this->language->get_used_language());
 
 		/**
-		 * Add UCP register data before they are assigned to the template or submitted.
+		 * Add UCP register data before they are assigned to the template or submitted
 		 *
 		 * To assign data to the template, use $this->template->assign_vars()
 		 *
@@ -173,14 +172,8 @@ class register
 		];
 		extract($this->dispatcher->trigger_event('core.ucp_register_requests_after', compact($vars)));
 
-		if ($agreed)
-		{
-			add_form_key('ucp_register');
-		}
-		else
-		{
-			add_form_key('ucp_register_terms');
-		}
+		$form_key = $agreed ? 'ucp_register' : 'ucp_register_terms';
+		add_form_key($form_key);
 
 		if ($change_lang || $user_lang != $this->config['default_lang'])
 		{
@@ -201,11 +194,11 @@ class register
 			else
 			{
 				$change_lang = '';
-				$user_lang = $this->lang->get_used_language();
+				$user_lang = $this->language->get_used_language();
 			}
 		}
 
-		$errors = [];
+		$error = [];
 		$cp_data = [];
 		$s_hidden_fields = [];
 
@@ -213,20 +206,21 @@ class register
 		$auth_provider = null;
 
 		// Handle login_link data added to $_hidden_fields
-		$link_data = $this->get_login_link_data_array();
+		$login_link_data = $this->get_login_link_data_array();
 
-		if (!empty($link_data))
+		if (!empty($login_link_data))
 		{
 			// Confirm that we have all necessary data
 			$auth_provider = $this->provider_collection->get_provider($this->request->variable('auth_provider', ''));
 
-			$result = $auth_provider->login_link_has_necessary_data($link_data);
+			$result = $auth_provider->login_link_has_necessary_data($login_link_data);
+
 			if ($result !== null)
 			{
-				$errors[] = $this->lang->lang($result);
+				$error[] = $this->language->lang($result);
 			}
 
-			$s_hidden_fields = array_merge($s_hidden_fields, $this->get_login_link_data_for_hidden_fields($link_data));
+			$s_hidden_fields = array_merge($s_hidden_fields, $this->get_login_link_data_for_hidden_fields($login_link_data));
 		}
 
 		if (!$agreed || ($coppa === false && $this->config['coppa_enable']) || ($coppa && !$this->config['coppa_enable']))
@@ -244,21 +238,15 @@ class register
 				$s_hidden_fields = array_merge($s_hidden_fields, [
 					'username'	=> $this->request->variable('username', '', true),
 					'email'		=> strtolower($this->request->variable('email', '')),
-					'lang'		=> $this->lang->get_used_language(),
+					'lang'		=> $this->language->get_used_language(),
 					'tz'		=> $this->request->variable('tz', $this->config['board_timezone']),
 				]);
 			}
 
 			// Checking amount of available languages
-			$lang_row = [];
-
-			$sql = 'SELECT lang_id
-				FROM ' . $this->tables['lang'];
+			$sql = 'SELECT lang_id FROM ' . $this->tables['lang'];
 			$result = $this->db->sql_query($sql);
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$lang_row[] = $row;
-			}
+			$lang_row = (array) $this->db->sql_fetchrowset($result);
 			$this->db->sql_freeresult($result);
 
 			if ($coppa === false && $this->config['coppa_enable'])
@@ -267,23 +255,23 @@ class register
 				$coppa_birthday = $this->user->create_datetime()
 					->setDate($now['year'] - 13, $now['mon'], $now['mday'] - 1)
 					->setTime(0, 0, 0)
-					->format($this->lang->lang('DATE_FORMAT'), true);
+					->format($this->language->lang('DATE_FORMAT'), true);
 				unset($now);
 
 				$template_vars = [
 					'COOKIE_NAME'		=> $this->config['cookie_name'],
 					'COOKIE_PATH'		=> $this->config['cookie_path'],
 
+					'L_COPPA_NO'		=> $this->language->lang('UCP_COPPA_BEFORE', $coppa_birthday),
+					'L_COPPA_YES'		=> $this->language->lang('UCP_COPPA_ON_AFTER', $coppa_birthday),
+
 					'S_LANG_OPTIONS'	=> count($lang_row) > 1 ? language_select($user_lang) : '',
-					'L_COPPA_NO'		=> $this->lang->lang('UCP_COPPA_BEFORE', $coppa_birthday),
-					'L_COPPA_YES'		=> $this->lang->lang('UCP_COPPA_ON_AFTER', $coppa_birthday),
-
-					'U_COPPA_NO'		=> $this->helper->route('ucp_account', ['mode' => 'register', 'coppa' => false]),
-					'U_COPPA_YES'		=> $this->helper->route('ucp_account', ['mode' => 'register', 'coppa' => true]),
-
 					'S_SHOW_COPPA'		=> true,
 					'S_HIDDEN_FIELDS'	=> build_hidden_fields($s_hidden_fields),
 					'S_UCP_ACTION'		=> $this->helper->route('ucp_account', ['mode' => 'register']),
+
+					'U_COPPA_NO'		=> $this->helper->route('ucp_account', ['mode' => 'register', 'coppa' => false]),
+					'U_COPPA_YES'		=> $this->helper->route('ucp_account', ['mode' => 'register', 'coppa' => true]),
 				];
 			}
 			else
@@ -292,8 +280,8 @@ class register
 					'COOKIE_NAME'		=> $this->config['cookie_name'],
 					'COOKIE_PATH'		=> $this->config['cookie_path'],
 
+					'L_TERMS_OF_USE'	=> $this->language->lang('TERMS_OF_USE_CONTENT', $this->config['sitename'], generate_board_url()),
 					'S_LANG_OPTIONS'	=> count($lang_row) > 1 ? language_select($user_lang) : '',
-					'L_TERMS_OF_USE'	=> $this->lang->lang('TERMS_OF_USE_CONTENT', $this->config['sitename'], generate_board_url()),
 
 					'S_SHOW_COPPA'		=> false,
 					'S_REGISTRATION'	=> true,
@@ -301,6 +289,8 @@ class register
 					'S_UCP_ACTION'		=> $this->helper->route('ucp_account', array_merge(['mode' => 'register'], $add_coppa)),
 				];
 			}
+
+			$tpl_name = 'ucp_agreement';
 
 			/**
 			 * Allows to modify the agreements.
@@ -315,15 +305,24 @@ class register
 			$vars = ['tpl_name', 'template_vars', 's_hidden_fields', 'lang_row'];
 			extract($this->dispatcher->trigger_event('core.ucp_register_agreement_modify_template_data', compact($vars)));
 
-			unset($lang_row);
-
 			$template_vars = array_merge($template_vars, [
-				'S_HIDDEN_FIELDS'	=> build_hidden_fields($s_hidden_fields),
+				'S_HIDDEN_FIELDS' => build_hidden_fields($s_hidden_fields),
 			]);
 
 			$this->template->assign_vars($template_vars);
 
-			return $this->helper->render('ucp_agreement.html', $this->lang->lang('REGISTER'));
+			/**
+			 * Allows to modify the agreements.
+			 *
+			 * To assign data to the template, use $this->template->assign_vars()
+			 *
+			 * @event core.ucp_register_agreement
+			 * @since 3.1.6-RC1
+			 * @deprecated 3.2.2-RC1 Replaced by core.ucp_register_agreement_modify_template_data and to be removed in 3.3.0-RC1
+			 */
+			$this->dispatcher->dispatch('core.ucp_register_agreement');
+
+			return $this->helper->render($tpl_name, $this->language->lang('REGISTER'));
 		}
 
 		// The CAPTCHA kicks in here. We can't help that the information gets lost on language change.
@@ -333,15 +332,13 @@ class register
 			$captcha->init(CONFIRM_REG);
 		}
 
-		$timezone = $this->config['board_timezone'];
-
 		$data = [
 			'username'			=> $this->request->variable('username', '', true),
 			'new_password'		=> $this->request->variable('new_password', '', true),
 			'password_confirm'	=> $this->request->variable('password_confirm', '', true),
 			'email'				=> strtolower($this->request->variable('email', '')),
-			'lang'				=> basename($this->request->variable('lang', $this->lang->get_used_language())),
-			'tz'				=> $this->request->variable('tz', $timezone),
+			'lang'				=> basename($this->request->variable('lang', $this->language->get_used_language())),
+			'tz'				=> $this->request->variable('tz', $this->config['board_timezone']),
 		];
 
 		/**
@@ -360,40 +357,44 @@ class register
 		// Check and initialize some variables if needed
 		if ($submit)
 		{
-			$errors = validate_data($data, [
+			$error = validate_data($data, [
 				'username'			=> [
 					['string', false, $this->config['min_name_chars'], $this->config['max_name_chars']],
-					['username', '']],
+					['username', ''],
+				],
 				'new_password'		=> [
-					['string', false, $this->config['min_pass_chars'], $this->config['max_pass_chars']],
-					['password']],
-				'password_confirm'	=> ['string', false, $this->config['min_pass_chars'], $this->config['max_pass_chars']],
+					['string', false, $this->config['min_pass_chars'], 0],
+					['password'],
+				],
+				'password_confirm'	=> ['string', false, $this->config['min_pass_chars'], 0],
 				'email'				=> [
 					['string', false, 6, 60],
-					['user_email']],
+					['user_email'],
+				],
 				'tz'				=> ['timezone'],
 				'lang'				=> ['language_iso_name'],
 			]);
 
 			if (!check_form_key('ucp_register'))
 			{
-				$errors[] = $this->lang->lang('FORM_INVALID');
+				$error[] = $this->language->lang('FORM_INVALID');
 			}
 
 			// Replace "error" strings with their real, localised form
-			$errors = array_map([$this->lang, 'lang'], $errors);
+			$error = array_map([$this->language, 'lang'], $error);
 
 			if ($this->config['enable_confirm'])
 			{
 				$vc_response = $captcha->validate($data);
+
 				if ($vc_response !== false)
 				{
-					$errors[] = $vc_response;
+					$error[] = $vc_response;
 				}
 
 				if ($this->config['max_reg_attempts'] && $captcha->get_attempt_count() > $this->config['max_reg_attempts'])
 				{
-					$errors[] = $this->lang->lang('TOO_MANY_REGISTERS');
+					$error[] = $this->language->lang('TOO_MANY_REGISTERS');
 				}
 			}
 
@@ -402,20 +403,21 @@ class register
 			{
 				if (($dnsbl = $this->user->check_dnsbl('register')) !== false)
 				{
-					$errors[] = $this->lang->lang('IP_BLACKLISTED', $this->user->ip, $dnsbl[1]);
+					$error[] = $this->language->lang('IP_BLACKLISTED', $this->user->ip, $dnsbl[1]);
 				}
 			}
 
 			// validate custom profile fields
-			$this->pf_manager->submit_cp_field('register', $this->user->get_iso_lang_id(), $cp_data, $errors);
+			$this->pf_manager->submit_cp_field('register', $this->user->get_iso_lang_id(), $cp_data, $error);
 
-			if (empty($errors))
+			if (empty($error))
 			{
 				if ($data['new_password'] != $data['password_confirm'])
 				{
-					$errors[] = $this->lang->lang('NEW_PASSWORD_ERROR');
+					$error[] = $this->language->lang('NEW_PASSWORD_ERROR');
 				}
 			}
+
 			/**
 			 * Check UCP registration data after they are submitted
 			 *
@@ -423,13 +425,13 @@ class register
 			 * @var bool	submit		Do we display the form only or did the user press submit
 			 * @var array	data		Array with current ucp registration data
 			 * @var array	cp_data		Array with custom profile fields data
-			 * @var array	errors		Array with list of errors
+			 * @var array	error		Array with list of errors
 			 * @since 3.1.4-RC1
 			 */
-			$vars = ['submit', 'data', 'cp_data', 'errors'];
+			$vars = ['submit', 'data', 'cp_data', 'error'];
 			extract($this->dispatcher->trigger_event('core.ucp_register_data_after', compact($vars)));
 
-			if (empty($errors))
+			if (empty($error))
 			{
 				// Which group by default?
 				$group_name = $coppa ? 'REGISTERED_COPPA' : 'REGISTERED';
@@ -444,10 +446,10 @@ class register
 
 				if ($row === false)
 				{
-					throw new back_exception(404, 'NO_GROUP', $u_mode);
+					throw new http_exception(404, 'NO_GROUP');
 				}
 
-				$group_id = $row['group_id'];
+				$group_id = (int) $row['group_id'];
 
 				if (($coppa ||
 					$this->config['require_activation'] == USER_ACTIVATION_SELF ||
@@ -506,7 +508,7 @@ class register
 				// This should not happen, because the required variables are listed above...
 				if ($user_id === false)
 				{
-					throw new back_exception(400, 'NO_USER', $u_mode);
+					throw new http_exception(400, 'NO_USER');
 				}
 
 				// Okay, captcha, your job is done.
@@ -517,22 +519,22 @@ class register
 
 				if ($coppa && $this->config['email_enable'])
 				{
-					$message = $this->lang->lang('ACCOUNT_COPPA');
+					$message = $this->language->lang('ACCOUNT_COPPA');
 					$email_template = 'coppa_welcome_inactive';
 				}
 				else if ($this->config['require_activation'] == USER_ACTIVATION_SELF && $this->config['email_enable'])
 				{
-					$message = $this->lang->lang('ACCOUNT_INACTIVE');
+					$message = $this->language->lang('ACCOUNT_INACTIVE');
 					$email_template = 'user_welcome_inactive';
 				}
 				else if ($this->config['require_activation'] == USER_ACTIVATION_ADMIN && $this->config['email_enable'])
 				{
-					$message = $this->lang->lang('ACCOUNT_INACTIVE_ADMIN');
+					$message = $this->language->lang('ACCOUNT_INACTIVE_ADMIN');
 					$email_template = 'admin_welcome_inactive';
 				}
 				else
 				{
-					$message = $this->lang->lang('ACCOUNT_ADDED');
+					$message = $this->language->lang('ACCOUNT_ADDED');
 					$email_template = 'user_welcome';
 
 					// Autologin after registration
@@ -541,21 +543,26 @@ class register
 
 				if ($this->config['email_enable'])
 				{
-					include_once($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
+					if (!class_exists('messenger'))
+					{
+						include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
+					}
 
 					$messenger = new \messenger(false);
 
 					$messenger->template($email_template, $data['lang']);
-
 					$messenger->to($data['email'], $data['username']);
-
 					$messenger->anti_abuse_headers($this->config, $this->user);
 
 					$messenger->assign_vars([
 						'PASSWORD'		=> htmlspecialchars_decode($data['new_password']),
 						'USERNAME'		=> htmlspecialchars_decode($data['username']),
-						'WELCOME_MSG'	=> htmlspecialchars_decode($this->lang->lang('WELCOME_SUBJECT', $this->config['sitename'])),
-						'U_ACTIVATE'	=> $this->helper->route('ucp_account', ['mode' => 'activate', 'u' => $user_id, 'k' => $user_actkey], false, false, UrlGeneratorInterface::ABSOLUTE_URL),
+						'WELCOME_MSG'	=> htmlspecialchars_decode($this->language->lang('WELCOME_SUBJECT', $this->config['sitename'])),
+						'U_ACTIVATE'	=> generate_board_url(false) . $this->helper->route('ucp_account', [
+							'mode'	=> 'activate',
+							'u'		=> $user_id,
+							'k'		=> $user_actkey,
+						]),
 					]);
 
 					if ($coppa)
@@ -571,14 +578,14 @@ class register
 					 * Modify messenger data before welcome mail is sent
 					 *
 					 * @event core.ucp_register_welcome_email_before
-					 * @var array		user_row		Array with user registration data
-					 * @var array		cp_data			Array with custom profile fields data
-					 * @var array		data			Array with current ucp registration data
-					 * @var string		message			Message to be displayed to the user after registration
-					 * @var string		server_url		Server URL
-					 * @var int			user_id			New user ID
-					 * @var string		user_actkey		User activation key
-					 * @var \messenger	messenger		phpBB Messenger
+					 * @var array		user_row	Array with user registration data
+					 * @var array		cp_data		Array with custom profile fields data
+					 * @var array		data		Array with current ucp registration data
+					 * @var string		message		Message to be displayed to the user after registration
+					 * @var string		server_url	Server URL
+					 * @var int			user_id		New user ID
+					 * @var string		user_actkey	User activation key
+					 * @var \messenger	messenger	phpBB Messenger
 					 * @since 3.2.4-RC1
 					 */
 					$vars = [
@@ -599,22 +606,22 @@ class register
 				if ($this->config['require_activation'] == USER_ACTIVATION_ADMIN)
 				{
 					$this->notification_manager->add_notifications('notification.type.admin_activate_user', [
-						'user_id'		=> (int) $user_id,
+						'user_id'		=> $user_id,
 						'user_actkey'	=> $user_row['user_actkey'],
 						'user_regdate'	=> $user_row['user_regdate'],
 					]);
 				}
 
 				// Perform account linking if necessary
-				if (!empty($link_data))
+				if (!empty($login_link_data))
 				{
-					$link_data['user_id'] = (int) $user_id;
+					$login_link_data['user_id'] = $user_id;
 
-					$result = $auth_provider->link_account($link_data);
+					$result = $auth_provider->link_account($login_link_data);
 
 					if ($result)
 					{
-						$message = $message . '<br /><br />' . $this->lang->lang($result);
+						$message = $message . '<br /><br />' . $this->language->lang($result);
 					}
 				}
 
@@ -642,9 +649,9 @@ class register
 				];
 				extract($this->dispatcher->trigger_event('core.ucp_register_register_after', compact($vars)));
 
-				$return = $this->lang->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
+				$message = $message . '<br /><br />' . $this->language->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
 
-				return $this->helper->message($message . '<br /><br />' . $return);
+				return $this->helper->message($message);
 			}
 		}
 
@@ -672,14 +679,15 @@ class register
 		}
 
 		$l_reg_cond = '';
+
 		switch ($this->config['require_activation'])
 		{
 			case USER_ACTIVATION_SELF:
-				$l_reg_cond = $this->lang->lang('UCP_EMAIL_ACTIVATE');
+				$l_reg_cond = $this->language->lang('UCP_EMAIL_ACTIVATE');
 			break;
 
 			case USER_ACTIVATION_ADMIN:
-				$l_reg_cond = $this->lang->lang('UCP_ADMIN_ACTIVATE');
+				$l_reg_cond = $this->language->lang('UCP_ADMIN_ACTIVATE');
 			break;
 		}
 
@@ -702,7 +710,7 @@ class register
 			}
 
 			$this->template->assign_vars([
-				'PROVIDER_TEMPLATE_FILE'	=> $auth_provider_data['TEMPLATE_FILE'],
+				'PROVIDER_TEMPLATE_FILE' => $auth_provider_data['TEMPLATE_FILE'],
 			]);
 		}
 
@@ -719,16 +727,18 @@ class register
 			'EMAIL'					=> $data['email'],
 
 			'L_REG_COND'			=> $l_reg_cond,
-			'L_USERNAME_EXPLAIN'	=> $this->lang->lang($this->config['allow_name_chars'] . '_EXPLAIN', $this->lang->lang('CHARACTERS', (int) $this->config['min_name_chars']), $this->lang->lang('CHARACTERS', (int) $this->config['max_name_chars'])),
-			'L_PASSWORD_EXPLAIN'	=> $this->lang->lang($this->config['pass_complex'] . '_EXPLAIN', $this->lang->lang('CHARACTERS', (int) $this->config['min_pass_chars']), $this->lang->lang('CHARACTERS', (int) $this->config['max_pass_chars'])),
+			'L_USERNAME_EXPLAIN'	=> $this->language->lang($this->config['allow_name_chars'] . '_EXPLAIN', $this->language->lang('CHARACTERS', (int) $this->config['min_name_chars']), $this->language->lang('CHARACTERS', (int) $this->config['max_name_chars'])),
+			'L_PASSWORD_EXPLAIN'	=> $this->language->lang($this->config['pass_complex'] . '_EXPLAIN', $this->language->lang('CHARACTERS', (int) $this->config['min_pass_chars'])),
 
 			'S_LANG_OPTIONS'		=> language_select($data['lang']),
 			'S_TZ_PRESELECT'		=> !$submit,
-			'S_CONFIRM_REFRESH'		=> (bool) $this->config['enable_confirm'] && $this->config['confirm_refresh'],
+			'S_CONFIRM_REFRESH'		=> $this->config['enable_confirm'] && $this->config['confirm_refresh'],
 			'S_REGISTRATION'		=> true,
 			'S_COPPA'				=> $coppa,
 			'S_UCP_ACTION'			=> $this->helper->route('ucp_account', ['mode' => 'register']),
 		];
+
+		$tpl_name = 'ucp_register';
 
 		/**
 		 * Modify template data on the registration page
@@ -736,7 +746,7 @@ class register
 		 * @event core.ucp_register_modify_template_data
 		 * @var array	template_vars		Array with template data
 		 * @var array	data				Array with user data, read only
-		 * @var array	errors				Array with errors
+		 * @var array	error				Array with errors
 		 * @var array	s_hidden_fields		Array with hidden field elements
 		 * @var string	tpl_name			Template name
 		 * @since 3.2.2-RC1
@@ -744,14 +754,14 @@ class register
 		$vars = [
 			'template_vars',
 			'data',
-			'errors',
+			'error',
 			's_hidden_fields',
 			'tpl_name',
 		];
 		extract($this->dispatcher->trigger_event('core.ucp_register_modify_template_data', compact($vars)));
 
 		$template_vars = array_merge($template_vars, [
-			'ERROR'				=> !empty($errors) ? implode('<br />', $errors) : '',
+			'ERROR'				=> !empty($error) ? implode('<br />', $error) : '',
 			'S_HIDDEN_FIELDS'	=> build_hidden_fields($s_hidden_fields),
 		]);
 
@@ -762,19 +772,20 @@ class register
 		// Generate profile fields -> Template Block Variable profile_fields
 		$this->pf_manager->generate_profile_fields('register', $this->user->get_iso_lang_id());
 
-		return $this->helper->render('ucp_register.html', $this->lang->lang('REGISTER'));
+		return $this->helper->render($tpl_name, $this->language->lang('REGISTER'));
 	}
 
 	/**
-	* Creates the login_link data array.
-	*
-	* @return array			Returns an array of all POST parameters whose names begin with 'login_link_'
-	*/
+	 * Creates the login_link data array.
+	 *
+	 * @return array				Returns an array of all POST parameters whose names begin with 'login_link_'
+	 */
 	protected function get_login_link_data_array()
 	{
 		$data = [];
 		$prefix = 'login_link_';
 		$prefix_length = strlen($prefix);
+
 		$var_names = $this->request->variable_names(\phpbb\request\request_interface::POST);
 
 		foreach ($var_names as $var_name)
@@ -790,12 +801,12 @@ class register
 	}
 
 	/**
-	* Prepends they key names of an associative array with 'login_link_' for
-	* inclusion on the page as hidden fields.
-	*
-	* @param array		$data		The array to be modified
-	* @return array					The modified array
-	*/
+	 * Prepends they key names of an associative array with 'login_link_' for
+	 * inclusion on the page as hidden fields.
+	 *
+	 * @param array		$data		The array to be modified
+	 * @return array				The modified array
+	 */
 	protected function get_login_link_data_for_hidden_fields(array $data)
 	{
 		$new_data = [];
