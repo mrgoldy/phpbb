@@ -59,7 +59,7 @@ parameters:
             defaults:
                 _controller: ucp.drafts:main
                 mode: 'post'
-                
+
     ucp.ucp_manage_attachments:
         auth: 'acl_u_attach'
         parent: 'ucp_cat_manage'
@@ -162,8 +162,8 @@ parameters:
 
     # --- UCP > Private Messages --- #
     ucp.ucp_cat_pm:
-        route: 'ucp_pm_inbox'
-  
+        route: 'ucp_pm_view'
+
     ucp.ucp_pm_compose:
         parent: 'ucp_cat_pm'
         route:
@@ -171,7 +171,7 @@ parameters:
             defaults:
                 _controller: ucp.pm_compose:main
                 action: 'post'
-        
+
     ucp.ucp_pm_drafts:
         parent: 'ucp_cat_pm'
         route:
@@ -179,14 +179,15 @@ parameters:
             defaults:
                 _controller: ucp.drafts:main
                 mode: 'pm'
-    
+
     ucp.ucp_pm_view:
         parent: 'ucp_cat_pm'
         route:
             path: /pm/folder/{folder}
             defaults:
                 _controller: ucp.pm_view_folder:main
-    
+                folder: 'inbox'
+
     ucp.ucp_pm_options:
         parent: 'ucp_cat_pm'
         route:
