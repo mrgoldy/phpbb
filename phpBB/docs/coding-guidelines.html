@@ -1,14 +1,56 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="keywords" content="" />
-<meta name="description" content="Proteus coding guidelines document" />
-<title>phpBB3 &bull; Coding Guidelines</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="keywords" content="">
+	<meta name="description" content="Proteus coding guidelines document">
+	<title>phpBB3 &bull; Coding Guidelines</title>
 
-<link href="assets/css/stylesheet.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/atom-one-dark-reasonable.min.css" rel="stylesheet">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			document.querySelectorAll('pre').forEach((block) => {
+				hljs.highlightBlock(block);
+			});
+		});
+	</script>
 
+	<link href="assets/css/stylesheet.css" rel="stylesheet" type="text/css" media="screen">
+	<style>
+		h2 {
+			font-size: 2em;
+			font-weight: bold;
+		}
+
+		h3 {
+			font-size: 1.3em;
+			color: #28313f;
+		}
+
+		h4 {
+			margin-top: 10px;
+		}
+
+		h2 a:link,
+		h2 a:visited,
+		h3 a:link,
+		h3 a:visited,
+		h4 a:link,
+		h4 a:visited {
+			font-size: 0.9em;
+			color: #ccc;
+			margin-right: 4px;
+		}
+
+		h2 a:hover,
+		h3 a:hover,
+		h4 a:hover {
+			color: #333;
+		}
+	</style>
 </head>
 
 <body id="phpbb" class="section-docs">
@@ -33,429 +75,986 @@
 	<a name="start_here"></a>
 
 	<div id="page-body">
+		<!-- BEGIN DOCUMENT -->
 
-<!-- BEGIN DOCUMENT -->
+		<p class="paragraph main-description">
+			These are the phpBB Coding Guidelines for Proteus, all attempts should be made to follow them as closely as possible.
+		</p>
 
-<p class="paragraph main-description">
-	These are the phpBB Coding Guidelines for Proteus, all attempts should be made to follow them as closely as possible.
-</p>
+		<h1>Coding Guidelines</h1>
 
-<h1>Coding Guidelines</h1>
-
-	<div class="paragraph menu">
-		<div class="inner">
-
-		<div class="content">
-
-<ol>
-	<li><a href="#defaults">Defaults</a>
-	<ol style="list-style-type: lower-roman;">
-		<li><a href="#editorsettings">Editor Settings</a></li>
-		<li><a href="#fileheader">File Header</a></li>
-		<li><a href="#locations">File Locations</a></li>
-		<li><a href="#constants">Special Constants</a></li>
-	</ol>
-	</li>
-	<li><a href="#code">Code Layout/Guidelines</a>
-	<ol style="list-style-type: lower-roman;">
-		<li><a href="#namingvars">Variable/Function/Class Naming</a></li>
-		<li><a href="#codelayout">Code Layout</a></li>
-		<li><a href="#sql">SQL/SQL Layout</a></li>
-		<li><a href="#optimizing">Optimizations</a></li>
-		<li><a href="#general">General Guidelines</a></li>
-		<li><a href="#phprestrictions">Restrictions on the Use of PHP</a></li>
-	</ol>
-	</li>
-	<li><a href="#styling">Styling</a>
-	<ol style="list-style-type: lower-roman;">
-		<li><a href="#cfgfiles">Style Config Files</a></li>
-		<li><a href="#genstyling">General Styling Rules</a></li>
-	</ol></li>
-	<li><a href="#templating">Templating</a>
-	<ol style="list-style-type: lower-roman;">
-		<li><a href="#templates">General Templating</a></li>
-		<li><a href="#stylestree">Styles Tree</a></li>
-		<li><a href="#template-events">Template Events</a></li>
-	</ol></li>
-	<li><a href="#charsets">Character Sets and Encodings</a></li>
-	<li><a href="#translation">Translation (<abbr title="Internationalisation">i18n</abbr>/<abbr title="Localisation">L10n</abbr>) Guidelines</a>
-	<ol style="list-style-type: lower-roman;">
-		<li><a href="#standardisation">Standardisation</a></li>
-		<li><a href="#otherconsiderations">Other considerations</a></li>
-		<li><a href="#placeholders">Working with placeholders</a></li>
-		<li><a href="#usingplurals">Using plurals</a></li>
-		<li><a href="#writingstyle">Writing Style</a></li>
-	</ol>
-	</li>
-	<li><a href="#disclaimer">Copyright and disclaimer</a></li>
-</ol>
-
+		<div class="paragraph menu">
+			<div class="inner">
+				<div class="content">
+					<ol>
+						<li>
+							<a href="#defaults">Defaults</a>
+							<ol>
+								<li><a href="#defaults.editor_settings">Editor settings</a></li>
+								<li><a href="#defaults.file_layout">File layout</a></li>
+								<li><a href="#defaults.special_constants">Special constants</a></li>
+								<li><a href="#defaults.special_naming">Special naming</a></li>
+							</ol>
+						</li>
+						<li>
+							<a href="#standards">Standards</a>
+							<ol>
+								<li><a href="#standards.routing">Routing</a></li>
+								<li><a href="#standards.services">Services</a></li>
+								<li><a href="#standards.classes">Classes</a></li>
+								<li><a href="#standards.interfaces">Interfaces</a></li>
+								<li><a href="#standards.exceptions">Exceptions</a></li>
+								<li><a href="#standards.functions">Functions</a></li>
+								<li><a href="#standards.variables">Variables</a></li>
+								<li><a href="#standards.comments">Comments</a></li>
+								<li><a href="#standards.brackets">Brackets</a></li>
+							</ol>
+						</li>
+						<li>
+							<a href="#code">Code</a>
+							<ol>
+								<li><a href="">Tokens</a></li>
+								<li><a href="">Switch</a></li>
+								<li><a href="">SQL</a></li>
+							</ol>
+						</li>
+						<li>
+							<a href="">Optimisation</a>
+						</li>
+						<li>
+							<a href="">Security</a>
+						</li>
+					</ol>
+				</div>
+			</div>
 		</div>
 
-		</div>
-	</div>
+		<hr>
 
-	<hr />
+		<h2 id="defaults">
+			<a href="#defaults">1.</a>
+			<span>Defaults</span>
+		</h2>
 
-<a name="defaults"></a><h2>1. Defaults</h2>
+		<div class="paragraph">
+			<div class="inner">
+				<div class="content">
+					<h3 id="defaults.editor_settings">
+						<a href="#defaults.editor_settings">1.1</a>
+						<span>Editor settings</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+					<ul>
+						<li>
+							<strong>Indentation:</strong>
+							<span>Use tabs instead of spaces. Tabs width should be 4 spaces.</span>
+						</li>
+						<li>
+							<strong>Line separator:</strong>
+							<span>Files should be saved with UNIX line feeds (<samp>LF</samp>), not <samp>CRLF</samp> or <samp>CR</samp>.</span>
+						</li>
+					</ul>
 
-	<div class="paragraph">
-		<div class="inner">
-
-		<div class="content">
-
-<a name="editorsettings"></a><h3>1.i. Editor Settings</h3>
-
-	<h4>Tabs vs Spaces:</h4>
-	<p>In order to make this as simple as possible, we will be using tabs, not spaces. We enforce 4 (four) spaces for one tab - therefore you need to set your tab width within your editor to 4 spaces. Make sure that when you <strong>save</strong> the file, it's saving tabs and not spaces. This way, we can each have the code be displayed the way we like it, without breaking the layout of the actual files.</p>
-	<p>Tabs in front of lines are no problem, but having them within the text can be a problem if you do not set it to the amount of spaces every one of us uses. Here is a short example of how it should look like:</p>
-
-	<div class="codebox"><pre>
-{TAB}$mode{TAB}{TAB}= $request->variable('mode', '');
-{TAB}$search_id{TAB}= $request->variable('search_id', '');</pre>
-	</div>
-
-	<p>If entered with tabs (replace the {TAB}) both equal signs need to be on the same column.</p>
-
-	<h3>Linefeeds:</h3>
-	<p>Ensure that your editor is saving files in the UNIX (LF) line ending format. This means that lines are terminated with a newline, not with Windows Line endings (CR/LF combo) as they are on Win32 or Classic Mac (CR) Line endings. Any decent editor should be able to do this, but it might not always be the default setting. Know your editor. If you want advice for an editor for your Operating System, just ask one of the developers. Some of them do their editing on Win32.</p>
-
-	<a name="fileheader"></a><h3>1.ii. File Layout</h3>
-
-	<h4>Standard header for new files:</h4>
-	<p>This template of the header must be included at the start of all phpBB files: </p>
-
-	<div class="codebox"><pre>
+					<h3 id="defaults.file_layout">
+						<a href="#defaults.file_layout">1.2</a>
+						<span>File layout</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+					<div class="inner">
+						<div class="column1">
+							<ul>
+								<li>
+									<strong>New line at end of file:</strong>
+									<span>All files should end with a <em>(empty)</em> new line.</span>
+								</li>
+								<li>
+									<strong>No PHP closing tag:</strong>
+									<span>Files containing only PHP code, should not have the PHP closing tag <samp>?></samp> at the end of the file.</span>
+								</li>
+								<li>
+									<strong>File header:</strong>
+									<span>All files should have the header documentation included at the start of the file.</span>
+								</li>
+							</ul>
+						</div>
+						<div class="column2">
+							<div class="codebox">
+								<pre class="php">
+&lt;?php
 /**
-*
-* This file is part of the phpBB Forum Software package.
-*
-* @copyright (c) phpBB Limited &lt;https://www.phpbb.com&gt;
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-* For full copyright and license information, please see
-* the docs/CREDITS.txt file.
-*
-*/</pre>
-	</div>
+ *
+ * This file is part of the phpBB Forum Software package.
+ *
+ * @copyright (c) phpBB Limited &lt;https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ * For full copyright and license information, please see
+ * the docs/CREDITS.txt file.
+ *
+ */
+</pre>
+							</div>
+						</div>
+					</div>
 
-	<p>Please see the <a href="#locations">File Locations section</a> for the correct package name.</p>
+					<h3 id="defaults.special_constants">
+						<a href="#defaults.special_constants">1.3</a>
+						<span>Special constants</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+					<p>There are some special constants which will alter phpBB's internal functionality.</p>
 
-	<h4>PHP closing tags</h4>
+					<table>
+						<tbody>
+							<tr><td><code>PHPBB_ADMIN_PATH</code></td><td>Overwrite $phpbb_admin_path</td></tr>
+							<tr><td><code>PHPBB_ROOT_PATH</code></td><td>Overwrite $phpbb_root_path</td></tr>
+							<tr><td><code>PHPBB_MSG_HANDLER</code></td><td>Overwrite message handler</td></tr>
+							<tr><td><code>PHPBB_DB_NEW_LINK</code></td><td>Overwrite new_link parameter for sql_connect</td></tr>
+							<tr><td><code>PHPBB_ACM_MEMCACHED_PORT</code></td><td>overwrite memcached port, default is 11211</td></tr>
+							<tr><td><code>PHPBB_ACM_MEMCACHED_COMPRESS</code></td><td>overwrite memcached compress setting, default is disabled</td></tr>
+							<tr><td><code>PHPBB_ACM_MEMCACHED_HOST</code></td><td>overwrite memcached host name, default is localhost</td></tr>
+							<tr><td><code>PHPBB_ACM_REDIS_HOST</code></td><td>Overwrite redis host name, default is localhost</td></tr>
+							<tr><td><code>PHPBB_ACM_REDIS_PORT</code></td><td>Overwrite redis port, default is 6379</td></tr>
+							<tr><td><code>PHPBB_ACM_REDIS_PASSWORD</code></td><td>Overwrite redis password, default is empty</td></tr>
+							<tr><td><code>PHPBB_ACM_REDIS_DB</code></td><td>Overwrite redis default database</td></tr>
+							<tr><td><code>PHPBB_QA</code></td><td>Set board to QA-Mode, which means the updater also checks for RC-releases</td></tr>
+							<tr><td><code>PHPBB_DISABLE_CONFIG_CHECK</code></td><td>Disable ACP config.php writable check</td></tr>
+							<tr><td><code>PHPBB_USE_BOARD_URL_PATH</code></td><td>Use generate_board_url() for image paths instead of $phpbb_root_path</td></tr>
+						</tbody>
+					</table>
 
-	<p>A file containg only PHP code should not end with the optional PHP closing tag <strong>?&gt;</strong> to avoid issues with whitespace following it.</p>
+					<h4 id="defaults.special_constants.phpbb_use_board_url">
+						<a href="#defaults.special_constants.phpbb_use_board_url">1.3.1</a>
+						<span>PHPBB_USE_BOARD_URL</span>
+					</h4>
+					<p>
+						If the <code>PHPBB_USE_BOARD_URL_PATH</code> constant is set to <code>true</code>, phpBB uses <code>generate_board_url()</code> on all instances where web-accessible images are loaded.
+						<br>The <code>generate_board_url</code> function will return the board's absolute url with the script path included.
+						<br>The exact locations are:
+					</p>
 
-	<h4>Newline at end of file</h4>
+					<ul>
+						<li>/phpbb/user.php - \phpbb\user::img()</li>
+						<li>/includes/functions_content.php - smiley_text()</li>
+					</ul>
 
-	<p>All files should end in a newline so the last line does not appear as modified in diffs, when a line is appended to the file.</p>
+					<p>Path locations for the following template variables are affected by this too:</p>
 
-	<h4>Files containing inline code:</h4>
+					<table>
+						<tbody>
+							<tr><td><code>{{ T_ASSETS_PATH}} </code></td><td>assets <em>(non-style specific, static resources)</em></td></tr>
+							<tr><td><code>{{ T_THEME_PATH}} </code></td><td><samp>styles/xxx/theme</samp></td></tr>
+							<tr><td><code>{{ T_TEMPLATE_PATH}} </code></td><td><samp>styles/xxx/template</samp></td></tr>
+							<tr><td><code>{{ T_SUPER_TEMPLATE_PATH}} </code></td><td><samp>styles/xxx/template</samp></td></tr>
+							<tr><td><code>{{ T_IMAGES_PATH}} </code></td><td><samp>images/</samp></td></tr>
+							<tr><td><code>{{ T_SMILIES_PATH}} </code></td><td><samp>$config['smilies_path']/</samp></td></tr>
+							<tr><td><code>{{ T_AVATAR_PATH}} </code></td><td><samp>$config['avatar_path']/</samp></td></tr>
+							<tr><td><code>{{ T_AVATAR_GALLERY_PATH}} </code></td><td><samp>$config['avatar_gallery_path']/</samp></td></tr>
+							<tr><td><code>{{ T_ICONS_PATH}} </code></td><td><samp>$config['icons_path']/</samp></td></tr>
+							<tr><td><code>{{ T_RANKS_PATH}} </code></td><td><samp>$config['ranks_path']/</samp></td></tr>
+							<tr><td><code>{{ T_UPLOAD_PATH}} </code></td><td><samp>$config['upload_path']/</samp></td></tr>
+							<tr><td><code>{{ T_STYLESHEET_LINK}} </code></td><td><samp>styles/xxx/theme/stylesheet.css</samp></td></tr>
+							<tr><td><code>{{ BOARD_URL}} </code></td><td>for the board url + script path</td></tr>
+						</tbody>
+					</table>
 
-	<p>For those files you have to put an empty comment directly after the header to prevent the documentor assigning the header to the first code element found.</p>
-
-	<div class="codebox"><pre>
-/**
-* {HEADER}
-*/
-
-/**
-*/
-{CODE}</pre>
-	</div>
-
-	<h4>Files containing only functions:</h4>
-
-	<p>Do not forget to comment the functions (especially the first function following the header). Each function should have at least a comment of what this function does. For more complex functions it is recommended to document the parameters too.</p>
-
-	<h4>Files containing only classes:</h4>
-
-	<p>Do not forget to comment the class. Classes need a separate @package definition, it is the same as the header package name. Apart from this special case the above statement for files containing only functions needs to be applied to classes and it's methods too.</p>
-
-	<h4>Code following the header but only functions/classes file:</h4>
-
-	<p>If this case is true, the best method to avoid documentation confusions is adding an ignore command, for example:</p>
-
-	<div class="codebox"><pre>
-/**
-* {HEADER}
-*/
-
-/**
-* @ignore
-*/
-Small code snipped, mostly one or two defines or an if statement
-
-/**
-* {DOCUMENTATION}
-*/
-class ...</pre>
-	</div>
-
-	<a name="locations"></a><h3>1.iii. File Locations</h3>
-
-	<p>Functions used by more than one page should be placed in functions.php, functions specific to one page should be placed on that page (at the bottom) or within the relevant sections functions file. Some files in <code>/includes</code> are holding functions responsible for special sections, for example uploading files, displaying &quot;things&quot;, user related functions and so forth.</p>
-
-	<p>The following packages are defined, and related new features/functions should be placed within the mentioned files/locations, as well as specifying the correct package name. The package names are bold within this list:</p>
-
-	<ul>
-		<li><strong>phpBB3</strong><br />Core files and all files not assigned to a separate package</li>
-		<li><strong>acm</strong><br /><code>/phpbb/cache</code><br />Cache System</li>
-		<li><strong>acp</strong><br /><code>/adm</code>, <code>/includes/acp</code>, <code>/includes/functions_admin.php</code><br />Administration Control Panel</li>
-		<li><strong>dbal</strong><br /><code>/phpbb/db</code>, <code>/includes/db</code><br />Database Abstraction Layer.
-			<ul>
-				<li><code>/phpbb/db/driver/</code><br />Database Abstraction Layer classes</li>
-				<li><code>/phpbb/db/migration/</code><br />Migrations are used for updating the database from one release to another</li>
-			</ul>
-		</li>
-		<li><strong>diff</strong><br /><code>/includes/diff</code><br />Diff Engine</li>
-		<li><strong>docs</strong><br /><code>/docs</code><br />phpBB Documentation</li>
-		<li><strong>images</strong><br /><code>/images</code><br />All global images not connected to styles</li>
-		<li><strong>install</strong><br /><code>/install</code><br />Installation System</li>
-		<li><strong>language</strong><br /><code>/language</code><br />All language files</li>
-		<li><strong>login</strong><br /><code>/phpbb/auth</code><br />Login Authentication Plugins</li>
-		<li><strong>VC</strong><br /><code>/includes/captcha</code><br />CAPTCHA</li>
-		<li><strong>mcp</strong><br /><code>mcp.php</code>, <code>/includes/mcp</code>, <code>report.php</code><br />Moderator Control Panel</li>
-		<li><strong>ucp</strong><br /><code>ucp.php</code>, <code>/includes/ucp</code><br />User Control Panel</li>
-		<li><strong>utf</strong><br /><code>/includes/utf</code><br />UTF8-related functions/classes</li>
-		<li><strong>search</strong><br /><code>/phpbb/search</code>, <code>search.php</code><br />Search System</li>
-		<li><strong>styles</strong><br /><code>/styles</code><br />phpBB Styles/Templates/Themes</li>
-	</ul>
-
-	<a name="constants"></a><h3>1.iv. Special Constants</h3>
-
-	<p>There are some special constants application developers are able to utilize to bend some of phpBB's internal functionality to suit their needs.</p>
-
-	<div class="codebox"><pre>
-PHPBB_MSG_HANDLER          (overwrite message handler)
-PHPBB_DB_NEW_LINK          (overwrite new_link parameter for sql_connect)
-PHPBB_ROOT_PATH            (overwrite $phpbb_root_path)
-PHPBB_ADMIN_PATH           (overwrite $phpbb_admin_path)
-PHPBB_USE_BOARD_URL_PATH   (use generate_board_url() for image paths instead of $phpbb_root_path)
-PHPBB_DISABLE_ACP_EDITOR   (disable ACP style editor for templates)
-PHPBB_DISABLE_CONFIG_CHECK (disable ACP config.php writeable check)
-
-PHPBB_ACM_MEMCACHED_PORT     (overwrite memcached port, default is 11211)
-PHPBB_ACM_MEMCACHED_COMPRESS (overwrite memcached compress setting, default is disabled)
-PHPBB_ACM_MEMCACHED_HOST     (overwrite memcached host name, default is localhost)
-
-PHPBB_ACM_REDIS_HOST        (overwrite redis host name, default is localhost)
-PHPBB_ACM_REDIS_PORT        (overwrite redis port, default is 6379)
-PHPBB_ACM_REDIS_PASSWORD    (overwrite redis password, default is empty)
-PHPBB_ACM_REDIS_DB          (overwrite redis default database)
-
-PHPBB_QA                   (Set board to QA-Mode, which means the updater also checks for RC-releases)
-</pre></div>
-
-<h4>PHPBB_USE_BOARD_URL_PATH</h4>
-
-<p>If the <code>PHPBB_USE_BOARD_URL_PATH</code> constant is set to true, phpBB uses generate_board_url() (this will return the boards url with the script path included) on all instances where web-accessible images are loaded. The exact locations are:</p>
-
-<ul>
-	<li>/phpbb/user.php - \phpbb\user::img()</li>
-	<li>/includes/functions_content.php - smiley_text()</li>
-</ul>
-
-<p>Path locations for the following template variables are affected by this too:</p>
-
-<ul>
-	<li>{T_ASSETS_PATH} - assets (non-style specific, static resources)</li>
-	<li>{T_THEME_PATH} - styles/xxx/theme</li>
-	<li>{T_TEMPLATE_PATH} - styles/xxx/template</li>
-	<li>{T_SUPER_TEMPLATE_PATH} - styles/xxx/template</li>
-	<li>{T_IMAGES_PATH} - images/</li>
-	<li>{T_SMILIES_PATH} - $config['smilies_path']/</li>
-	<li>{T_AVATAR_PATH} - $config['avatar_path']/</li>
-	<li>{T_AVATAR_GALLERY_PATH} - $config['avatar_gallery_path']/</li>
-	<li>{T_ICONS_PATH} - $config['icons_path']/</li>
-	<li>{T_RANKS_PATH} - $config['ranks_path']/</li>
-	<li>{T_UPLOAD_PATH} - $config['upload_path']/</li>
-	<li>{T_STYLESHEET_LINK} - styles/xxx/theme/stylesheet.css</li>
-	<li>New template variable {BOARD_URL} for the board url + script path.</li>
-</ul>
-
+					<h3 id="defaults.special_naming">
+						<a href="#defaults.special_naming">1.4</a>
+						<span>Special naming</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+					<ul>
+						<li>
+							<strong>Email</strong>
+							<span>is the term we use, without a dash “<kbd>-</kbd>” between “<kbd>e</kbd>” and “<kbd>m</kbd>”.</span>
+						</li>
+						<li>
+							<strong>Smilies</strong>
+							<span>is the plural form of a smiley.</span>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 
-		<div class="back2top"><a href="#wrap" class="top">Back to Top</a></div>
+		<hr>
 
+		<h2 id="standards">
+			<a href="#standards">2.</a>
+			<span>Standards</span>
+		</h2>
+
+		<div class="paragraph">
+			<div class="inner">
+				<div class="content">
+					<h3 id="standards.routing">
+						<a href="#standards.routing">2.1</a>
+						<span>Routing</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+
+					<div class="inner">
+						<div class="column1">
+							<h4 id="standards.routing.files">
+								<a href="#standards.routing.files">2.1.1</a>
+								<span>Routing files</span>
+							</h4>
+							<ul>
+								<li>
+									Routes should be declared in a separate file and imported into <code>routing.yml</code>
+									<br>The separate file should be named after the namespace, eg. <code>routing_feed.yml</code>
+								</li>
+								<li>
+									If multiple files are required, they should go in a separate directory.
+									<br>The separate directory should be named after the namespace, eg. <code>routing/report/routing_*.yml</code>
+								</li>
+							</ul>
+
+							<h4 id="standards.routing.names">
+								<a href="#standards.routing.names">2.1.2</a>
+								<span>Route names</span>
+							</h4>
+							<ul>
+								<li>All route names should be lowercase.</li>
+								<li>All route names should be prefixed with <code>phpbb_</code>
+								<li>Stay as close as possible to the full class the route leads to.</li>
+								<li>All route resources should be suffixed with <code>_routing</code></li>
+							</ul>
+
+							<h4 id="standards.routing.order">
+								<a href="#standards.routing.order">2.1.3</a>
+								<span>Route order</span>
+							</h4>
+							<ul>
+								<li>Routes resources should be ordered alphabetically.</li>
+								<li>
+									Routes can not have a specific order sometimes, use your best judgement.
+									<br> For example top levels first. Or pagination after base route.
+								</li>
+							</ul>
+
+							<h4 id="standards.routing.parameters">
+								<a href="#standards.routing.parameters">2.1.4</a>
+								<span>Route parameters</span>
+							</h4>
+							<ul>
+								<li>Parameters should follow the provided order.</li>
+								<li>Parameters should not be indented, just a single space after the colon</li>
+								<li>Strings starting with <code>@</code>, <code>%</code>, <code>`</code>, <code>|</code> or <code>></code> should be single quoted.</li>
+								<li>Most top level arrays should each be on a new line.</li>
+								<li>Inline associative arrays should have have surrounding spaces.</li>
+							</ul>
+						</div>
+						<div class="column2">
+							<div class="codebox">
+								<pre class="yaml">
+phpbb_feed_routing:
+    resource: routing_feed.yml
+    prefix: /feed
+</pre>
+							</div>
+							<div class="codebox">
+								<pre class="yaml">
+phpbb_feed_forums:
+    path: /forums	# Do not use pattern
+    defaults:
+        _controller: phpbb.feed.controller:forums
+
+phpbb_feed_topics:
+    path: /topics
+    defaults:
+        _controller: phpbb.feed.controller:topics
+
+phpbb_feed_example_order:
+	path: /example/{order}/{id}
+	methods: [GET, POST]
+	defaults:
+	    _controller: some.controller:function
+		order: 'parameters'
+		id: 0
+	requirements:
+		order: \w+
+	    id: \d+
+</pre>
+							</div>
+						</div>
+					</div>
+
+					<h3 id="standards.services">
+						<a href="#standards.services">2.2</a>
+						<span>Services</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+
+					<div class="inner">
+						<div class="column1">
+							<h4 id="standards.services.files">
+								<a href="#standards.services.files">2.2.1</a>
+								<span>Service files</span>
+							</h4>
+							<ul>
+								<li>Services should be declared in a separate file and imported into <code>services.yml</code>
+									<br>The separate file should be name after the namespace, eg. <code>services_template.yml</code></li>
+								<li>If multiple files are required, they should go in a separate directory.
+									<br>The separate directory should be named after the namespace, eg. <code>services/template/services_*.yml</code></li>
+							</ul>
+
+							<h4 id="standards.services.names">
+								<a href="#standards.services.names">2.2.2</a>
+								<span>Service names</span>
+							</h4>
+							<ul>
+								<li>All service names should be lowercase.</li>
+								<li>Use the full class, omit <code>\phpbb\</code> and use dots as separator.</li>
+								<li>When the class name is the same as the initial directory, omit the class.</li>
+								<li>Service collections should be suffixed with <code>_collection</code></li>
+							</ul>
+
+							<h4 id="standards.services.order">
+								<a href="#standards.services.order">2.2.3</a>
+								<span>Service order</span>
+							</h4>
+							<ul>
+								<li>Imports first, then parameters, then services, then service collections.</li>
+								<li>Imports, parameters and services should be ordered alphabetically.</li>
+							</ul>
+
+							<h4 id="standards.services.parameters">
+								<a href="#standards.services.parameters">2.2.4</a>
+								<span>Service parameters</span>
+							</h4>
+							<ul>
+								<li>Parameters should follow the provided order.</li>
+								<li>Parameters should not be indented, just a single space after the colon</li>
+								<li>Class value should not have a leading backslash</li>
+								<li>Strings starting with <code>@</code>, <code>%</code>, <code>`</code>, <code>|</code> or <code>></code> should be single quoted.</li>
+								<li>Top level arrays should each be on a new line.</li>
+								<li>Inline associative arrays should have have surrounding spaces.</li>
+								<li>Deprecated message should include version and alternative.</li>
+							</ul>
+						</div>
+
+						<div class="column2">
+							<div class="codebox">
+								<pre class="yaml">
+services:
+    # Regular service name
+    avatar.manager:
+        class: \phpbb\avatar\manager
+
+    # Regular service name with underscore_
+    console.exception_subscriber:
+        class: phpbb\console\exception_subscriber
+
+    # When the class name is the same as the initial directory (example 1)
+    config:
+        class: phpbb\config\config
+
+    # When the class name is the same as the initial directory (example 2)
+    cron.controller:
+        class: phpbb\cron\controller\cron
+
+    # Service collection following regular convention, suffixed with _collection
+    notification.type_collection:
+        class: phpbb\di\service_collection
+
+    # Order of service parameters
+    example_order:
+        # Deprecation message with 'since', 'removed' and 'use'
+        deprecated: 'The "%service_id%" is deprecated since 3.3.1 and will be removed in 4.0.0, use "parameter_order" instead.'
+        alias: sample.order
+        abstract: false
+        synthetic: false
+        class: example\order\class			# No leading backslash
+        shared: false						# Do not use 'scope: prototype'
+        public: true
+        parent:
+        configurator:
+        factory:
+        arguments:
+            - '@avatar.manager'				# Top level array on new line
+            - '@request'					# Single quote all strings starting with @, %, `, | or >
+        calls:
+            - ['set_config', ['@config']]	# Non-top level arrays may be inline
+        tags:
+            - { name: notification.type }	# Inline associative array with surrounding spaces
+</pre>
+							</div>
+						</div>
+					</div>
+
+					<h3 id="standards.classes">
+						<a href="#standards.classes">2.3</a>
+						<span>Classes</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+
+					<h4 id="standards.classes.location">
+						<a href="#standards.classes.location">2.3.1</a>
+						<span>Location</span>
+					</h4>
+					<ul>
+						<li>Classes should be in a subdirectory of <code>phpbb/</code></li>
+						<li>Directories should not contain underscores: <code>_</code></li>
+						<li>Directories should typically be singular noun, eg. <code>type</code> and not <code>types</code></li>
+					</ul>
+
+					<div class="inner">
+						<div class="column1">
+							<h4 id="standards.classes.declaration">
+								<a href="#standards.classes.declaration">2.3.2</a>
+								<span>Declaration</span>
+							</h4>
+							<ul>
+								<li>Class names should use <samp>snake_case</samp>.</li>
+								<li>Document the class before the declaration.</li>
+								<li>Declare only one class per file.</li>
+								<li>Declare inheritance and implemented interface on the same line as the class name.</li>
+								<li>
+									Import non-<samp>phpbb</samp> classes
+									<ul>
+										<li><code>use</code> statements come after the namespace and before the class.</li>
+										<li>Classes that are outside the <code>phpbb</code> namespace.</li>
+										<li>Classes should not have a leading backslash.</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+						<div class="column2">
+							<div class="codebox">
+								<pre class="php">
+namespace phpbb\guidelines;
+
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * Class documentation.
+ */
+abstract class coding extends base implements guidelines_interface
+{
+	// ...
+}
+
+</pre>
+							</div>
+						</div>
+					</div>
+
+					<div class="inner">
+						<div class="column1">
+							<h4 id="standards.classes.visibility">
+								<a href="#standards.classes.visibility">2.3.3</a>
+								<span>Visibility</span>
+							</h4>
+							<ul>
+								<li>All properties and methods should have a visibility keyword.</li>
+								<li>
+									<strong>public:</strong>
+									<span>So it can be accessed by anyone.</span>
+								</li>
+								<li>
+									<strong>protected:</strong>
+									<span>So it can be accessed by this class and inheriting & parent classes.</span>
+								</li>
+								<li>
+									<strong>private:</strong>
+									<span>So it can be accessed by this class.</span>
+								</li>
+								<li>
+									<strong>var:</strong>
+									<span>Should not be used.</span>
+								</li>
+							</ul>
+
+							<h4 id="standards.classes.properties">
+								<a href="#standards.classes.properties">2.3.4</a>
+								<span>Properties</span>
+							</h4>
+							<ul>
+								<li>Class properties should be declared before class methods.</li>
+								<li>Properties should have the same order as in the constructor.</li>
+								<li>Non-injected properties should come after injected properties.</li>
+								<li>
+									Properties should have a single line docblock.
+									<ul>
+										<li>It should only contain the type hint.</li>
+										<li>If it is not a class, it should have a short description.</li>
+									</ul>
+								</li>
+							</ul>
+
+							<h4 id="standards.classes.constructor">
+								<a href="#standards.classes.constructor">2.3.5</a>
+								<span>Constructor</span>
+							</h4>
+							<ul>
+								<li>Either all arguments are on the same line.</li>
+								<li>
+									Or all arguments are on a separate line.
+									<ul>
+										<li>Opening <code>(</code> is right after <code>__construct</code></li>
+										<li>Closing <code>)</code> is on a separate line.</li>
+									</ul>
+								</li>
+								<li>Type hint all services and parameters when possible.</li>
+								<li>
+									Arguments should be ordered by the following:
+									<ul>
+										<li>Services should be ordered alphabetically.</li>
+										<li>Services come before parameters.</li>
+										<li>
+											Parameters should be grouped.
+											<ul>
+												<li>Path parameters (<code>$admin_path</code>, <code>$root_path</code>, <code>$php_ext</code>) should be together.</li>
+												<li>Table parameters (<code>$posts_table</code>, <code>$users_table</code>, etc..) should be together.</li>
+											</ul>
+										</li>
+										<li>Path parameters come before table parameters.</li>
+										<li>Path parameters should follow <code>$admin_path</code> &raquo; <code>$root_path</code> &raquo; <code>$web_path</code> &raquo; <code>$php_ext</code></li>
+										<li>Table parameters should be ordered alphabetically.</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+						<div class="column2">
+							<div class="codebox">
+								<pre class="php">
+/** @var \phpbb\language\language */
+protected $language;
+
+/** @var \phpbb\template\template */
+protected $template;
+
+/** @var string phpBB root path */
+protected $root_path;
+
+/** @var string php File extension */
+protected $php_ext;
+
+/** @var array phpBB tables */
+protected $tables;
+
+/** @var bool Non-injected property */
+protected $property;
+
+/**
+ * Constructor.
+ *
+ * @param \phpbb\language\language $language  Language object
+ * @param \phpbb\template\template $template  Template object
+ * @param string                   $root_path phpBB root path
+ * @param string                   $php_ext   php File extension
+ * @param array                    $tables    phpBB tables
+ */
+public function __construct(
+	\phpbb\language\language $language,
+	\phpbb\template\template $template,
+	string $root_path,
+	string $php_ext,
+	array $tables
+)
+{
+	// ...
+}
+</pre>
+							</div>
+						</div>
+					</div>
+
+
+					<h3 id="standards.interfaces">
+						<a href="#standards.interfaces">2.4</a>
+						<span>Interfaces</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+					<ul>
+						<li>Names should be suffixed with <code>_interface</code></li>
+						<li>Class constants should be declared in the interface.</li>
+					</ul>
+
+					<h3 id="standards.exceptions">
+						<a href="#standards.exceptions">2.5</a>
+						<span>Exceptions</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+					<ul>
+						<li>Names should be suffixed with <code>_exception</code></li>
+						<li>
+							Exceptions should go in their own, separate directory.
+							<ul>
+								<li>Either as <code>/phpbb/exception/*_exception.php</code></li>
+								<li>Or as <code>/phpbb/namespace/exception/*_exception.php</code></li>
+							</ul>
+						</li>
+						<li>Exception directory names should take the singular form: <code>exception</code></li>
+					</ul>
+
+					<h3 id="standards.functions">
+						<a href="#standards.functions">2.6</a>
+						<span>Functions</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+					<div class="inner">
+						<div class="column1">
+							<h4 id="standards.functions.names">
+								<a href="#standards.functions.names">2.6.1</a>
+								<span>Function names</span>
+							</h4>
+							<ul>
+								<li>Should be <samp>snake_case</samp>.</li>
+								<li>Should be short but concise.</li>
+								<li>
+									Commonly start with a verb followed by an object.
+									<ul>
+										<li><code>get_name</code></li>
+										<li><code>set_error_prefix</code></li>
+										<li><code>print_login_status</code></li>
+									</ul>
+								</li>
+							</ul>
+
+							<h4 id="standards.functions.order">
+								<a href="#standards.functions.order">2.6.2</a>
+								<span>Function order</span>
+							</h4>
+							<ul>
+								<li>
+									<code>construct</code>
+									Must come before all other functions.
+								</li>
+								<li>
+									<code>abstract</code>
+									<span>Must be implemented by inheriting classes.</span>
+								</li>
+								<li>
+									<code>public</code>
+									<span>Can be accessed by any other classes.</span>
+								</li>
+								<li>
+									<code>protected</code>
+									<span>Can be accessed by inheriting or parent classes.</span>
+								</li>
+								<li>
+									<code>private</code>
+									<span>Can only be accessed by this class itself.</span>
+								</li>
+							</ul>
+
+							<h4 id="standards.functions.keyword_order">
+								<a href="#standards.functions.keyword_order">2.6.3</a>
+								<span>Keyword order</span>
+							</h4>
+							<ul>
+								<li><code>abstract</code>, <code>final</code> and <code>static</code> come before the visibility.</li>
+								<li><code>abstract</code> comes before <code>static</code></li>
+							</ul>
+
+							<h4 id="standards.functions.return_type_hinting">
+								<a href="#standards.functions.return_type_hinting">2.6.4</a>
+								<span>Return type hinting</span>
+							</h4>
+							<ul>
+								<li>Should be done as much as possible.</li>
+								<li>There should be no space before the colon.</li>
+								<li>There should be a space after the colon.</li>
+								<li>Only <a href="https://www.php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration.types" target="_blank">PHP valid types</a> should be used.</li>
+								<li>Only one type should <em>(and can)</em> be hinted.</li>
+							</ul>
+						</div>
+						<div class="column2">
+							<div class="codebox">
+								<pre class="php">
+abstract static public function get_subsection_name(): string;
+
+static public function get_name(): string
+{
+	return 'coding';
+}
+
+public function get_subsections(string $section): array
+{
+	// ...
+}
+
+protected function generate_section(array $row): array
+{
+	// ...
+}
+
+private function is_subsection_available(string $subsection): bool
+{
+	// ...
+}
+</pre>
+							</div>
+						</div>
+					</div>
+
+					<h3 id="standards.variables">
+						<a href="#standards.variables">2.7</a>
+						<span>Variables</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+					<div class="inner">
+						<div class="column1">
+							<h4 id="standards.variables.names">
+								<a href="#standards.variables.names">2.7.1</a>
+								<span>Variable names</span>
+							</h4>
+							<ul>
+								<li>Should be <samp>snake_case</samp>.</li>
+								<li>Should be short but concise.</li>
+								<li>
+									Only allowed one-letter variable are loop indices.
+									<ul>
+										<li>Not-nested loops should use <code>$i</code></li>
+										<li>First nested loop should use <code>$j</code></li>
+										<li>Second nested loop should use <code>$k</code>, etc..</li>
+									</ul>
+								</li>
+							</ul>
+
+							<h4 id="standards.variables.array">
+								<a href="#standars.variables.array">2.7.2</a>
+								<span>Array</span>
+							</h4>
+							<ul>
+								<li>Should use new array syntax: <code>['a', 'b']</code></li>
+								<li>Commas after every (also the last) array element if they are on separate lines.</li>
+								<li>Array keys should not be literal strings, quote the strings instead.</li>
+							</ul>
+
+							<h4 id="standards.variables.boolean">
+								<a href="#standards.variables.boolean">2.7.3</a>
+								<span>Boolean</span>
+							</h4>
+							<ul>
+								<li>Lowercase booleans should be used: <code>true</code> and <code>false</code></li>
+							</ul>
+
+							<h4 id="standards.variables.null">
+								<a href="#standards.variables.null">2.7.4</a>
+								<span>Null</span>
+							</h4>
+							<ul>
+								<li>Lowercase null should be used: <code>null</code></li>
+							</ul>
+
+							<h4 id="standards.variables.string">
+								<a href="#standards.variables.string">2.7.5</a>
+								<span>String</span>
+							</h4>
+							<ul>
+								<li>Strings should be single quoted as much as possible.</li>
+								<li>Strings containing a single quote should be double quoted.</li>
+								<li>
+									Strings requiring variable substitution should be double quoted.
+									<ul>
+										<li>Use <code>{$variable}</code> at all times.</li>
+										<li>Do not use <code>${variable}</code></li>
+										<li>Do note use <code>$variable</code></li>
+									</ul>
+								</li>
+								<li>String concatenation is done with a dot surrounded by spaces: <code>'' . ''</code></li>
+								<li>String concatenation should not be used when joining 4 strings or more.</li>
+							</ul>
+						</div>
+						<div class="column2">
+							<div class="codebox">
+								<pre class="php">
+// Array examples
+$modes		= ['overview', 'settings', 'logs'];
+$variables	= [
+	'ERRORS'	=> $errors,
+	'ACTION'	=> $action,
+];
+
+// Boolean and null examples
+$object			= null;
+$is_authed		= true;
+$is_available	= false;
+
+// String examples
+$sql_select	= 'SELECT user_id, username FROM ' . $this->tables['users'];
+$sql_where	= "WHERE username_clean = '" . $db->sql_escape($username_clean) . "'";
+$sql		= $sql_select . ' ' . $sql_where;
+
+$warn_msg	= 'The user (' . $username . ') has been warned.';
+$warn_msg	= "The user ({$username}) has been warned.";
+</pre>
+							</div>
+						</div>
+					</div>
+
+					<h3 id="standards.comments">
+						<a href="#standards.comments">2.8</a>
+						<span>Comments</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+					<div class="inner">
+						<div class="column1">
+							<h4 id="standards.comments.docblock">
+								<a href="#standards.comments.docblock">2.8.1</a>
+								<span>Docblock</span>
+							</h4>
+							<ul>
+								<li>First line should start with double asterisks: <code>/**</code></li>
+								<li>All other lines should be indented with an additional space.</li>
+								<li>Additional indentation and outlining should be done with spaces.</li>
+								<li>Tags (<code>@param</code>, <code>@return</code>, etc..) are followed by a single space.</li>
+								<li>Tags should follow the provided order.</li>
+								<li>Empty line before <code>@return</code> and <code>@throws</code> are optional.</li>
+								<li>Empty line before <code>@deprecated</code> is mandatory.</li>
+								<li>All <code>@param</code> tags should be in order of the arguments</li>
+								<li>When type hinting includes <code>null</code>, always place it at the end.</li>
+								<li>Only used <code>mixed</code> for type hinting, when three or more types are possible.</li>
+							</ul>
+
+							<h4 id="standards.comments.in-code">
+								<a href="#standards.comments.in-code">2.8.2</a>
+								<span>In-code</span>
+							</h4>
+							<ul>
+								<li><code>//</code> should be used for 1 or 2 line comments.</li>
+								<li><code>/** ... *</code> should not be used for 1 or 2 line comments.</li>
+								<li>
+									<code>/** ... *</code> should be used when type hinting a variable.
+									<br>Use the canonical order: <code>@var type $variable</code>
+								</li>
+								<li>
+									<code>/** ... */</code> should be used for 3+ line block comments.
+									<br>In-code block comments should follow the guidelines for <a href="#standards.comments.docblock">docblocks</a>.
+								</li>
+							</ul>
+						</div>
+						<div class="column2">
+							<div class="codebox">
+								<pre class="php">
+/**
+ * One-line introduction followed by a full-stop.
+ *
+ * An optional paragraph giving a more details explanation.
+ * An optional paragraph giving a more details explanation.
+ * @see is part of the paragraph
+ * @example is part of the paragraph
+ *
+ * @param array  $data    The data array
+ * @param string $name    The name string
+ *
+ * @throws http_exception When something goes wrong
+ *
+ * @return bool           Indicator of success
+ *
+ * @deprecated 3.2.1      Use this other function instead
+ */
+public function check_availability(array $data, string $name): bool
+{
+	/** @var \phpbb\notification\type\type_interface $type */
+	$type = $this->notification_manager->load_object($data['notification_type']);
+
+	// Set initial notification data
+	$type->set_initial_data($data);
+
+	return (bool) $type->is_available();
+}
+</pre>
+							</div>
+						</div>
+					</div>
+
+					<h3 id="standards.brackets">
+						<a href="#standards.brackets">2.9</a>
+						<span>Brackets</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+					<div class="inner">
+						<div class="column1">
+							<ul>
+								<li>Always include the brackets (braces <code>{}</code>, brackets <code>[]</code> and parentheses<code>()</code>).</li>
+								<li>Open and closing brackets should always have the same indentation.</li>
+								<li>Braces <code>{}</code> always go alone on a separate line</li>
+								<li>Either brackets <code>[]</code> and parentheses <code>()</code> open and close on the same line.</li>
+								<li>Or brackets <code>[]</code> and parentheses <code>()</code> open on the same line and close alone on a separate line.</li>
+							</ul>
+						</div>
+						<div class="column2">
+							<div class="codebox">
+								<pre class="php">
+if ($is_available === true)
+{
+	// opens and closes on the same line: if (...)
+	// Braces {} are alone on a separate line
+}
+
+if ($is_available === true
+	&& $method === 'notification.method.board'
+	&& ($name === 'notification.type.post' || $name === 'notification.type.topic')
+	&& ...
+)
+{
+	// opens on the same line: if (
+	// closes alone on a separate line: )
+}
+
+
+$array = ['a', 'b', 'c'];
+$array = [
+	// opens on the same line: [
+	// closes alone on a separate line ];
+];
+</pre>
+							</div>
+						</div>
+					</div>
+
+					<h3 id="standards.javascript">
+						<a href="#standards.javascript">2.10</a>
+						<span>JavaScript</span>
+						<a href="#wrap" class="top">Back to Top</a>
+					</h3>
+					<p>JavaScript should follow all the regular guidelines, with a few exceptions and additions:</p>
+					<div class="inner">
+						<div class="column1">
+							<ul>
+								<li>Functions and variables should use <samp>camelCase</samp>.</li>
+								<li>Opening and closing braces <code>{}</code> do not go alone on a separate line.</li>
+								<li>Use <code>typeof</code> to test if a variable is not <code>undefined</code></li>
+								<li>The <code>radix</code> should always be provided for <code>parseInt()</code>, defaults to 10.</li>
+								<li>Variable substitution in strings can use templating literals: <code>`${variable}`</code></li>
+								<li>
+									<code>var</code> should be used instead of <code>let</code>.
+									<br><em><code>let</code> currently makes <abbr title="Continuous Integration">CI</abbr> tests fail.</em>
+								</li>
+							</ul>
+						</div>
+						<div class="column2">
+							<div class="codebox">
+								<pre class="js">
+function showBertie() {
+	var size = 0,
+		name = 'Bertie';
+
+	if (typeof size !== 'undefined') {
+		size = parseInt(size, 10);
+	} else if (name !== 'Bertie') {
+		var text = `${name} is the only name possible!`;
+	} else {
+		// ...
+	}
+}
+</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
-
-	<hr />
 
 <a name="code"></a><h2>2. Code Layout/Guidelines</h2>
-
 	<div class="paragraph">
 		<div class="inner">
+			<div class="content">
 
-		<div class="content">
-
-	<p>Please note that these guidelines apply to all php, html, javascript and css files.</p>
-
-	<a name="namingvars"></a><h3>2.i. Variable/Function/Class Naming</h3>
-
-	<p>We will not be using any form of hungarian notation in our naming conventions. Many of us believe that hungarian naming is one of the primary code obfuscation techniques currently in use.</p>
-
-	<h4>Variable Names:</h4>
-	<p>In PHP, variable names should be in all lowercase, with words separated by an underscore, example:</p>
-
-	<div class="indent">
-		<p><code>$current_user</code> is right, but <code>$currentuser</code> and <code> $currentUser</code> are not.</p>
-	</div>
-
-	<p>In JavaScript, variable names should use camel case:</p>
-
-	<div class="indent">
-		<p><code>currentUser</code> is right, but <code>currentuser</code> and <code>current_user</code> are not.</p>
-	</div>
-
-	<p>Names should be descriptive, but concise. We don't want huge sentences as our variable names, but typing an extra couple of characters is always better than wondering what exactly a certain variable is for. </p>
-
-	<h4>Loop Indices:</h4>
-	<p>The <em>only</em> situation where a one-character variable name is allowed is when it's the index for some looping construct. In this case, the index of the outer loop should always be $i. If there's a loop inside that loop, its index should be $j, followed by $k, and so on. If the loop is being indexed by some already-existing variable with a meaningful name, this guideline does not apply, example:</p>
-
-	<div class="codebox"><pre>
-for ($i = 0; $i &lt; $outer_size; $i++)
-{
-   for ($j = 0; $j &lt; $inner_size; $j++)
-   {
-      foo($i, $j);
-   }
-}</pre>
-	</div>
-
-	<h4>Function Names:</h4>
-	<p>Functions should also be named descriptively. We're not programming in C here, we don't want to write functions called things like "stristr()". Again, all lower-case names with words separated by a single underscore character in PHP, and camel caps in JavaScript. Function names should be prefixed with "phpbb_" and preferably have a verb in them somewhere. Good function names are <code>phpbb_print_login_status()</code>, <code>phpbb_get_user_data()</code>, etc. Constructor functions in JavaScript should begin with a capital letter.</p>
-
-	<h4>Function Arguments:</h4>
-	<p>Arguments are subject to the same guidelines as variable names. We don't want a bunch of functions like: <code>do_stuff($a, $b, $c)</code>. In most cases, we'd like to be able to tell how to use a function by just looking at its declaration. </p>
-
-	<h4>Class Names:</h4>
-
-	<p>Apart from following the rules for function names, all classes should meet the following conditions:</p>
-	<ul>
-		<li>Every class must be defined in a separate file.</li>
-		<li>The classes have to be located in a subdirectory of <code>phpbb/</code>.</li>
-		<li>Classnames must be namespaced with <code>\phpbb\</code> to avoid name clashes.</li>
-		<li>Class names/namespaces have to reflect the location of the file they are defined in. The namespace must be the directory in which the file is located. So the directory names must not contain any underscores, but the filename may.</li>
-		<li>Directories should typically be a singular noun (e.g. <code>dir</code> in the example below, not <code>dirs</code>.</li>
-	</ul>
-
-	<p>So given the following example directory structure you would result in the below listed lookups</p>
-	<div class="codebox"><pre>
-phpbb/
-  class_name.php
-  dir/
-    class_name.php
-      subdir/
-        class_name.php</pre>
-	</div>
-
-	<div class="codebox"><pre>
-\phpbb\class_name            - phpbb/class_name.php
-\phpbb\dir\class_name        - phpbb/dir/class_name.php
-\phpbb\dir\subdir\class_name - phpbb/dir/subdir/class_name.php</pre>
-	</div>
-
-
-	<h4>Summary:</h4>
-	<p>The basic philosophy here is to not hurt code clarity for the sake of laziness. This has to be balanced by a little bit of common sense, though; <code>phpbb_print_login_status_for_a_given_user()</code> goes too far, for example -- that function would be better named <code>phpbb_print_user_login_status()</code>, or just <code>phpbb_print_login_status()</code>.</p>
-
-	<h4>Special Namings: </h4>
-	<p>For all emoticons use the term <code>smiley</code> in singular and <code>smilies</code> in plural. For emails we use the term <code>email</code> (without dash between “e” and “m”).</p>
-
-	<a name="codelayout"></a><h3>2.ii. Code Layout</h3>
-
-	<h4>Always include the braces:</h4>
-	<p>This is another case of being too lazy to type 2 extra characters causing problems with code clarity. Even if the body of some construct is only one line long, do <em>not</em> drop the braces. Just don't, examples:</p>
-
-	<p class="bad">// These are all wrong. </p>
-
-	<div class="codebox"><pre>
-if (condition) do_stuff();
-
-if (condition)
-	do_stuff();
-
-while (condition)
-	do_stuff();
-
-for ($i = 0; $i &lt; size; $i++)
-	do_stuff($i);</pre>
-	</div>
-
-	<p class="good">// These are all right. </p>
-	<div class="codebox"><pre>
-if (condition)
-{
-	do_stuff();
-}
-
-while (condition)
-{
-	do_stuff();
-}
-
-for ($i = 0; $i &lt; size; $i++)
-{
-	do_stuff();
-}</pre>
-	</div>
-
-	<h4>Where to put the braces:</h4>
-	<p>In PHP code, braces always go on their own line. The closing brace should also always be at the same column as the corresponding opening brace, examples:</p>
-
-	<div class="codebox"><pre>
-if (condition)
-{
-	while (condition2)
-	{
-		...
-	}
-}
-else
-{
-	...
-}
-
-for ($i = 0; $i &lt; $size; $i++)
-{
-	...
-}
-
-while (condition)
-{
-	...
-}
-
-function do_stuff()
-{
-	...
-}</pre>
-	</div>
-
-	<p>In JavaScript code, braces always go on the same line:</p>
-
-	<div class="codebox"><pre>
-if (condition) {
-	while (condition2) {
-		...
-	}
-} else {
-	...
-}
-
-for (var i = 0; i &lt; size; i++) {
-	...
-}
-
-while (condition) {
-	...
-}
-
-function do_stuff() {
-	...
-}</pre>
-	</div>
 
 	<h4>Use spaces between tokens:</h4>
 	<p>This is another simple, easy step that helps keep code readable without much effort. Whenever you write an assignment, expression, etc.. Always leave <em>one</em> space between the tokens. Basically, write code as if it was English. Put spaces between variable names and operators. Don't put spaces just after an opening bracket or before a closing bracket. Don't put spaces just before a comma or a semicolon. This is best shown with a few examples, examples:</p>
@@ -500,82 +1099,6 @@ $i = ($j &lt; $size) ? 0 : 1;</pre>
 		<pre>$bool = ($i &lt; 7 &amp;&amp; ($j &lt; 8 || $k == 4));</pre>
 	</div>
 
-	<h4>Quoting strings:</h4>
-	<p>There are two different ways to quote strings in PHP - either with single quotes or with double quotes. The main difference is that the parser does variable interpolation in double-quoted strings, but not in single quoted strings. Because of this, you should <em>always</em> use single quotes <em>unless</em> you specifically need variable interpolation to be done on that string. This way, we can save the parser the trouble of parsing a bunch of strings where no interpolation needs to be done.</p>
-	<p>Also, if you are using a string variable as part of a function call, you do not need to enclose that variable in quotes. Again, this will just make unnecessary work for the parser. Note, however, that nearly all of the escape sequences that exist for double-quoted strings will not work with single-quoted strings. Be careful, and feel free to break this guideline if it's making your code easier to read, examples:</p>
-
-	<p class="bad">// wrong </p>
-	<div class="codebox"><pre>
-$str = "This is a really long string with no variables for the parser to find.";
-
-do_stuff("$str");</pre>
-	</div>
-
-	<p class="good">// right</p>
-	<div class="codebox"><pre>
-$str = 'This is a really long string with no variables for the parser to find.';
-
-do_stuff($str);</pre>
-	</div>
-
-	<p class="bad">// Sometimes single quotes are just not right</p>
-	<div class="codebox"><pre>
-$post_url = $phpbb_root_path . 'posting.' . $phpEx . '?mode=' . $mode . '&amp;amp;start=' . $start;</pre>
-	</div>
-
-	<p class="good">// Double quotes are sometimes needed to not overcrowd the line with concatenations.</p>
-	<div class="codebox"><pre>
-$post_url = "{$phpbb_root_path}posting.$phpEx?mode=$mode&amp;amp;start=$start";</pre>
-	</div>
-
-	<p>In SQL statements mixing single and double quotes is partly allowed (following the guidelines listed here about SQL formatting), else one should try to only use one method - mostly single quotes.</p>
-
-	<h4>Commas after every array element:</h4>
-	<p>If an array is defined with each element on its own line, you still have to modify the previous line to add a comma when appending a new element. PHP allows for trailing (useless) commas in array definitions. These should always be used so each element including the comma can be appended with a single line. In JavaScript, do not use the trailing comma, as it causes browsers to throw errors.</p>
-
-	<p class="bad">// wrong</p>
-	<div class="codebox"><pre>
-$foo = array(
-	'bar' => 42,
-	'boo' => 23
-);</pre>
-	</div>
-
-	<p class="good">// right </p>
-	<div class="codebox"><pre>
-$foo = array(
-	'bar' => 42,
-	'boo' => 23,
-);</pre>
-	</div>
-
-
-	<h4>Associative array keys:</h4>
-	<p>In PHP, it's legal to use a literal string as a key to an associative array without quoting that string. We don't want to do this -- the string should always be quoted to avoid confusion. Note that this is only when we're using a literal, not when we're using a variable, examples:</p>
-
-	<p class="bad">// wrong</p>
-	<div class="codebox">
-		<pre>$foo = $assoc_array[blah];</pre>
-	</div>
-
-	<p class="good">// right </p>
-	<div class="codebox">
-		<pre>$foo = $assoc_array['blah'];</pre>
-	</div>
-
-	<p class="bad">// wrong</p>
-	<div class="codebox">
-		<pre>$foo = $assoc_array["$var"];</pre>
-	</div>
-
-	<p class="good">// right </p>
-	<div class="codebox">
-		<pre>$foo = $assoc_array[$var];</pre>
-	</div>
-
-	<h4>Comments:</h4>
-	<p>Each complex function should be preceded by a comment that tells a programmer everything they need to know to use that function. The meaning of every parameter, the expected input, and the output are required as a minimal comment. The function's behaviour in error conditions (and what those error conditions are) should also be present - but mostly included within the comment about the output.<br /><br />Especially important to document are any assumptions the code makes, or preconditions for its proper operation. Any one of the developers should be able to look at any part of the application and figure out what's going on in a reasonable amount of time.<br /><br />Avoid using <code>/* */</code> comment blocks for one-line comments, <code>//</code> should be used for one/two-liners.</p>
-
 	<h4>Magic numbers:</h4>
 	<p>Don't use them. Use named constants for any literal value other than obvious special cases. Basically, it's ok to check if an array has 0 elements by using the literal 0. It's not ok to assign some special meaning to a number and then use it everywhere as a literal. This hurts readability AND maintainability. The constants <code>true</code> and <code>false</code> should be used in place of the literals 1 and 0 -- even though they have the same values (but not type!), it's more obvious what the actual logic is when you use the named constants. Typecast variables where it is needed, do not rely on the correct variable type (PHP is currently very loose on typecasting which can lead to security problems if a developer does not keep a very close eye on it).</p>
 
@@ -611,24 +1134,6 @@ $min = ($i &lt; $j) ? $i : $j;</pre>
 	</div>
 
 	<h4>Don't use uninitialized variables.</h4>
-	<p>For phpBB3, we intend to use a higher level of run-time error reporting. This will mean that the use of an uninitialized variable will be reported as a warning. These warnings can be avoided by using the built-in isset() function to check whether a variable has been set - but preferably the variable is always existing. For checking if an array has a key set this can come in handy though, examples:</p>
-
-	<p class="bad">// Wrong </p>
-	<div class="codebox">
-		<pre>if ($forum) ...</pre>
-	</div>
-
-	<p class="good">// Right </p>
-	<div class="codebox">
-		<pre>if (isset($forum)) ...</pre></div>
-
-	<p class="good">// Also possible</p>
-	<div class="codebox">
-		<pre>if (isset($forum) &amp;&amp; $forum == 5)</pre>
-	</div>
-
-	<p>The <code>empty()</code> function is useful if you want to check if a variable is not set or being empty (an empty string, 0 as an integer or string, NULL, false, an empty array or a variable declared, but without a value in a class). Therefore empty should be used in favor of <code>isset($array) &amp;&amp; count($array) &gt; 0</code> - this can be written in a shorter way as <code>!empty($array)</code>.</p>
-
 	<h4>Switch statements:</h4>
 	<p>Switch/case code blocks can get a bit long sometimes. To have some level of notice and being in-line with the opening/closing brace requirement (where they are on the same line for better readability), this also applies to switch/case code blocks and the breaks. An example:</p>
 
@@ -714,26 +1219,6 @@ switch ($mode)
 	break;
 }</pre>
 	</div>
-
-	<h4>Class Members</h4>
-	<p>Use the explicit visibility qualifiers <code>public</code>, <code>private</code> and <code>protected</code> for all properties instead of <code>var</code>.
-
-	<p>Place the <code>static</code> qualifier before the visibility qualifiers.</p>
-
-	<p class="bad">//Wrong </p>
-	<div class="codebox"><pre>
-var $x;
-private static function f()</pre>
-	</div>
-
-	<p class="good">// Right </p>
-	<div class="codebox"><pre>
-public $x;
-static private function f()</pre>
-	</div>
-
-	<h4>Constants</h4>
-	<p>Prefer class constants over global constants created with <code>define()</code>.</p>
 
 	<a name="sql"></a><h3>2.iii. SQL/SQL Layout</h3>
 
@@ -990,7 +1475,7 @@ $sql = $db-&gt;sql_build_query('SELECT', $sql_array);</pre>
 	</div>
 
 	<a name="optimizing"></a><h3>2.iv. Optimizations</h3>
-
+use nual coalesce ?? saves an isset call
 	<h4>Operations in loop definition: </h4>
 	<p>Always try to optimize your loops if operations are going on at the comparing part, since this part is executed every time the loop is parsed through. For assignments a descriptive name should be chosen. Example:</p>
 
@@ -1171,7 +1656,7 @@ append_sid(&quot;{$phpbb_root_path}memberlist.$phpEx&quot;, 'mode=group&amp;amp;
 		</div>
 	</div>
 
-	<hr />
+	<hr>
 
 <a name="styling"></a><h2>3. Styling</h2>
 	<div class="paragraph">
@@ -1254,7 +1739,7 @@ parent = prosilver</pre>
 		</div>
 	</div>
 
-	<hr />
+	<hr>
 
 <a name="templating"></a><h2>4. Templating</h2>
 	<div class="paragraph">
@@ -1750,7 +2235,7 @@ This may span multiple lines.
 		</div>
 	</div>
 
-	<hr />
+	<hr>
 
 
 
@@ -1823,7 +2308,7 @@ if (utf8_case_fold_nfc($string1) == utf8_case_fold_nfc($string2))
 		</div>
 	</div>
 
-	<hr />
+	<hr>
 
 <a name="translation"></a><h2>6. Translation (<abbr title="Internationalisation">i18n</abbr>/<abbr title="Localisation">L10n</abbr>) Guidelines</h2>
 
@@ -2540,7 +3025,7 @@ if (utf8_case_fold_nfc($string1) == utf8_case_fold_nfc($string2))
 		</div>
 	</div>
 
-	<hr />
+	<hr>
 
 <a name="disclaimer"></a><h2>7. Copyright and disclaimer</h2>
 
